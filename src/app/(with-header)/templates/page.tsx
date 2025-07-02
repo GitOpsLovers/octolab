@@ -23,6 +23,9 @@ const templates = [
     },
 ];
 
+/**
+ * Templates page
+ */
 export default function TemplatesPage() {
     return (
         <main className="min-h-screen p-8 bg-gray-50">
