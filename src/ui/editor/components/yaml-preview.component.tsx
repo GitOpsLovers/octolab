@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import yaml from 'yaml';
@@ -9,7 +9,6 @@ import { useEditor } from '../hooks/editor.hooks';
 
 export default function YamlPreview() {
     const { config } = useEditor();
-    const [copied, setCopied] = useState(false);
 
     const steps = [
         {
@@ -69,25 +68,29 @@ export default function YamlPreview() {
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(yamlContent);
-            setCopied(true);
-            setTimeout(() => {
-                setCopied(false);
-            }, 2000);
+            toast.success('¡YAML copiado al portapapeles!');
         } catch (err) {
             console.error('Failed to copy YAML', err);
+            toast.error('Error al copiar');
         }
     };
 
     const handleDownload = () => {
-        const blob = new Blob([yamlContent], { type: 'text/yaml' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'workflow.yml';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        try {
+            const blob = new Blob([yamlContent], { type: 'text/yaml' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'workflow.yml';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            toast.success('Archivo descargado');
+        } catch (err) {
+            console.error('Failed to download YAML', err);
+            toast.error('Error al descargar');
+        }
     };
 
     return (
@@ -98,7 +101,7 @@ export default function YamlPreview() {
                 customStyle={{
                     flex: 1,
                     overflow: 'auto',
-                    margin: '0 0  1rem 0',
+                    margin: '0 0  1rem',
                     borderRadius: '0.375rem',
                 }}
             >
@@ -107,7 +110,7 @@ export default function YamlPreview() {
 
             <div className="flex gap-2 mt-auto">
                 <button onClick={handleCopy} className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
-                    {copied ? 'Copiado ✅' : 'Copiar YAML'}
+                    Copiar YAML
                 </button>
 
                 <button onClick={handleDownload} className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
