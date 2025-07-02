@@ -89,7 +89,7 @@ export default function YamlPreview() {
     };
 
     return (
-        <div className="w-full lg:w-1/2 bg-black text-white p-4 rounded shadow flex flex-col">
+        <div className="w-full lg:w-1/2 bg-black text-white p-4 rounded shadow flex flex-col h-full">
             <h2 className="text-lg font-semibold mb-2">Vista YAML</h2>
 
             <pre className="text-xs whitespace-pre-wrap overflow-auto flex-1 mb-4">{yamlContent}</pre>

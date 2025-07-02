@@ -7,19 +7,9 @@ const templates = [
         description: 'Instala dependencias, corre tests y build para Node.js.',
     },
     {
-        id: 'vercel-deploy',
-        name: 'Deploy a Vercel',
-        description: 'Deploy automático a Vercel en cada push.',
-    },
-    {
         id: 'npm-publish',
         name: 'Publicar NPM',
         description: 'Workflow para publicar tu paquete en NPM.',
-    },
-    {
-        id: 'empty',
-        name: 'Workflow vacío',
-        description: 'Empieza desde cero y personalízalo a tu gusto.',
     },
 ];
 
@@ -28,7 +18,7 @@ const templates = [
  */
 export default function TemplatesPage() {
     return (
-        <main className="min-h-screen p-8 bg-gray-50">
+        <main className="p-8 bg-gray-50">
             <h1 className="text-3xl font-bold mb-8 text-center">Elige una plantilla para empezar</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {templates.map((template) => (
