@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import yaml from 'yaml';
 
 import { useEditor } from '../hooks/editor.hooks';
@@ -89,17 +91,26 @@ export default function YamlPreview() {
     };
 
     return (
-        <div className="w-full lg:w-1/2 bg-black text-white p-4 rounded shadow flex flex-col h-full">
-            <h2 className="text-lg font-semibold mb-2">Vista YAML</h2>
-
-            <pre className="text-xs whitespace-pre-wrap overflow-auto flex-1 mb-4">{yamlContent}</pre>
+        <div className="w-full lg:w-1/2 flex flex-col h-full">
+            <SyntaxHighlighter
+                language="yaml"
+                style={oneDark}
+                customStyle={{
+                    flex: 1,
+                    overflow: 'auto',
+                    margin: '0 0  1rem 0',
+                    borderRadius: '0.375rem',
+                }}
+            >
+                {yamlContent}
+            </SyntaxHighlighter>
 
             <div className="flex gap-2 mt-auto">
-                <button onClick={handleCopy} className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition">
+                <button onClick={handleCopy} className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
                     {copied ? 'Copiado ✅' : 'Copiar YAML'}
                 </button>
 
-                <button onClick={handleDownload} className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition">
+                <button onClick={handleDownload} className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
                     Descargar YAML
                 </button>
             </div>
