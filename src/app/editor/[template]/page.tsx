@@ -1,19 +1,38 @@
 import EditorForm from '@ui/editor/components/form.component';
 import YamlPreview from '@ui/editor/components/yaml-preview.component';
+import { EditorConfig } from '@ui/editor/models/editor.models';
 import { EditorProvider } from '@ui/editor/providers/editor.provider';
 
+/**
+ * Editor page
+ */
 export default function EditorPage({ params }: { params: { template: string } }) {
     const template = params.template;
 
-    if (template !== 'npm-publish') {
+    let defaultConfig: EditorConfig;
+
+    if (template === 'npm-publish') {
+        defaultConfig = {
+            template: 'npm-publish',
+            branch: 'main',
+            nodeVersion: '18',
+            installCommand: 'npm install',
+            testCommand: 'npm test',
+            buildCommand: 'npm run build',
+            npmTokenSecret: 'NPM_TOKEN',
+        };
+    } else if (template === 'node-ci') {
+        defaultConfig = {
+            template: 'node-ci',
+            branch: 'main',
+            nodeVersion: '18',
+            installCommand: 'npm install',
+            testCommand: 'npm test',
+            buildCommand: 'npm run build',
+        };
+    } else {
         return <div>Plantilla no soportada todavía.</div>;
     }
-
-    // Config base
-    const defaultConfig = {
-        branch: 'main',
-        nodeVersion: '18',
-    };
 
     return (
         <main className="min-h-screen flex flex-col p-6 bg-gray-50">

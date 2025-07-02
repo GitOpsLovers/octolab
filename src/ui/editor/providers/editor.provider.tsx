@@ -3,10 +3,13 @@
 import { useState } from 'react';
 
 import { EditorContext } from '../contexts/editor.context';
-import { NodeTemplateConfig } from '../models/templates.models';
+import { EditorConfig } from '../models/editor.models';
 
-export function EditorProvider({ children, defaultConfig }: { children: React.ReactNode; defaultConfig: NodeTemplateConfig }) {
-    const [config, setConfig] = useState<NodeTemplateConfig>(defaultConfig);
+/**
+ * Editor context provider
+ */
+export function EditorProvider({ children, defaultConfig }: { children: React.ReactNode; defaultConfig: EditorConfig }) {
+    const [config, setConfig] = useState<EditorConfig>(defaultConfig);
 
     return <EditorContext.Provider value={{ config, setConfig }}>{children}</EditorContext.Provider>;
 }
