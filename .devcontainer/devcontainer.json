@@ -26,7 +26,8 @@
                 "GitHub.vscode-github-actions",
                 "redhat.vscode-yaml",
                 "sibiraj-s.vscode-scss-formatter",
-                "aeschli.vscode-css-formatter"
+                "aeschli.vscode-css-formatter",
+                "bradlc.vscode-tailwindcss"
             ]
         }
     },

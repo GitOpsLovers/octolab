@@ -35,7 +35,7 @@ export default function EditorPage({ params }: { params: { template: string } })
     }
 
     return (
-        <main className="p-8 bg-gray-50 h-[calc(100vh-64px)] flex flex-col">
+        <main className="p-8 h-[calc(100vh-64px)] flex flex-col">
             <h1 className="text-2xl font-bold mb-4">Editor: {template}</h1>
 
             <EditorProvider defaultConfig={defaultConfig}>

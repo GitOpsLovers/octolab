@@ -5,7 +5,7 @@ import Link from 'next/link';
  */
 export default function Header() {
     return (
-        <header className="w-full bg-black shadow px-6 py-4 flex items-center justify-between">
+        <header className="w-full bg-surface shadow px-6 py-4 flex items-center justify-between">
             <Link href="/" className="text-xl font-bold text-white">
                 Workflow Generator
             </Link>

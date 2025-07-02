@@ -6,11 +6,15 @@ import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import yaml from 'yaml';
 
 import { useEditor } from '../hooks/editor.hooks';
+import { Step } from '../models/editor.models';
 
+/**
+ * Yaml preview component.
+ */
 export default function YamlPreview() {
     const { config } = useEditor();
 
-    const steps = [
+    const steps: Step[] = [
         {
             name: 'Checkout code',
             uses: 'actions/checkout@v3',
@@ -65,6 +69,7 @@ export default function YamlPreview() {
 
     const yamlContent = yaml.stringify(fullConfig);
 
+    // Copy YAML to clipboard
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(yamlContent);
@@ -75,6 +80,7 @@ export default function YamlPreview() {
         }
     };
 
+    // Download YAML as a file
     const handleDownload = () => {
         try {
             const blob = new Blob([yamlContent], { type: 'text/yaml' });
@@ -109,11 +115,11 @@ export default function YamlPreview() {
             </SyntaxHighlighter>
 
             <div className="flex gap-2 mt-auto">
-                <button onClick={handleCopy} className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
+                <button onClick={handleCopy} className="bg-primary text-black px-4 py-2 font-semibold text-center  rounded-md hover:bg-primary-hover transition">
                     Copiar YAML
                 </button>
 
-                <button onClick={handleDownload} className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
+                <button onClick={handleDownload} className="bg-primary text-black px-4 py-2 font-semibold text-center  rounded-md hover:bg-primary-hover transition">
                     Descargar YAML
                 </button>
             </div>
