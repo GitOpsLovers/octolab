@@ -1,6 +1,6 @@
-import { NodeTemplateConfig } from "./templates.models";
+import { NodeTemplateConfig } from './templates.models';
 
-export type EditorContextType = {
-  config: NodeTemplateConfig;
-  setConfig: (config: NodeTemplateConfig) => void;
-};
+export interface EditorContextType {
+    config: NodeTemplateConfig;
+    setConfig: (config: NodeTemplateConfig) => void;
+}

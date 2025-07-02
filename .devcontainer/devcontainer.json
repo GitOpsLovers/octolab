@@ -1,0 +1,37 @@
+{
+    "name": "Generator Development container",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "runArgs": [
+        "--name", "generator-devcontainer",
+        "--network", "host"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "http.proxyStrictSSL": false
+            },
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "sleistner.vscode-fileutils",
+                "GitHub.copilot",
+                "GitHub.copilot-chat",
+                "eamodio.gitlens",
+                "ms-vscode.vscode-typescript-next",
+                "shd101wyy.markdown-preview-enhanced",
+                "stylelint.vscode-stylelint",
+                "firsttris.vscode-jest-runner",
+                "GitHub.vscode-github-actions",
+                "redhat.vscode-yaml",
+                "sibiraj-s.vscode-scss-formatter",
+                "aeschli.vscode-css-formatter"
+            ]
+        }
+    },
+    "remoteEnv": {
+        "NODE_TLS_REJECT_UNAUTHORIZED": "0"
+    }
+}
+  

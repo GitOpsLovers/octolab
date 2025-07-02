@@ -1,4 +1,4 @@
-export type NodeTemplateConfig = {
-  branch: string;
-  nodeVersion: string;
-};
+export interface NodeTemplateConfig {
+    branch: string;
+    nodeVersion: string;
+}
