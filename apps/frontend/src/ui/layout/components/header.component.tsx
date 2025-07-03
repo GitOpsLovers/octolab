@@ -10,7 +10,7 @@ export function Header() {
                 OctoLab
             </Link>
 
-            <nav className="flex gap-6">
+            <nav className="flex gap-6 items-center">
                 <Link href="/templates" className="text-muted hover:text-primary transition font-medium">
                     Templates
                 </Link>
@@ -19,6 +19,9 @@ export function Header() {
                 </Link>
                 <Link href="/contact" className="text-muted hover:text-primary transition font-medium">
                     Contact
+                </Link>
+                <Link href="/signup" className="px-4 py-2 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-surface transition">
+                    Sign up
                 </Link>
             </nav>
         </header>

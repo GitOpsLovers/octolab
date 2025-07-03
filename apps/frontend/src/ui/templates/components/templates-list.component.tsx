@@ -1,15 +1,55 @@
 'use client';
 
 import Link from 'next/link';
+import { useCookies } from 'next-client-cookies';
+import { useState, MouseEvent, useEffect } from 'react';
 import * as FaIcons from 'react-icons/fa';
 
 import { useTemplates } from '../hooks/templates.hooks';
+
+import { RegisterModalForTemplatesList } from './register.modal.component';
 
 /**
  * Templates list component.
  */
 export function TemplatesList() {
+    const cookies = useCookies();
     const { templates, loading, error } = useTemplates();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+    const [skipRegisterModal, setSkipRegisterModal] = useState(false);
+
+    // Check if the user has skipped the register modal
+    useEffect(() => {
+        const skip = cookies.get('octolab_skip_register_modal');
+
+        if (skip === 'true') {
+            setSkipRegisterModal(true);
+        }
+    }, [cookies]);
+
+    // Set the skip register modal cookie
+    const setSkipModal = (value: boolean) => {
+        if (value) {
+            cookies.set('octolab_skip_register_modal', 'true', { expires: 7 });
+            setSkipRegisterModal(true);
+        } else {
+            cookies.remove('octolab_skip_register_modal');
+            setSkipRegisterModal(false);
+        }
+    };
+
+    // Handle the click event to select a template
+    const handleSelectTemplate = (e: MouseEvent, id: string) => {
+        e.preventDefault();
+        setSelectedTemplateId(id);
+
+        if (skipRegisterModal) {
+            window.location.href = `/editor/${id}`;
+        } else {
+            setModalOpen(true);
+        }
+    };
 
     if (loading) {
         return (
@@ -51,16 +91,33 @@ export function TemplatesList() {
                                 </ul>
 
                                 <Link
-                                    href={`/editor/${template.id}`}
+                                    href="#"
+                                    onClick={(e) => {
+                                        handleSelectTemplate(e, template.id);
+                                    }}
                                     className="bg-primary text-white font-semibold text-center px-4 py-2 rounded-md hover:bg-primary-hover transition mt-6"
                                 >
                                     Use template
                                 </Link>
+
+                                <p className="text-xs text-text-muted mt-2 text-center">You’ll need an account to save your workflow.</p>
                             </div>
                         </div>
                     );
                 })}
             </div>
+
+            {/* Register modal */}
+            <RegisterModalForTemplatesList
+                templateId={selectedTemplateId}
+                isOpen={modalOpen}
+                onClose={() => {
+                    setModalOpen(false);
+                }}
+                onSkip={() => {
+                    setSkipModal(true);
+                }}
+            />
         </>
     );
 }
