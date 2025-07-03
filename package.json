@@ -1,12 +1,9 @@
 {
-  "name": "generator",
+  "name": "octolab",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "turbo run dev"
   },
   "dependencies": {
     "next": "15.3.4",
@@ -20,11 +17,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@stylistic/eslint-plugin": "5.1.0",
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/react-syntax-highlighter": "^15.5.13",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "eslint-config-prettier": "10.1.5",
@@ -38,8 +31,12 @@
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-prettier": "5.5.1",
     "eslint-plugin-unused-imports": "4.1.4",
-    "tailwindcss": "^4",
+    "turbo": "^2.5.4",
     "typescript": "^5",
     "typescript-eslint": "8.35.0"
-  }
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "packageManager": "npm@10.9.0"
 }
