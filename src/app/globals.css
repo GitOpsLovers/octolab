@@ -1,15 +1,55 @@
 @import "tailwindcss";
 
-@import "../styles/theme.css";
+@theme {
+  /* Fondo y superficies */
+  --background: #0d1117;
+  --surface: #161b22;
+  --border: #30363d;
+  --color-background: #0d1117;
+  --color-surface: #161b22;
+  --color-border: #30363d;
 
-@theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Primario (rosa neón) */
+  --primary: #ff4d9d;
+  --primary-hover: #e60073;
+  --color-primary: #ff4d9d;
+  --color-primary-hover: #e60073;
+
+  /* Secundario (cian eléctrico) */
+  --secondary: #00e3ff;
+  --secondary-hover: #00b2cc;
+  --color-secondary: #00e3ff;
+  --color-secondary-hover: #00b2cc;
+
+  /* Accent (violeta eléctrico) */
+  --accent: #d27aff;
+  --accent-hover: #a14bd9;
+  --color-accent: #d27aff;
+  --color-accent-hover: #a14bd9;
+
+  /* Estados */
+  --success: #3fb950;
+  --danger: #ff3b58;
+  --warning: #ffbe3b;
+  --color-success: #3fb950;
+  --color-danger: #ff3b58;
+  --color-warning: #ffbe3b;
+
+  /* Texto */
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --color-text: #c9d1d9;
+  --color-text-muted: #8b949e;
+
+  /* Bordes */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
 }
 
 body {
   color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 html,
@@ -17,4 +57,8 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: var(--font-montserrat), sans-serif;
 }

@@ -6,8 +6,8 @@ import { EditorProvider } from '@ui/editor/providers/editor.provider';
 /**
  * Editor page
  */
-export default function EditorPage({ params }: { params: { template: string } }) {
-    const template = params.template;
+export default async function EditorPage({ params }: { params: Promise<{ template: string }> }) {
+    const { template } = await params;
 
     let defaultConfig: EditorConfig;
 

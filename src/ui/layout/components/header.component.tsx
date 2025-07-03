@@ -5,16 +5,21 @@ import Link from 'next/link';
  */
 export default function Header() {
     return (
-        <header className="w-full bg-surface shadow px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-white">
-                Workflow Generator
+        <header className="w-full bg-surface px-6 py-4 flex items-center justify-between">
+            <Link href="/" className="text-2xl font-bold text-primary transition">
+                OctoLab
             </Link>
 
-            <nav className="flex gap-4">
-                <Link href="/templates" className="text-gray-300 hover:text-white transition">
+            <nav className="flex gap-6">
+                <Link href="/templates" className="text-muted hover:text-primary transition font-medium">
                     Plantillas
                 </Link>
-                {/* Aquí puedes añadir más links */}
+                <Link href="/about" className="text-muted hover:text-primary transition font-medium">
+                    Sobre nosotros
+                </Link>
+                <Link href="/contact" className="text-muted hover:text-primary transition font-medium">
+                    Contacto
+                </Link>
             </nav>
         </header>
     );

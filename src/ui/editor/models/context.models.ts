@@ -6,4 +6,5 @@ import { EditorConfig } from './editor.models';
 export interface EditorContextType {
     config: EditorConfig;
     setConfig: (config: EditorConfig) => void;
+    resetConfig: () => void;
 }

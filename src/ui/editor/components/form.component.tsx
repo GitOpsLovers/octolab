@@ -8,7 +8,7 @@ import { useEditor } from '../hooks/editor.hooks';
  * Editor form component
  */
 export default function EditorForm(): ReactNode {
-    const { config, setConfig } = useEditor();
+    const { config, setConfig, resetConfig } = useEditor();
 
     return (
         <div className="w-full lg:w-1/2 bg-surface border border-border p-6 rounded-lg shadow flex flex-col">
@@ -84,6 +84,14 @@ export default function EditorForm(): ReactNode {
                     />
                 </>
             )}
+
+            <button
+                type="button"
+                onClick={resetConfig}
+                className="mt-2 border border-secondary font-semibold text-secondary px-4 py-2 rounded-md cursor-pointer hover:bg-secondary/80 transition self-start"
+            >
+                Resetear valores
+            </button>
         </div>
     );
 }

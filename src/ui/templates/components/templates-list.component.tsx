@@ -41,7 +41,10 @@ export default function TemplatesList() {
                             ))}
                         </ul>
 
-                        <Link href={`/editor/${template.id}`} className="bg-primary text-black font-semibold text-center py-2 rounded-md hover:bg-primary-hover transition mt-6">
+                        <Link
+                            href={`/editor/${template.id}`}
+                            className="bg-primary text-white font-semibold text-center px-4 py-2 rounded-md hover:bg-primary-hover transition mt-6"
+                        >
                             Usar plantilla
                         </Link>
                     </div>

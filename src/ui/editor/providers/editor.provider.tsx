@@ -11,5 +11,10 @@ import { EditorConfig } from '../models/editor.models';
 export function EditorProvider({ children, defaultConfig }: { children: React.ReactNode; defaultConfig: EditorConfig }) {
     const [config, setConfig] = useState<EditorConfig>(defaultConfig);
 
-    return <EditorContext.Provider value={{ config, setConfig }}>{children}</EditorContext.Provider>;
+    // Reset the config to the default values
+    const resetConfig = () => {
+        setConfig(defaultConfig);
+    };
+
+    return <EditorContext.Provider value={{ config, setConfig, resetConfig }}>{children}</EditorContext.Provider>;
 }

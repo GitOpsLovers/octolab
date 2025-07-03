@@ -115,11 +115,11 @@ export default function YamlPreview() {
             </SyntaxHighlighter>
 
             <div className="flex gap-2 mt-auto">
-                <button onClick={handleCopy} className="bg-primary text-black px-4 py-2 font-semibold text-center  rounded-md hover:bg-primary-hover transition">
+                <button onClick={handleCopy} className="bg-primary text-white px-4 py-2 font-semibold text-center cursor-pointer rounded-md hover:bg-primary-hover transition">
                     Copiar YAML
                 </button>
 
-                <button onClick={handleDownload} className="bg-primary text-black px-4 py-2 font-semibold text-center  rounded-md hover:bg-primary-hover transition">
+                <button onClick={handleDownload} className="bg-primary text-white px-4 py-2 font-semibold text-center cursor-pointer rounded-md hover:bg-primary-hover transition">
                     Descargar YAML
                 </button>
             </div>
