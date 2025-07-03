@@ -74,10 +74,10 @@ export function YamlPreview() {
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(yamlContent);
-            toast.success('¡YAML copiado al portapapeles!');
+            toast.success('YAML copied to clipboard!');
         } catch (err) {
             console.error('Failed to copy YAML', err);
-            toast.error('Error al copiar');
+            toast.error('Error copying YAML');
         }
     };
 
@@ -93,10 +93,10 @@ export function YamlPreview() {
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-            toast.success('Archivo descargado');
+            toast.success('File downloaded');
         } catch (err) {
             console.error('Failed to download YAML', err);
-            toast.error('Error al descargar');
+            toast.error('Error downloading YAML');
         }
     };
 
