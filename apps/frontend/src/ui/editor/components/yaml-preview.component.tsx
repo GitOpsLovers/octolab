@@ -13,10 +13,10 @@ import { useEditor } from '../hooks/editor.hooks';
  * Yaml preview component.
  */
 export function YamlPreview(): ReactNode {
-    const { template, workflowConfig, errors } = useEditor();
-    const fileName = template ? template.filename : 'workflow.yml';
+    const { templateConfig, editingWorkflow, errors } = useEditor();
+    const fileName = templateConfig ? templateConfig.filename : 'workflow.yml';
 
-    const workflowContent = yaml.stringify(workflowConfig);
+    const workflowContent = yaml.stringify(editingWorkflow);
 
     // Copy YAML to clipboard
     const handleCopy = async () => {

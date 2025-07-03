@@ -1,4 +1,21 @@
 /**
+ * Editing workflow model
+ */
+export interface EditingWorkflow {
+    name: string;
+    on: any;
+    jobs: Record<string, Job>;
+}
+
+/**
+ * Jobs model
+ */
+export interface Job {
+    'runs-on': string;
+    steps: Step[];
+}
+
+/**
  * Step model
  */
 export interface Step {

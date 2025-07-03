@@ -16,6 +16,15 @@ export interface TemplatesRepository {
      *
      * @param id Template id.
      *
+     * @returns Template.
+     */
+    getOne: (id: string) => Promise<Template>;
+
+    /**
+     * Get template configuration.
+     *
+     * @param id Template id.
+     *
      * @returns Template configuration.
      */
     getTemplateConfig: (id: string) => Promise<TemplateConfig>;

@@ -19,8 +19,22 @@ export const templatesApiRepository = (): TemplatesRepository => ({
 
         return response.json();
     },
-    getTemplateConfig: async (id: string): Promise<TemplateConfig> => {
+    getOne: async (id: string): Promise<Template> => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/templates/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching template');
+        }
+
+        return response.json();
+    },
+    getTemplateConfig: async (id: string): Promise<TemplateConfig> => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/templates/${id}/config`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

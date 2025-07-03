@@ -5,6 +5,7 @@ import { TemplatesRepository } from '../domain/repositories/templates.repository
  * Get template configuration use case.
  *
  * @param repository Templates repository.
+ * @param id Template id.
  *
  * @returns Template configuration.
  */
