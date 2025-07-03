@@ -7,7 +7,9 @@
     "dev:frontend": "turbo run dev --filter=frontend",
     "dev:backend": "turbo run dev --filter=backend",
     "build": "turbo run build",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "lint:frontend": "turbo run lint --filter=frontend",
+    "lint:backend": "turbo run lint --filter=backend"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

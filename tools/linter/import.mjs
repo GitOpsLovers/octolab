@@ -1,9 +1,11 @@
 import unusedImports from 'eslint-plugin-unused-imports';
+import importPlugin from 'eslint-plugin-import';
 
 export default [
   {
     plugins: {
       'unused-imports': unusedImports,
+      import: importPlugin,
     },
     settings: {
       'import/parsers': {
