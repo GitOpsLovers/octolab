@@ -12,7 +12,7 @@ import { Step } from '../models/editor.models';
  * Yaml preview component.
  */
 export default function YamlPreview() {
-    const { config } = useEditor();
+    const { config, errors } = useEditor();
 
     const steps: Step[] = [
         {
@@ -99,6 +99,8 @@ export default function YamlPreview() {
         }
     };
 
+    const hasErrors = Object.keys(errors).length > 0;
+
     return (
         <div className="w-full lg:w-1/2 flex flex-col h-full">
             <SyntaxHighlighter
@@ -115,12 +117,22 @@ export default function YamlPreview() {
             </SyntaxHighlighter>
 
             <div className="flex gap-2 mt-auto">
-                <button onClick={handleCopy} className="bg-primary text-white px-4 py-2 font-semibold text-center cursor-pointer rounded-md hover:bg-primary-hover transition">
-                    Copiar YAML
+                <button
+                    onClick={handleCopy}
+                    disabled={hasErrors}
+                    className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition 
+                        ${hasErrors ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
+                >
+                    Copy code
                 </button>
 
-                <button onClick={handleDownload} className="bg-primary text-white px-4 py-2 font-semibold text-center cursor-pointer rounded-md hover:bg-primary-hover transition">
-                    Descargar YAML
+                <button
+                    onClick={handleDownload}
+                    disabled={hasErrors}
+                    className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition 
+                        ${hasErrors ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
+                >
+                    Download YAML
                 </button>
             </div>
         </div>

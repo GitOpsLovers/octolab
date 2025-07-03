@@ -4,16 +4,16 @@ const templates = [
     {
         id: 'node-ci',
         name: 'Node.js CI',
-        description: 'Instala dependencias, corre tests y build para Node.js.',
-        icon: '💚',
-        features: ['Tests automáticos', 'Compatible Node 16/18/20', 'Build antes de merge'],
+        description: 'Install dependencies, run tests and build for Node.js.',
+        icon: '🟢',
+        features: ['Automated tests', 'Compatible with Node 16/18/20', 'Build before merge'],
     },
     {
         id: 'npm-publish',
-        name: 'Publicar NPM',
-        description: 'Workflow para publicar tu paquete en NPM.',
+        name: 'Publish to NPM',
+        description: 'Workflow to publish your package to NPM.',
         icon: '📦',
-        features: ['Configura token NPM', 'Test y build antes de publish', 'Compatible monorepos'],
+        features: ['Configure NPM token', 'Test and build before publish', 'Compatible with monorepos'],
     },
 ];
 
@@ -45,7 +45,7 @@ export default function TemplatesList() {
                             href={`/editor/${template.id}`}
                             className="bg-primary text-white font-semibold text-center px-4 py-2 rounded-md hover:bg-primary-hover transition mt-6"
                         >
-                            Usar plantilla
+                            Use template
                         </Link>
                     </div>
                 </div>

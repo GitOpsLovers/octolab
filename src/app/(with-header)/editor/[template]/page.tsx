@@ -31,7 +31,7 @@ export default async function EditorPage({ params }: { params: Promise<{ templat
             buildCommand: 'npm run build',
         };
     } else {
-        return <div>Plantilla no soportada todavía.</div>;
+        return <div>Template not yet supported.</div>;
     }
 
     return (

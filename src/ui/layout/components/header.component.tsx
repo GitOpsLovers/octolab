@@ -12,13 +12,13 @@ export default function Header() {
 
             <nav className="flex gap-6">
                 <Link href="/templates" className="text-muted hover:text-primary transition font-medium">
-                    Plantillas
+                    Templates
                 </Link>
                 <Link href="/about" className="text-muted hover:text-primary transition font-medium">
-                    Sobre nosotros
+                    About Us
                 </Link>
                 <Link href="/contact" className="text-muted hover:text-primary transition font-medium">
-                    Contacto
+                    Contact
                 </Link>
             </nav>
         </header>
