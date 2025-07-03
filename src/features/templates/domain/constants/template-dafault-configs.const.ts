@@ -12,6 +12,7 @@ export const templatesDefaultConfigs: Record<string, EditorConfig> = {
         testCommand: 'npm test',
         buildCommand: 'npm run build',
         npmTokenSecret: 'NPM_TOKEN',
+        workflowName: 'Publish to NPM',
     },
     'node-ci': {
         template: 'node-ci',
@@ -20,5 +21,6 @@ export const templatesDefaultConfigs: Record<string, EditorConfig> = {
         installCommand: 'npm install',
         testCommand: 'npm test',
         buildCommand: 'npm run build',
+        workflowName: 'Node.js CI',
     },
 };

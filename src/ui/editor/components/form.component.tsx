@@ -26,6 +26,24 @@ export function EditorForm(): ReactNode {
         <div className="w-full lg:w-1/2 bg-surface border border-border p-6 rounded-lg shadow flex flex-col mb-4">
             <h2 className="text-xl font-bold text-text mb-4">Edit Configuration</h2>
 
+            {/* Workflow name */}
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-text mb-1">Workflow name</label>
+                <input
+                    type="text"
+                    value={config.workflowName ?? ''}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setConfig({ ...config, workflowName: value });
+                        validateField('workflowName', value);
+                    }}
+                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                    placeholder="CI Workflow"
+                />
+                {errors.workflowName && <p className="text-red-500 text-sm mt-1">{errors.workflowName}</p>}
+            </div>
+
+            {/* Target Branch */}
             <div className="mb-4">
                 <label className="block text-sm font-medium text-text mb-1">Target Branch</label>
                 <input
@@ -41,6 +59,7 @@ export function EditorForm(): ReactNode {
                 {errors.branch && <p className="text-red-500 text-sm mt-1">{errors.branch}</p>}
             </div>
 
+            {/* Node version */}
             <div className="mb-4">
                 <label className="block text-sm font-medium text-text mb-1">Node version</label>
                 <select
@@ -56,6 +75,7 @@ export function EditorForm(): ReactNode {
                 </select>
             </div>
 
+            {/* Template */}
             <div className="mb-4">
                 <label className="block text-sm font-medium text-text mb-1">Installation command</label>
                 <input
@@ -72,6 +92,7 @@ export function EditorForm(): ReactNode {
                 {errors.installCommand && <p className="text-red-500 text-sm mt-1">{errors.installCommand}</p>}
             </div>
 
+            {/* Test command */}
             <div className="mb-4">
                 <label className="block text-sm font-medium text-text mb-1">Test command</label>
                 <input
@@ -88,6 +109,7 @@ export function EditorForm(): ReactNode {
                 {errors.testCommand && <p className="text-red-500 text-sm mt-1">{errors.testCommand}</p>}
             </div>
 
+            {/* Build command */}
             <div className="mb-4">
                 <label className="block text-sm font-medium text-text mb-1">Build command</label>
                 <input
@@ -104,6 +126,7 @@ export function EditorForm(): ReactNode {
                 {errors.buildCommand && <p className="text-red-500 text-sm mt-1">{errors.buildCommand}</p>}
             </div>
 
+            {/* NPM Token Secret Name */}
             {config.template === 'npm-publish' && (
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-text mb-1">NPM Token Secret Name</label>
@@ -122,6 +145,7 @@ export function EditorForm(): ReactNode {
                 </div>
             )}
 
+            {/* Reset button */}
             <button
                 type="button"
                 onClick={() => {

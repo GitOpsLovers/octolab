@@ -12,6 +12,8 @@ export const availableTemplates: Template[] = [
         iconColor: 'text-[#68A063]',
         features: ['Automated tests', 'Compatible with Node 16/18/20', 'Build before merge'],
         filename: 'node-js-ci.yml',
+        jobName: 'build',
+        workflowName: 'Node.js CI',
     },
     {
         id: 'npm-publish',
@@ -21,5 +23,7 @@ export const availableTemplates: Template[] = [
         iconColor: 'text-[#cb3737]',
         features: ['Configure NPM token', 'Test and build before publish', 'Compatible with monorepos'],
         filename: 'npm-publish.yml',
+        jobName: 'publish',
+        workflowName: 'Publish to NPM',
     },
 ];

@@ -9,6 +9,8 @@ export interface Template {
     iconColor: string;
     features: string[];
     filename: string;
+    jobName: string;
+    workflowName: string;
 }
 
 /**
@@ -22,6 +24,7 @@ export interface NpmPublishTemplateConfig {
     testCommand: string;
     buildCommand: string;
     npmTokenSecret: string;
+    workflowName: string;
 }
 
 /**
@@ -34,4 +37,5 @@ export interface NodeCiTemplateConfig {
     installCommand: string;
     testCommand: string;
     buildCommand: string;
+    workflowName: string;
 }

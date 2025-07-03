@@ -57,7 +57,7 @@ export function YamlPreview() {
     }
 
     const fullConfig = {
-        name: config.template === 'npm-publish' ? 'Publish to NPM' : 'Node.js CI',
+        name: config.workflowName,
         on: {
             push: {
                 branches: [config.branch],
@@ -65,7 +65,7 @@ export function YamlPreview() {
             ...(config.template === 'node-ci' && { pull_request: {} }),
         },
         jobs: {
-            build: {
+            [templateData?.jobName ?? 'build']: {
                 'runs-on': 'ubuntu-latest',
                 steps: steps,
             },
