@@ -1,11 +1,16 @@
-import { EditorConfig } from '@features/editor/domain/editor.models';
+import { NodePrVerifyTemplateConfig, NpmPublishTemplateConfig } from '../models/template.models';
+
+/**
+ * Editor configuration model
+ */
+export type TempplateConfig = NpmPublishTemplateConfig | NodePrVerifyTemplateConfig;
 
 /**
  * Default configurations for each template.
  */
-export const templatesDefaultConfigs: Record<string, EditorConfig> = {
+export const templatesDefaultConfigs: Record<string, TempplateConfig> = {
     'npm-publish': {
-        template: 'npm-publish',
+        id: 'npm-publish',
         runner: 'ubuntu-latest',
         branch: 'main',
         nodeVersion: '22',
@@ -16,7 +21,7 @@ export const templatesDefaultConfigs: Record<string, EditorConfig> = {
         workflowName: 'Publish to NPM',
     },
     'node-pr-verify': {
-        template: 'node-pr-verify',
+        id: 'node-pr-verify',
         runner: 'ubuntu-latest',
         nodeVersion: '22',
         installCommand: 'npm install',

@@ -1,22 +1,34 @@
+'use client';
+
 import Link from 'next/link';
 import * as FaIcons from 'react-icons/fa';
 
-import { availableTemplates } from '@features/templates/domain/constants/available-templates.const';
+import { useTemplates } from '../hooks/templates.hooks';
 
 /**
  * Templates list component.
  */
 export function TemplatesList() {
+    const { templates, loading, error } = useTemplates();
+
+    if (loading) {
+        return <p className="text-center text-text-muted">Loading templates...</p>;
+    }
+
+    if (error) {
+        return <p className="text-center text-red-500">Error loading templates: {error}</p>;
+    }
+
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {availableTemplates.map((template) => {
+            {templates.map((template) => {
                 // eslint-disable-next-line import/namespace
                 const Icon = FaIcons[template.icon as keyof typeof FaIcons];
 
                 return (
                     <div key={template.id} className="bg-surface rounded-xl shadow hover:shadow-lg transition border border-border flex flex-col">
                         <div className="p-6 flex flex-col flex-1">
-                            <Icon className={`w-12 h-12 mb-4 ${template.iconColor}`} />
+                            <Icon className="w-12 h-12 mb-4" style={{ color: template.iconColor }} />
 
                             <h2 className="text-xl font-bold text-text mb-2">{template.name}</h2>
 

@@ -11,11 +11,6 @@ export interface Template {
 }
 
 /**
- * Template configuration model
- */
-export type TemplateConfig = NpmPublishTemplateConfig | NodePrVerifyTemplateConfig;
-
-/**
  * Template configuration for NPM publish workflow
  */
 export interface NpmPublishTemplateConfig {
@@ -28,8 +23,6 @@ export interface NpmPublishTemplateConfig {
     buildCommand: string;
     npmTokenSecret: string;
     workflowName: string;
-    jobName: string;
-    filename: string;
 }
 
 /**
@@ -44,6 +37,4 @@ export interface NodePrVerifyTemplateConfig {
     testCommand: string;
     buildCommand: string;
     workflowName: string;
-    jobName: string;
-    filename: string;
 }

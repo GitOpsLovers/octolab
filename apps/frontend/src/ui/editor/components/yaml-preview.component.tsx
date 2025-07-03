@@ -9,15 +9,12 @@ import yaml from 'yaml';
 
 import { useEditor } from '../hooks/editor.hooks';
 
-import { availableTemplates } from '@features/templates/domain/constants/available-templates.const';
-
 /**
  * Yaml preview component.
  */
 export function YamlPreview(): ReactNode {
-    const { config, errors, workflowConfig } = useEditor();
-    const templateData = availableTemplates.find((t) => t.id === config.template);
-    const fileName = templateData ? templateData.filename : 'workflow.yml';
+    const { template, workflowConfig, errors } = useEditor();
+    const fileName = template ? template.filename : 'workflow.yml';
 
     const workflowContent = yaml.stringify(workflowConfig);
 

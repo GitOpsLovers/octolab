@@ -1,10 +1,3 @@
-import { NodePrVerifyTemplateConfig, NpmPublishTemplateConfig } from '@features/templates/domain/models/template.models';
-
-/**
- * Editor configuration model
- */
-export type EditorConfig = NpmPublishTemplateConfig | NodePrVerifyTemplateConfig;
-
 /**
  * Step model
  */
