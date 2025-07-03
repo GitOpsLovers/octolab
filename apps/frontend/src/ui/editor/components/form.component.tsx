@@ -23,7 +23,7 @@ export function EditorForm(): ReactNode {
     };
 
     if (!templateConfig) {
-        return <p className="text-center text-text-muted">Loading template configuration...</p>;
+        return null;
     }
 
     return (

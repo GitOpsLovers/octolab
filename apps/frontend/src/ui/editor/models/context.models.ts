@@ -12,4 +12,5 @@ export interface EditorContextType {
     setErrors: React.Dispatch<React.SetStateAction<Record<string, string | null>>>;
     editingWorkflow: EditingWorkflow | null;
     resetTemplateConfig: () => void;
+    loading: boolean;
 }

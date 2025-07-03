@@ -50,6 +50,10 @@ export function YamlPreview(): ReactNode {
 
     const hasErrors = Object.keys(errors).length > 0;
 
+    if (!templateConfig) {
+        return null;
+    }
+
     return (
         <div className="w-full lg:w-1/2 flex flex-col h-full">
             <SyntaxHighlighter

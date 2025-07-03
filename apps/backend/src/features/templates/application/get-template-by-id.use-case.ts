@@ -8,12 +8,12 @@ import { Template } from '../domain/models/template.models';
  *
  * @returns Template.
  */
-export function getTemplateByIdUseCase(templateId: string): Template {
+export async function getTemplateByIdUseCase(templateId: string): Promise<Template> {
     const template = availableTemplates.find((t) => t.id === templateId);
 
     if (!template) {
         throw new Error(`Template ${templateId} not found`);
     }
 
-    return template;
+    return Promise.resolve(template);
 }

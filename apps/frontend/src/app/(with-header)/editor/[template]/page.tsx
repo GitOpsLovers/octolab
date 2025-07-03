@@ -1,4 +1,5 @@
 import { EditorForm } from '@ui/editor/components/form.component';
+import { LoadingEditor } from '@ui/editor/components/loading.component';
 import { EditorTitle } from '@ui/editor/components/title.component';
 import { YamlPreview } from '@ui/editor/components/yaml-preview.component';
 import { EditorProvider } from '@ui/editor/providers/editor.provider';
@@ -15,6 +16,8 @@ export default async function EditorPage({ params }: { params: Promise<{ templat
                 <EditorTitle />
 
                 <div className="flex flex-col lg:flex-row gap-6 w-full flex-1">
+                    <LoadingEditor />
+
                     <EditorForm />
 
                     <YamlPreview />

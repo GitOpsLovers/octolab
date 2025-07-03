@@ -6,6 +6,6 @@ import { Template } from '../domain/models/template.models';
  *
  * @returns List of available templates.
  */
-export function getTemplatesUseCase(): Template[] {
-    return availableTemplates;
+export async function getTemplatesUseCase(): Promise<Template[]> {
+    return Promise.resolve(availableTemplates);
 }

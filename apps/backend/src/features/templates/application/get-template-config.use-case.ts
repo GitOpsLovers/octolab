@@ -7,12 +7,12 @@ import { templatesDefaultConfigs, TempplateConfig } from '../domain/constants/te
  *
  * @returns Template configuration.
  */
-export function getTemplateConfigUseCase(template: string): TempplateConfig {
+export async function getTemplateConfigUseCase(template: string): Promise<TempplateConfig> {
     const config = templatesDefaultConfigs[template];
 
     if (!config) {
         throw new Error(`Template ${template} not found`);
     }
 
-    return config;
+    return Promise.resolve(config);
 }

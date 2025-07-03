@@ -5,9 +5,9 @@ import { getTemplateConfigUseCase } from '../../application/get-template-config.
 /**
  * Get template configuration controller.
  */
-export function getTemplateConfigController(req: Request, res: Response): void {
+export async function getTemplateConfigController(req: Request, res: Response): Promise<void> {
     const templateId = req.params.templateId;
-    const config = getTemplateConfigUseCase(templateId);
+    const config = await getTemplateConfigUseCase(templateId);
 
     res.json(config);
 }
