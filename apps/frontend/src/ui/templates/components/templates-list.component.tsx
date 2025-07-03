@@ -1,5 +1,5 @@
 'use client';
-
+import { useUser } from '@auth0/nextjs-auth0';
 import Link from 'next/link';
 import { useCookies } from 'next-client-cookies';
 import { useState, MouseEvent, useEffect } from 'react';
@@ -7,13 +7,14 @@ import * as FaIcons from 'react-icons/fa';
 
 import { useTemplates } from '../hooks/templates.hooks';
 
-import { RegisterModalForTemplatesList } from './register.modal.component';
+import { RegisterModalForTemplatesList } from './register-modal.component';
 
 /**
  * Templates list component.
  */
 export function TemplatesList() {
     const cookies = useCookies();
+    const { user } = useUser();
     const { templates, loading, error } = useTemplates();
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
@@ -44,7 +45,7 @@ export function TemplatesList() {
         e.preventDefault();
         setSelectedTemplateId(id);
 
-        if (skipRegisterModal) {
+        if (user || skipRegisterModal) {
             window.location.href = `/editor/${id}`;
         } else {
             setModalOpen(true);
