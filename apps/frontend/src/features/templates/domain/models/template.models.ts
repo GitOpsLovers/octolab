@@ -18,6 +18,7 @@ export interface Template {
  */
 export interface NpmPublishTemplateConfig {
     template: 'npm-publish';
+    runner: string;
     branch: string;
     nodeVersion: string;
     installCommand: string;
@@ -28,13 +29,14 @@ export interface NpmPublishTemplateConfig {
 }
 
 /**
- * Template configuration for Node CI workflow
+ * Template configuration for Node PR Verify workflow
  */
-export interface NodeCiTemplateConfig {
-    template: 'node-ci';
-    branch: string;
+export interface NodePrVerifyTemplateConfig {
+    template: 'node-pr-verify';
+    runner: string;
     nodeVersion: string;
     installCommand: string;
+    lintCommand: string;
     testCommand: string;
     buildCommand: string;
     workflowName: string;

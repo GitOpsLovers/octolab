@@ -10,6 +10,7 @@ import { useEditor } from '../hooks/editor.hooks';
 export function EditorForm(): ReactNode {
     const { config, setConfig, resetConfig, errors, setErrors } = useEditor();
 
+    // Validate a field
     const validateField = (field: string, value: string) => {
         if (!value.trim()) {
             setErrors((prev) => ({ ...prev, [field]: 'This field cannot be empty' }));
@@ -28,7 +29,7 @@ export function EditorForm(): ReactNode {
 
             {/* Workflow name */}
             <div className="mb-4">
-                <label className="block text-sm font-medium text-text mb-1">Workflow name</label>
+                <label className="block text-sm font-medium text-text mb-1">Name</label>
                 <input
                     type="text"
                     value={config.workflowName ?? ''}
@@ -43,21 +44,42 @@ export function EditorForm(): ReactNode {
                 {errors.workflowName && <p className="text-red-500 text-sm mt-1">{errors.workflowName}</p>}
             </div>
 
-            {/* Target Branch */}
+            {/* Runner */}
             <div className="mb-4">
-                <label className="block text-sm font-medium text-text mb-1">Target Branch</label>
-                <input
-                    type="text"
-                    value={config.branch}
+                <label className="block text-sm font-medium text-text mb-1">Runner</label>
+                <select
+                    value={config.runner}
                     onChange={(e) => {
                         const value = e.target.value;
-                        setConfig({ ...config, branch: value });
-                        validateField('branch', value);
+                        setConfig({ ...config, runner: value });
+                        validateField('runner', value);
                     }}
                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                />
-                {errors.branch && <p className="text-red-500 text-sm mt-1">{errors.branch}</p>}
+                >
+                    <option value="ubuntu-latest">ubuntu-latest</option>
+                    <option value="windows-latest">windows-latest</option>
+                    <option value="macos-latest">macos-latest</option>
+                </select>
+                {errors.runner && <p className="text-red-500 text-sm mt-1">{errors.runner}</p>}
             </div>
+
+            {/* Target Branch  */}
+            {config.template !== 'node-pr-verify' && (
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-text mb-1">Target Branch</label>
+                    <input
+                        type="text"
+                        value={config.branch}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setConfig({ ...config, branch: value });
+                            validateField('branch', value);
+                        }}
+                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                    />
+                    {errors.branch && <p className="text-red-500 text-sm mt-1">{errors.branch}</p>}
+                </div>
+            )}
 
             {/* Node version */}
             <div className="mb-4">
@@ -69,9 +91,10 @@ export function EditorForm(): ReactNode {
                     }}
                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                 >
+                    <option value="16">16</option>
                     <option value="18">18</option>
                     <option value="20">20</option>
-                    <option value="16">16</option>
+                    <option value="22">22</option>
                 </select>
             </div>
 
@@ -91,6 +114,25 @@ export function EditorForm(): ReactNode {
                 />
                 {errors.installCommand && <p className="text-red-500 text-sm mt-1">{errors.installCommand}</p>}
             </div>
+
+            {/* Lint command */}
+            {config.template === 'node-pr-verify' && (
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-text mb-1">Lint command</label>
+                    <input
+                        type="text"
+                        value={config.lintCommand ?? ''}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setConfig({ ...config, lintCommand: value });
+                            validateField('lintCommand', value);
+                        }}
+                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        placeholder="npm lint"
+                    />
+                    {errors.lintCommand && <p className="text-red-500 text-sm mt-1">{errors.lintCommand}</p>}
+                </div>
+            )}
 
             {/* Test command */}
             <div className="mb-4">

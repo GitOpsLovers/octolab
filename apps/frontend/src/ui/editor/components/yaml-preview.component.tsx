@@ -1,5 +1,6 @@
 'use client';
 
+import { ReactNode } from 'react';
 import toast from 'react-hot-toast';
 import { FaRegFileAlt } from 'react-icons/fa';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -8,76 +9,22 @@ import yaml from 'yaml';
 
 import { useEditor } from '../hooks/editor.hooks';
 
-import { Step } from '@features/editor/domain/editor.models';
 import { availableTemplates } from '@features/templates/domain/constants/available-templates.const';
 
 /**
  * Yaml preview component.
  */
-export function YamlPreview() {
-    const { config, errors } = useEditor();
+export function YamlPreview(): ReactNode {
+    const { config, errors, workflowConfig } = useEditor();
     const templateData = availableTemplates.find((t) => t.id === config.template);
     const fileName = templateData ? templateData.filename : 'workflow.yml';
 
-    const steps: Step[] = [
-        {
-            name: 'Checkout code',
-            uses: 'actions/checkout@v3',
-        },
-        {
-            name: 'Setup Node',
-            uses: 'actions/setup-node@v3',
-            with: {
-                'node-version': config.nodeVersion,
-                'registry-url': 'https://registry.npmjs.org/',
-            },
-        },
-        {
-            name: 'Install dependencies',
-            run: config.installCommand,
-        },
-        {
-            name: 'Run tests',
-            run: config.testCommand,
-        },
-        {
-            name: 'Build package',
-            run: config.buildCommand,
-        },
-    ];
+    const workflowContent = yaml.stringify(workflowConfig);
 
-    if (config.template === 'npm-publish') {
-        steps.push({
-            name: 'Publish to NPM',
-            run: 'npm publish',
-            env: {
-                NODE_AUTH_TOKEN: `\${{ secrets.${config.npmTokenSecret} }}`,
-            },
-        });
-    }
-
-    const fullConfig = {
-        name: config.workflowName,
-        on: {
-            push: {
-                branches: [config.branch],
-            },
-            ...(config.template === 'node-ci' && { pull_request: {} }),
-        },
-        jobs: {
-            [templateData?.jobName ?? 'build']: {
-                'runs-on': 'ubuntu-latest',
-                steps: steps,
-            },
-        },
-    };
-
-    const yamlContent = yaml.stringify(fullConfig);
-
-    // Copy to clipboard
+    // Copy YAML to clipboard
     const handleCopy = async () => {
         try {
-            await navigator.clipboard.writeText(yamlContent);
+            await navigator.clipboard.writeText(workflowContent);
             toast.success('YAML copied to clipboard!');
         } catch (err) {
             console.error('Failed to copy YAML', err);
@@ -88,7 +35,7 @@ export function YamlPreview() {
     // Download YAML file
     const handleDownload = () => {
         try {
-            const blob = new Blob([yamlContent], { type: 'text/yaml' });
+            const blob = new Blob([workflowContent], { type: 'text/yaml' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
@@ -118,7 +65,7 @@ export function YamlPreview() {
                     borderRadius: '0.375rem',
                 }}
             >
-                {yamlContent}
+                {workflowContent}
             </SyntaxHighlighter>
 
             {/* Informative banner */}

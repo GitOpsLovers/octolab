@@ -1,9 +1,9 @@
-import { NodeCiTemplateConfig, NpmPublishTemplateConfig } from '@features/templates/domain/models/template.models';
+import { NodePrVerifyTemplateConfig, NpmPublishTemplateConfig } from '@features/templates/domain/models/template.models';
 
 /**
  * Editor configuration model
  */
-export type EditorConfig = NpmPublishTemplateConfig | NodeCiTemplateConfig;
+export type EditorConfig = NpmPublishTemplateConfig | NodePrVerifyTemplateConfig;
 
 /**
  * Step model
