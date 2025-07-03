@@ -16,8 +16,7 @@ export function EditorForm(): ReactNode {
             setErrors((prev) => ({ ...prev, [field]: 'This field cannot be empty' }));
         } else {
             setErrors((prev) => {
-                const newErrors = { ...prev };
-                delete newErrors[field];
+                const newErrors = Object.fromEntries(Object.entries(prev).filter(([key]) => key !== field));
                 return newErrors;
             });
         }
