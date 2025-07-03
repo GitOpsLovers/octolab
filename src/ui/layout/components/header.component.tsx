@@ -3,7 +3,7 @@ import Link from 'next/link';
 /**
  * Header component
  */
-export default function Header() {
+export function Header() {
     return (
         <header className="w-full bg-surface px-6 py-4 flex items-center justify-between">
             <Link href="/" className="text-2xl font-bold text-primary transition">

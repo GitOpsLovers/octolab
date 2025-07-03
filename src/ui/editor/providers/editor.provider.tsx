@@ -3,7 +3,8 @@
 import { useState } from 'react';
 
 import { EditorContext } from '../contexts/editor.context';
-import { EditorConfig } from '../models/editor.models';
+
+import { EditorConfig } from '@features/editor/domain/editor.models';
 
 /**
  * Editor context provider

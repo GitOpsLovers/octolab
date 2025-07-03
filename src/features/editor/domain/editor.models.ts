@@ -1,4 +1,4 @@
-import { NodeCiTemplateConfig, NpmPublishTemplateConfig } from './templates.models';
+import { NodeCiTemplateConfig, NpmPublishTemplateConfig } from '@features/templates/domain/models/template.models';
 
 /**
  * Editor configuration model

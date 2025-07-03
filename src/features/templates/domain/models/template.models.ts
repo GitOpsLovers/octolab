@@ -1,4 +1,15 @@
 /**
+ * Template model
+ */
+export interface Template {
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    features: string[];
+}
+
+/**
  * Template configuration for NPM publish workflow
  */
 export interface NpmPublishTemplateConfig {

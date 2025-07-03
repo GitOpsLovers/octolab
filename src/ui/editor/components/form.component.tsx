@@ -7,7 +7,7 @@ import { useEditor } from '../hooks/editor.hooks';
 /**
  * Editor form component
  */
-export default function EditorForm(): ReactNode {
+export function EditorForm(): ReactNode {
     const { config, setConfig, resetConfig, errors, setErrors } = useEditor();
 
     const validateField = (field: string, value: string) => {

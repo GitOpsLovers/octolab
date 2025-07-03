@@ -1,4 +1,4 @@
-import { EditorConfig } from './editor.models';
+import { EditorConfig } from '@features/editor/domain/editor.models';
 
 /**
  * Editor context provider model

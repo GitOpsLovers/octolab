@@ -7,7 +7,7 @@ export default function Home() {
             <p className="text-lg text-text-muted text-center max-w-xl mb-8">
                 Generate ready-to-use YAML files without the need to write anything by hand. Get started now and speed up your CI/CD.
             </p>
-            <Link href="/templates" className="bg-primary text-black px-6 py-3 rounded-md text-lg font-semibold text-center hover:bg-primary-hover transition">
+            <Link href="/templates" className="bg-primary text-white px-6 py-3 rounded-md text-lg font-semibold text-center hover:bg-primary-hover transition">
                 Create Workflow
             </Link>
         </main>

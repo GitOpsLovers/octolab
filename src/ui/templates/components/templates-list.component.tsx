@@ -1,29 +1,14 @@
 import Link from 'next/link';
 
-const templates = [
-    {
-        id: 'node-ci',
-        name: 'Node.js CI',
-        description: 'Install dependencies, run tests and build for Node.js.',
-        icon: '🟢',
-        features: ['Automated tests', 'Compatible with Node 16/18/20', 'Build before merge'],
-    },
-    {
-        id: 'npm-publish',
-        name: 'Publish to NPM',
-        description: 'Workflow to publish your package to NPM.',
-        icon: '📦',
-        features: ['Configure NPM token', 'Test and build before publish', 'Compatible with monorepos'],
-    },
-];
+import { availableTemplates } from '@features/templates/domain/constants/available-templates.const';
 
 /**
  * Templates list component.
  */
-export default function TemplatesList() {
+export function TemplatesList() {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {templates.map((template) => (
+            {availableTemplates.map((template) => (
                 <div key={template.id} className="bg-surface rounded-xl shadow hover:shadow-lg transition border border-border flex flex-col">
                     <div className="p-6 flex flex-col flex-1">
                         <div className="text-5xl mb-4">{template.icon}</div>

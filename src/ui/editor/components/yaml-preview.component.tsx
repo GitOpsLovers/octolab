@@ -6,12 +6,13 @@ import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import yaml from 'yaml';
 
 import { useEditor } from '../hooks/editor.hooks';
-import { Step } from '../models/editor.models';
+
+import { Step } from '@features/editor/domain/editor.models';
 
 /**
  * Yaml preview component.
  */
-export default function YamlPreview() {
+export function YamlPreview() {
     const { config, errors } = useEditor();
 
     const steps: Step[] = [
