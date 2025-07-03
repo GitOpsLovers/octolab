@@ -6,7 +6,9 @@ export interface Template {
     name: string;
     description: string;
     icon: string;
+    iconColor: string;
     features: string[];
+    filename: string;
 }
 
 /**

@@ -1,6 +1,7 @@
 'use client';
 
 import toast from 'react-hot-toast';
+import { FaRegFileAlt } from 'react-icons/fa';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import yaml from 'yaml';
@@ -8,12 +9,15 @@ import yaml from 'yaml';
 import { useEditor } from '../hooks/editor.hooks';
 
 import { Step } from '@features/editor/domain/editor.models';
+import { availableTemplates } from '@features/templates/domain/constants/available-templates.const';
 
 /**
  * Yaml preview component.
  */
 export function YamlPreview() {
     const { config, errors } = useEditor();
+    const templateData = availableTemplates.find((t) => t.id === config.template);
+    const fileName = templateData ? templateData.filename : 'workflow.yml';
 
     const steps: Step[] = [
         {
@@ -70,7 +74,7 @@ export function YamlPreview() {
 
     const yamlContent = yaml.stringify(fullConfig);
 
-    // Copy YAML to clipboard
+    // Copy to clipboard
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(yamlContent);
@@ -81,14 +85,14 @@ export function YamlPreview() {
         }
     };
 
-    // Download YAML as a file
+    // Download YAML file
     const handleDownload = () => {
         try {
             const blob = new Blob([yamlContent], { type: 'text/yaml' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'workflow.yml';
+            link.download = fileName;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -117,7 +121,19 @@ export function YamlPreview() {
                 {yamlContent}
             </SyntaxHighlighter>
 
-            <div className="flex gap-2 mt-auto">
+            {/* Informative banner */}
+            <div className="bg-background border border-border px-4 py-3 rounded-md mb-4 flex items-center gap-2">
+                <FaRegFileAlt className="w-5 h-5 text-primary" />
+
+                <div>
+                    <p className="text-sm text-text font-medium">
+                        Save this file as <code className="bg-muted px-1 py-0.5 rounded">.github/workflows/{fileName}</code>
+                    </p>
+                    <p className="text-xs text-text/70">Place this file in your repository to enable GitHub Actions.</p>
+                </div>
+            </div>
+
+            <div className="flex gap-2 mt-auto mb-4">
                 <button
                     onClick={handleCopy}
                     disabled={hasErrors}

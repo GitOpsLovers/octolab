@@ -23,7 +23,7 @@ export function EditorForm(): ReactNode {
     };
 
     return (
-        <div className="w-full lg:w-1/2 bg-surface border border-border p-6 rounded-lg shadow flex flex-col">
+        <div className="w-full lg:w-1/2 bg-surface border border-border p-6 rounded-lg shadow flex flex-col mb-4">
             <h2 className="text-xl font-bold text-text mb-4">Edit Configuration</h2>
 
             <div className="mb-4">
