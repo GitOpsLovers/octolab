@@ -2,9 +2,9 @@ import { CreateWorkflowDto } from '../dtos/create-workflow.dto';
 import { WorkflowConfig } from '../models/editor.models';
 
 /**
- * Workflows repository.
+ * Editor repository.
  */
-export interface WorkflowsRepository {
+export interface EditorRepository {
     /**
      * Get workflow configuration.
      *

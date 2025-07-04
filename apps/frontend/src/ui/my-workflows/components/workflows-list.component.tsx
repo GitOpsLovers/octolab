@@ -1,39 +1,29 @@
 'use client';
 
 import Link from 'next/link';
+import { FaSpinner } from 'react-icons/fa';
 import { LuWorkflow } from 'react-icons/lu';
+
+import { useMyWorkflows } from '../hooks/my-workflows.hooks';
 
 /**
  * Workflows list component.
  */
 export function WorkflowsList() {
-    const workflows = [
-        {
-            id: '1',
-            name: 'Workflow 1',
-            updatedAt: new Date().toISOString(),
-        },
-        {
-            id: '2',
-            name: 'Workflow 2',
-            updatedAt: new Date().toISOString(),
-        },
-        {
-            id: '3',
-            name: 'Workflow 3',
-            updatedAt: new Date().toISOString(),
-        },
-        {
-            id: '4',
-            name: 'Workflow 4',
-            updatedAt: new Date().toISOString(),
-        },
-        {
-            id: '5',
-            name: 'Workflow 5',
-            updatedAt: new Date().toISOString(),
-        },
-    ];
+    const { workflows, loading, error } = useMyWorkflows();
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-text-muted">
+                <FaSpinner className="w-8 h-8 animate-spin mb-4 text-primary" />
+                <p>Loading workflows...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return <p className="text-center text-red-500">Error loading workflows: {error}</p>;
+    }
 
     return (
         <>

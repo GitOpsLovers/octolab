@@ -11,7 +11,7 @@ import yaml from 'yaml';
 import { useEditor } from '../hooks/editor.hooks';
 
 import { createWorkflowUseCase } from '@features/editor/application/save-workflow.use-case';
-import { workflowsApiRepository } from '@features/editor/infrastructure/workflows-api.repository';
+import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
 import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 import { useCurrentUser } from '@ui/user/hooks/user.hooks';
 
@@ -63,7 +63,7 @@ export function YamlPreview(): ReactNode {
         if (!currentUser || !editingWorkflow || !template || !authToken) return;
 
         try {
-            const repository = workflowsApiRepository(authToken);
+            const repository = editorApiRepository(authToken);
 
             const response = await createWorkflowUseCase(repository, {
                 id: workflowId,

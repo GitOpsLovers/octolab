@@ -10,10 +10,11 @@ import { UpdateWorkflowDto } from '@features/workflows/domain/dtos/update-workfl
  * Workflows Supabase database repository.
  */
 export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = {
-    getWorkflows: async (): Promise<DatabaseWorkflow[]> => {
+    getWorkflows: async (userId: string): Promise<DatabaseWorkflow[]> => {
         const supabase = getSupabaseClient();
+
         try {
-            const { data, error } = await supabase.from('workflows').select();
+            const { data, error } = await supabase.from('workflows').select().eq('user_id', userId);
 
             if (error) {
                 throw new DatabaseError('Failed to retrieve workflows from database', DatabaseErrorType.DATABASE_CONNECTION_ERROR);
@@ -28,8 +29,10 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
                 userId: item.user_id,
                 name: item.name,
                 description: item.description,
-                yaml: item.content,
-                data: item.config,
+                yaml: item.yaml,
+                data: item.data,
+                createdAt: item.created_at,
+                updatedAt: item.updated_at,
             }));
 
             return workflows as DatabaseWorkflow[];
@@ -58,6 +61,8 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
                 description: data.description,
                 yaml: data.content,
                 data: data.config,
+                createdAt: data.created_at,
+                updatedAt: data.updated_at,
             };
 
             return workflow as DatabaseWorkflow;
@@ -92,6 +97,8 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
                 description: data.description,
                 yaml: data.content,
                 data: data.config,
+                createdAt: data.created_at,
+                updatedAt: data.updated_at,
             };
 
             return workflow as DatabaseWorkflow;
@@ -125,6 +132,8 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
                 description: data.description,
                 yaml: data.content,
                 data: data.config,
+                createdAt: data.created_at,
+                updatedAt: data.updated_at,
             };
 
             return workflow as DatabaseWorkflow;

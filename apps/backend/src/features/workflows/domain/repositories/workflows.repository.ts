@@ -7,11 +7,13 @@ import { DatabaseWorkflow } from '../models/workflows.models';
  */
 export interface WorkflowsDatabaseRepository {
     /**
-     * Get all workflows.
+     * Get all workflows for a user.
+     *
+     * @param userId User id
      *
      * @returns Database workflows
      */
-    getWorkflows: () => Promise<DatabaseWorkflow[]>;
+    getWorkflows: (userId: string) => Promise<DatabaseWorkflow[]>;
 
     /**
      * Get workflow by id.

@@ -5,8 +5,11 @@ export interface DatabaseWorkflow {
     id: string;
     userId: string;
     name: string;
+    description: string;
     yaml: string;
     data: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 /**
@@ -64,4 +67,14 @@ export interface Step {
     uses?: string;
     with?: Record<string, string>;
     env?: Record<string, string>;
+}
+
+/**
+ * User workflow model
+ */
+export interface UserWorkflow {
+    id: string;
+    name: string;
+    description: string;
+    updatedAt: string;
 }

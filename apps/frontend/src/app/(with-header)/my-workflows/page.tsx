@@ -1,4 +1,5 @@
 import { WorkflowsList } from '@ui/my-workflows/components/workflows-list.component';
+import { MyWorkflowsProvider } from '@ui/my-workflows/providers/my-workflows.provider';
 
 /**
  * My workflows page
@@ -6,7 +7,9 @@ import { WorkflowsList } from '@ui/my-workflows/components/workflows-list.compon
 export default function MyWorkflowsPage() {
     return (
         <main className="p-8">
-            <WorkflowsList />
+            <MyWorkflowsProvider>
+                <WorkflowsList />
+            </MyWorkflowsProvider>
         </main>
     );
 }

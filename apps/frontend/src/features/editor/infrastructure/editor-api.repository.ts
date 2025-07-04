@@ -1,10 +1,10 @@
 import { WorkflowConfig } from '../domain/models/editor.models';
-import { WorkflowsRepository } from '../domain/repositories/workflows.repository';
+import { EditorRepository } from '../domain/repositories/editor.repository';
 
 /**
- * Workflows Api Repository
+ * Editor Api Repository
  */
-export const workflowsApiRepository = (token: string): WorkflowsRepository => ({
+export const editorApiRepository = (token: string): EditorRepository => ({
     getWorkflowConfig: async (id: string): Promise<WorkflowConfig> => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/workflows/${id}/config`, {
             method: 'GET',

@@ -12,7 +12,7 @@ const workflowsRoutes = Router();
 
 workflowsRoutes.get('/workflows/:workflowId', getWorkflowByIdController);
 workflowsRoutes.get('/workflows/:templateId/config', getWorkflowConfigController);
-workflowsRoutes.get('/workflows', getWorkflowsController);
+workflowsRoutes.get('/workflows', authClient, currentUserMiddleware, getWorkflowsController);
 workflowsRoutes.post('/workflows', authClient, currentUserMiddleware, createOrEditWorkflowController);
 
 export { workflowsRoutes };

@@ -7,10 +7,11 @@ import { EditorContext } from '../contexts/editor.context';
 import { generateEditingWorkflowFromConfigUseCase } from '@features/editor/application/generate-editing-workflow-from-config.use-case';
 import { getWorkflowConfigUseCase } from '@features/editor/application/get-workflow-config.use-case';
 import { WorkflowConfig } from '@features/editor/domain/models/editor.models';
-import { workflowsApiRepository } from '@features/editor/infrastructure/workflows-api.repository';
+import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
 import { getOneTemplateUseCase } from '@features/templates/application/get-one-template.use-case';
 import { Template } from '@features/templates/domain/models/template.models';
 import { templatesApiRepository } from '@features/templates/infrastructure/templates-api.repository';
+import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 
 interface EditorProviderProps {
     children: ReactNode;
@@ -21,6 +22,7 @@ interface EditorProviderProps {
  * Editor context provider
  */
 export function EditorProvider({ children, templateId }: EditorProviderProps) {
+    const { authToken } = useAuthUser();
     const [errors, setErrors] = useState<Record<string, string | null>>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [template, setTemplate] = useState<Template | null>(null);
@@ -44,9 +46,11 @@ export function EditorProvider({ children, templateId }: EditorProviderProps) {
 
     // Fetch workflow configuration
     useEffect(() => {
+        if (!authToken || !templateId) return;
+
         const fetchWorkflowConfig = async () => {
             try {
-                const repository = workflowsApiRepository();
+                const repository = editorApiRepository(authToken);
                 const workflowConfigFromApi = await getWorkflowConfigUseCase(repository, templateId);
                 const initialWorkflow: WorkflowConfig = {
                     ...workflowConfigFromApi,
@@ -64,7 +68,7 @@ export function EditorProvider({ children, templateId }: EditorProviderProps) {
         };
 
         fetchWorkflowConfig();
-    }, [templateId, template]);
+    }, [templateId, template, authToken]);
 
     // Generate the editing workflow yaml for the preview
     const editingWorkflowYaml = useMemo(() => {
