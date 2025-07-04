@@ -1,4 +1,4 @@
-import { Template, TemplateConfig } from '../models/template.models';
+import { Template } from '../models/template.models';
 
 /**
  * Templates repository.
@@ -19,13 +19,4 @@ export interface TemplatesRepository {
      * @returns Template.
      */
     getOne: (id: string) => Promise<Template>;
-
-    /**
-     * Get template configuration.
-     *
-     * @param id Template id.
-     *
-     * @returns Template configuration.
-     */
-    getTemplateConfig: (id: string) => Promise<TemplateConfig>;
 }

@@ -8,7 +8,7 @@ import { useEditor } from '../hooks/editor.hooks';
  * Editor form component
  */
 export function EditorForm(): ReactNode {
-    const { templateConfig, setTemplateConfig, resetTemplateConfig, errors, setErrors } = useEditor();
+    const { editingWorkflow, setEditingWorkflow, resetEditingWorkflow, errors, setErrors } = useEditor();
 
     // Validate a field
     const validateField = (field: string, value: string) => {
@@ -22,7 +22,7 @@ export function EditorForm(): ReactNode {
         }
     };
 
-    if (!templateConfig) {
+    if (!editingWorkflow) {
         return null;
     }
 
@@ -35,10 +35,10 @@ export function EditorForm(): ReactNode {
                 <label className="block text-sm font-medium text-text mb-1">Name</label>
                 <input
                     type="text"
-                    value={templateConfig.workflowName ?? ''}
+                    value={editingWorkflow.workflowName ?? ''}
                     onChange={(e) => {
                         const value = e.target.value;
-                        setTemplateConfig({ ...templateConfig, workflowName: value });
+                        setEditingWorkflow({ ...editingWorkflow, workflowName: value });
                         validateField('workflowName', value);
                     }}
                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -51,10 +51,10 @@ export function EditorForm(): ReactNode {
             <div className="mb-4">
                 <label className="block text-sm font-medium text-text mb-1">Runner</label>
                 <select
-                    value={templateConfig.runner}
+                    value={editingWorkflow.runner}
                     onChange={(e) => {
                         const value = e.target.value;
-                        setTemplateConfig({ ...templateConfig, runner: value });
+                        setEditingWorkflow({ ...editingWorkflow, runner: value });
                         validateField('runner', value);
                     }}
                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -67,15 +67,15 @@ export function EditorForm(): ReactNode {
             </div>
 
             {/* Target Branch  */}
-            {templateConfig.id !== 'node-pr-verify' && (
+            {editingWorkflow.id !== 'node-pr-verify' && (
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-text mb-1">Target Branch</label>
                     <input
                         type="text"
-                        value={templateConfig.branch}
+                        value={editingWorkflow.branch}
                         onChange={(e) => {
                             const value = e.target.value;
-                            setTemplateConfig({ ...templateConfig, branch: value });
+                            setEditingWorkflow({ ...editingWorkflow, branch: value });
                             validateField('branch', value);
                         }}
                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -88,9 +88,9 @@ export function EditorForm(): ReactNode {
             <div className="mb-4">
                 <label className="block text-sm font-medium text-text mb-1">Node version</label>
                 <select
-                    value={templateConfig.nodeVersion}
+                    value={editingWorkflow.nodeVersion}
                     onChange={(e) => {
-                        setTemplateConfig({ ...templateConfig, nodeVersion: e.target.value });
+                        setEditingWorkflow({ ...editingWorkflow, nodeVersion: e.target.value });
                     }}
                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                 >
@@ -106,10 +106,10 @@ export function EditorForm(): ReactNode {
                 <label className="block text-sm font-medium text-text mb-1">Installation command</label>
                 <input
                     type="text"
-                    value={templateConfig.installCommand ?? ''}
+                    value={editingWorkflow.installCommand ?? ''}
                     onChange={(e) => {
                         const value = e.target.value;
-                        setTemplateConfig({ ...templateConfig, installCommand: value });
+                        setEditingWorkflow({ ...editingWorkflow, installCommand: value });
                         validateField('installCommand', value);
                     }}
                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -119,15 +119,15 @@ export function EditorForm(): ReactNode {
             </div>
 
             {/* Lint command */}
-            {templateConfig.id === 'node-pr-verify' && (
+            {editingWorkflow.id === 'node-pr-verify' && (
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-text mb-1">Lint command</label>
                     <input
                         type="text"
-                        value={templateConfig.lintCommand ?? ''}
+                        value={editingWorkflow.lintCommand ?? ''}
                         onChange={(e) => {
                             const value = e.target.value;
-                            setTemplateConfig({ ...templateConfig, lintCommand: value });
+                            setEditingWorkflow({ ...editingWorkflow, lintCommand: value });
                             validateField('lintCommand', value);
                         }}
                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -142,10 +142,10 @@ export function EditorForm(): ReactNode {
                 <label className="block text-sm font-medium text-text mb-1">Test command</label>
                 <input
                     type="text"
-                    value={templateConfig.testCommand ?? ''}
+                    value={editingWorkflow.testCommand ?? ''}
                     onChange={(e) => {
                         const value = e.target.value;
-                        setTemplateConfig({ ...templateConfig, testCommand: value });
+                        setEditingWorkflow({ ...editingWorkflow, testCommand: value });
                         validateField('testCommand', value);
                     }}
                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -159,10 +159,10 @@ export function EditorForm(): ReactNode {
                 <label className="block text-sm font-medium text-text mb-1">Build command</label>
                 <input
                     type="text"
-                    value={templateConfig.buildCommand ?? ''}
+                    value={editingWorkflow.buildCommand ?? ''}
                     onChange={(e) => {
                         const value = e.target.value;
-                        setTemplateConfig({ ...templateConfig, buildCommand: value });
+                        setEditingWorkflow({ ...editingWorkflow, buildCommand: value });
                         validateField('buildCommand', value);
                     }}
                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -172,15 +172,15 @@ export function EditorForm(): ReactNode {
             </div>
 
             {/* NPM Token Secret Name */}
-            {templateConfig.id === 'npm-publish' && (
+            {editingWorkflow.id === 'npm-publish' && (
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-text mb-1">NPM Token Secret Name</label>
                     <input
                         type="text"
-                        value={templateConfig.npmTokenSecret ?? ''}
+                        value={editingWorkflow.npmTokenSecret ?? ''}
                         onChange={(e) => {
                             const value = e.target.value;
-                            setTemplateConfig({ ...templateConfig, npmTokenSecret: value });
+                            setEditingWorkflow({ ...editingWorkflow, npmTokenSecret: value });
                             validateField('npmTokenSecret', value);
                         }}
                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -194,7 +194,7 @@ export function EditorForm(): ReactNode {
             <button
                 type="button"
                 onClick={() => {
-                    resetTemplateConfig();
+                    resetEditingWorkflow();
                     setErrors({});
                 }}
                 className="mt-2 border border-secondary font-semibold text-secondary px-4 py-2 rounded-md cursor-pointer hover:bg-secondary/80 transition self-start"

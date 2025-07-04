@@ -1,13 +1,13 @@
-import { EditingWorkflow } from '../models/editor.models';
-
-import { TemplateConfig } from '@features/templates/domain/models/template.models';
+import { EditingWorkflow, EditingWorkflowYaml } from '../models/editor.models';
 
 /**
  * Create workflow DTO
  */
 export interface CreateWorkflowDto {
     id: string;
+    templateId: string;
     name: string;
-    content: EditingWorkflow;
-    config: TemplateConfig;
+    description: string;
+    yaml: EditingWorkflowYaml;
+    data: EditingWorkflow;
 }

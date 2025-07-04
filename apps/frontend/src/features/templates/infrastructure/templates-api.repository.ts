@@ -1,4 +1,4 @@
-import { Template, TemplateConfig } from '../domain/models/template.models';
+import { Template } from '../domain/models/template.models';
 import { TemplatesRepository } from '../domain/repositories/templates.repository';
 
 /**
@@ -29,20 +29,6 @@ export const templatesApiRepository = (): TemplatesRepository => ({
 
         if (!response.ok) {
             throw new Error('Error fetching template');
-        }
-
-        return response.json();
-    },
-    getTemplateConfig: async (id: string): Promise<TemplateConfig> => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/templates/${id}/config`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error('Error fetching template configuration');
         }
 
         return response.json();

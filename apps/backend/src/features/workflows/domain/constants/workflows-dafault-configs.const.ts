@@ -1,14 +1,14 @@
-import { NodePrVerifyTemplateConfig, NpmPublishTemplateConfig } from '../models/template.models';
+import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig } from '../models/workflows.models';
 
 /**
  * Editor configuration model
  */
-export type TemplateConfig = NpmPublishTemplateConfig | NodePrVerifyTemplateConfig;
+export type EditingWorkflow = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig;
 
 /**
- * Default configurations for each template.
+ * Default configurations for each workflow.
  */
-export const templatesDefaultConfigs: Record<string, TemplateConfig> = {
+export const workflowsDefaultConfigs: Record<string, EditingWorkflow> = {
     'npm-publish': {
         id: 'npm-publish',
         runner: 'ubuntu-latest',

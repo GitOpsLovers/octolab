@@ -77,6 +77,10 @@
   .modal-animate-out {
     animation: modal-fade-out 0.2s ease-out forwards;
   }
+
+  .font-montserrat {
+    font-family: var(--font-montserrat), sans-serif;
+  }
 }
 
 body {

@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-unassigned-import
 import 'dotenv/config';
+
 import bodyParser from 'body-parser';
 import express from 'express';
 import helmet from 'helmet';
@@ -23,13 +24,7 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(helmet());
-app.use(
-    bodyParser.json({
-        verify: (req, res, buf) => {
-            (req as express.Request).rawBody = buf.toString('utf8');
-        },
-    }),
-);
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(configureCorsMiddleware(allowedOrigins));
 

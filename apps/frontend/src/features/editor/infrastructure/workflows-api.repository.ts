@@ -1,9 +1,24 @@
+import { WorkflowConfig } from '../domain/models/editor.models';
 import { WorkflowsRepository } from '../domain/repositories/workflows.repository';
 
 /**
  * Workflows Api Repository
  */
 export const workflowsApiRepository = (): WorkflowsRepository => ({
+    getWorkflowConfig: async (id: string): Promise<WorkflowConfig> => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/workflows/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching workflow configuration');
+        }
+
+        return response.json();
+    },
     create: async (createDto: any): Promise<any> => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/workflows`, {
             method: 'POST',

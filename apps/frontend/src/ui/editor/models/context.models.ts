@@ -1,16 +1,17 @@
-import { EditingWorkflow } from '@features/editor/domain/models/editor.models';
-import { Template, TemplateConfig } from '@features/templates/domain/models/template.models';
+import { EditingWorkflow, EditingWorkflowYaml } from '@features/editor/domain/models/editor.models';
+import { Template } from '@features/templates/domain/models/template.models';
 
 /**
  * Editor context provider model
  */
 export interface EditorContextType {
     template: Template | null;
-    templateConfig: TemplateConfig | null;
-    setTemplateConfig: (template: TemplateConfig) => void;
+    editingWorkflow: EditingWorkflow | null;
+    setEditingWorkflow: (workflow: EditingWorkflow) => void;
     errors: Record<string, string | null>;
     setErrors: React.Dispatch<React.SetStateAction<Record<string, string | null>>>;
-    editingWorkflow: EditingWorkflow | null;
-    resetTemplateConfig: () => void;
+    editingWorkflowYaml: EditingWorkflowYaml | null;
+    resetEditingWorkflow: () => void;
     loading: boolean;
+    setWorkflowNameAndDescription: (name: string, description: string) => void;
 }

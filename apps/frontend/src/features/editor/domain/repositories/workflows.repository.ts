@@ -1,9 +1,19 @@
 import { CreateWorkflowDto } from '../dtos/create-workflow.dto';
+import { WorkflowConfig } from '../models/editor.models';
 
 /**
  * Workflows repository.
  */
 export interface WorkflowsRepository {
+    /**
+     * Get workflow configuration.
+     *
+     * @param id Template id.
+     *
+     * @returns Workflow configuration.
+     */
+    getWorkflowConfig: (id: string) => Promise<WorkflowConfig>;
+
     /**
      * Create a new workflow.
      *

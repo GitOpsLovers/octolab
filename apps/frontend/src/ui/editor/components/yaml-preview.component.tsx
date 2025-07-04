@@ -20,11 +20,11 @@ import { useCurrentUser } from '@ui/user/hooks/user.hooks';
 export function YamlPreview(): ReactNode {
     const { uuid } = useParams();
     const { currentUser } = useCurrentUser();
-    const { templateConfig, editingWorkflow, errors } = useEditor();
-    const fileName = templateConfig ? templateConfig.filename : 'workflow.yml';
+    const { editingWorkflow, editingWorkflowYaml, errors, template } = useEditor();
+    const fileName = editingWorkflow ? editingWorkflow.filename : 'workflow.yml';
     const workflowId = uuid as string;
 
-    const workflowContent = yaml.stringify(editingWorkflow);
+    const workflowContent = yaml.stringify(editingWorkflowYaml);
 
     // Copy YAML to clipboard
     const handleCopy = async () => {
@@ -58,19 +58,21 @@ export function YamlPreview(): ReactNode {
 
     // Save editing workflow to workspace
     const saveToWorkspace = async () => {
-        if (!currentUser || !templateConfig) return;
+        if (!currentUser || !editingWorkflow || !template) return;
 
         try {
             const repository = workflowsApiRepository();
 
-            await createWorkflowUseCase(repository, {
+            const response = await createWorkflowUseCase(repository, {
                 id: workflowId,
-                name: 'My workflow',
-                content: yaml.parse(workflowContent),
-                config: templateConfig,
+                templateId: editingWorkflow.id,
+                name: editingWorkflow.name ?? template.name,
+                description: editingWorkflow.description ?? template.description,
+                yaml: yaml.parse(workflowContent),
+                data: editingWorkflow,
             });
 
-            toast.success('Workflow saved to workspace!');
+            toast.success(response.message);
         } catch (err) {
             console.error('Failed to save workflow', err);
             toast.error('Error saving workflow');
@@ -79,7 +81,7 @@ export function YamlPreview(): ReactNode {
 
     const hasErrors = Object.keys(errors).length > 0;
 
-    if (!templateConfig) {
+    if (!editingWorkflow) {
         return null;
     }
 

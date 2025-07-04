@@ -1,6 +1,4 @@
-import { EditingWorkflow, Step } from '../domain/models/editor.models';
-
-import { TemplateConfig } from '@features/templates/domain/models/template.models';
+import { EditingWorkflow, EditingWorkflowYaml, Step } from '../domain/models/editor.models';
 
 /**
  * Generate editing workflow from template configuration use case.
@@ -9,7 +7,7 @@ import { TemplateConfig } from '@features/templates/domain/models/template.model
  *
  * @returns Editing workflow
  */
-export function generateEditingWorkflowFromConfigUseCase(templateConfig: TemplateConfig): EditingWorkflow {
+export function generateEditingWorkflowFromConfigUseCase(templateConfig: EditingWorkflow): EditingWorkflowYaml {
     const on = templateConfig.id === 'node-pr-verify' ? { pull_request: {} } : { push: { branches: [templateConfig.branch] } };
     const steps: Step[] = [
         {
