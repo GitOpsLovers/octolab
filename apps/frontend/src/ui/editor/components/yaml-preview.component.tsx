@@ -12,12 +12,14 @@ import { useEditor } from '../hooks/editor.hooks';
 
 import { createWorkflowUseCase } from '@features/editor/application/save-workflow.use-case';
 import { workflowsApiRepository } from '@features/editor/infrastructure/workflows-api.repository';
+import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 import { useCurrentUser } from '@ui/user/hooks/user.hooks';
 
 /**
  * Yaml preview component.
  */
 export function YamlPreview(): ReactNode {
+    const { authToken } = useAuthUser();
     const { uuid } = useParams();
     const { currentUser } = useCurrentUser();
     const { editingWorkflow, editingWorkflowYaml, errors, template } = useEditor();
@@ -58,10 +60,10 @@ export function YamlPreview(): ReactNode {
 
     // Save editing workflow to workspace
     const saveToWorkspace = async () => {
-        if (!currentUser || !editingWorkflow || !template) return;
+        if (!currentUser || !editingWorkflow || !template || !authToken) return;
 
         try {
-            const repository = workflowsApiRepository();
+            const repository = workflowsApiRepository(authToken);
 
             const response = await createWorkflowUseCase(repository, {
                 id: workflowId,

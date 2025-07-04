@@ -4,7 +4,7 @@ import { WorkflowsRepository } from '../domain/repositories/workflows.repository
 /**
  * Workflows Api Repository
  */
-export const workflowsApiRepository = (): WorkflowsRepository => ({
+export const workflowsApiRepository = (token: string): WorkflowsRepository => ({
     getWorkflowConfig: async (id: string): Promise<WorkflowConfig> => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/workflows/${id}/config`, {
             method: 'GET',
@@ -24,6 +24,7 @@ export const workflowsApiRepository = (): WorkflowsRepository => ({
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(createDto),
         });

@@ -17,3 +17,10 @@ export interface UserIdp {
     phone_number: string;
     user_metadata: Record<string, any>;
 }
+
+/**
+ * User model
+ */
+export interface User {
+    id: string;
+}

@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 
 import { auth0Client } from '@features/authentication/infrastructure/auth0/client.auth0';
 import { Header } from '@ui/layout/components/header.component';
+import { AuthUserProvider } from '@ui/user/providers/auth-user.provider';
 import { CurrentUserProvider } from '@ui/user/providers/user.provider';
 
 /**
@@ -10,14 +11,16 @@ import { CurrentUserProvider } from '@ui/user/providers/user.provider';
  */
 export default async function WithHeaderLayout({ children }: { children: ReactNode }) {
     const session = await auth0Client.getSession();
-    const user = session?.user ?? null;
+    const currentUser = session?.user ?? null;
 
     return (
-        <CurrentUserProvider currentUser={user}>
-            <CookiesProvider>
-                <Header />
-                {children}
-            </CookiesProvider>
+        <CurrentUserProvider currentUser={currentUser}>
+            <AuthUserProvider>
+                <CookiesProvider>
+                    <Header />
+                    {children}
+                </CookiesProvider>
+            </AuthUserProvider>
         </CurrentUserProvider>
     );
 }

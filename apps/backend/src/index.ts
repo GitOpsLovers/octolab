@@ -9,9 +9,20 @@ import { initSupabaseClient } from '@core/infrastructure/database/supabase.clien
 import { configureCorsMiddleware } from '@core/infrastructure/express/cors-config.express';
 import { checkRequiredEnvVariables } from '@core/infrastructure/express/env-config.express';
 import { templatesRoutes } from '@features/templates/ui/routes/templates.routes';
+import { usersRoutes } from '@features/users/ui/routes/users.routes';
 import { workflowsRoutes } from '@features/workflows/ui/routes/workflows.routes';
 
-const requiredEnvVars = ['BACKEND_PORT', 'CORS_ALLOWED_ORIGINS', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET'];
+const requiredEnvVars = [
+    'BACKEND_PORT',
+    'CORS_ALLOWED_ORIGINS',
+    'SUPABASE_URL',
+    'SUPABASE_SERVICE_ROLE_KEY',
+    'AUTH0_DOMAIN',
+    'AUTH0_CLIENT_ID',
+    'AUTH0_CLIENT_SECRET',
+    'AUTH0_AUDIENCE',
+    'AUTH0_AUDIENCE',
+];
 const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(',') ?? [];
 
 checkRequiredEnvVariables(requiredEnvVars);
@@ -29,6 +40,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(configureCorsMiddleware(allowedOrigins));
 
 // Routing
+app.use('/api', usersRoutes);
 app.use('/api', templatesRoutes);
 app.use('/api', workflowsRoutes);
 
