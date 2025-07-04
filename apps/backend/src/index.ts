@@ -11,7 +11,7 @@ import { checkRequiredEnvVariables } from '@core/infrastructure/express/env-conf
 import { templatesRoutes } from '@features/templates/ui/routes/templates.routes';
 import { workflowsRoutes } from '@features/workflows/ui/routes/workflows.routes';
 
-const requiredEnvVars = ['BACKEND_PORT', 'CORS_ALLOWED_ORIGINS', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY'];
+const requiredEnvVars = ['BACKEND_PORT', 'CORS_ALLOWED_ORIGINS', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'AUTH0_DOMAIN', 'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_SECRET'];
 const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(',') ?? [];
 
 checkRequiredEnvVariables(requiredEnvVars);

@@ -1,4 +1,5 @@
 import { CreateWorkflowDto } from '../dtos/create-workflow.dto';
+import { UpdateWorkflowDto } from '../dtos/update-workflow.dto';
 import { DatabaseWorkflow } from '../models/workflows.models';
 
 /**
@@ -6,11 +7,36 @@ import { DatabaseWorkflow } from '../models/workflows.models';
  */
 export interface WorkflowsDatabaseRepository {
     /**
+     * Get all workflows.
+     *
+     * @returns Database workflows
+     */
+    getWorkflows: () => Promise<DatabaseWorkflow[]>;
+
+    /**
+     * Get workflow by id.
+     *
+     * @param id Workflow id
+     *
+     * @returns Database workflow
+     */
+    getWorkflowById: (id: string) => Promise<DatabaseWorkflow | null>;
+
+    /**
      * Create a new workflow.
      *
      * @param createDto Workflow to create
      *
-     * @returns Created workflow
+     * @returns Created database workflow
      */
     createWorkflow: (createDto: CreateWorkflowDto) => Promise<DatabaseWorkflow>;
+
+    /**
+     * Update a new workflow.
+     *
+     * @param updateDto Workflow to update
+     *
+     * @returns Updated database workflow
+     */
+    updateWorkflow: (updateDto: UpdateWorkflowDto) => Promise<DatabaseWorkflow>;
 }

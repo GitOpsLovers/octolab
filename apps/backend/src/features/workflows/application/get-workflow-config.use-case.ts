@@ -1,17 +1,17 @@
-import { EditingWorkflow, workflowsDefaultConfigs } from '../domain/constants/workflows-dafault-configs.const';
+import { WorkflowConfig, workflowsDefaultConfigs } from '../domain/constants/workflows-dafault-configs.const';
 
 /**
  * Get template configuration use case.
  *
  * @param template Template name.
  *
- * @returns Template configuration.
+ * @returns Workflow configuration.
  */
-export async function getWorkflowConfigUseCase(template: string): Promise<EditingWorkflow> {
+export async function getWorkflowConfigUseCase(template: string): Promise<WorkflowConfig> {
     const config = workflowsDefaultConfigs[template];
 
     if (!config) {
-        throw new Error(`Template ${template} not found`);
+        throw new Error(`Workflow ${template} not found`);
     }
 
     return Promise.resolve(config);

@@ -2,9 +2,9 @@ import { WorkflowConfig } from '../constants/workflows-dafault-configs.const';
 import { EditingWorkflowYaml } from '../models/workflows.models';
 
 /**
- * Create workflow DTO
+ * Update workflow DTO
  */
-export interface CreateWorkflowDto {
+export interface UpdateWorkflowDto {
     id: string;
     templateId: string;
     name: string;

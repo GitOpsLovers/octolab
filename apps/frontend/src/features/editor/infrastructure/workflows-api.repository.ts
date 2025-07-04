@@ -6,7 +6,7 @@ import { WorkflowsRepository } from '../domain/repositories/workflows.repository
  */
 export const workflowsApiRepository = (): WorkflowsRepository => ({
     getWorkflowConfig: async (id: string): Promise<WorkflowConfig> => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/workflows/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/workflows/${id}/config`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

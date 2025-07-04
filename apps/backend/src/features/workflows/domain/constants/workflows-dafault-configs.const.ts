@@ -1,14 +1,14 @@
 import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig } from '../models/workflows.models';
 
 /**
- * Editor configuration model
+ * Workflow configuration model
  */
-export type EditingWorkflow = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig;
+export type WorkflowConfig = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig;
 
 /**
  * Default configurations for each workflow.
  */
-export const workflowsDefaultConfigs: Record<string, EditingWorkflow> = {
+export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
     'npm-publish': {
         id: 'npm-publish',
         runner: 'ubuntu-latest',
