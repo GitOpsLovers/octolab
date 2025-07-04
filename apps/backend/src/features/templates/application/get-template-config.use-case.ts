@@ -1,4 +1,4 @@
-import { templatesDefaultConfigs, TempplateConfig } from '../domain/constants/template-dafault-configs.const';
+import { templatesDefaultConfigs, TemplateConfig } from '../domain/constants/template-dafault-configs.const';
 
 /**
  * Get template configuration use case.
@@ -7,7 +7,7 @@ import { templatesDefaultConfigs, TempplateConfig } from '../domain/constants/te
  *
  * @returns Template configuration.
  */
-export async function getTemplateConfigUseCase(template: string): Promise<TempplateConfig> {
+export async function getTemplateConfigUseCase(template: string): Promise<TemplateConfig> {
     const config = templatesDefaultConfigs[template];
 
     if (!config) {

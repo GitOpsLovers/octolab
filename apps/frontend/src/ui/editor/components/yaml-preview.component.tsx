@@ -1,5 +1,6 @@
 'use client';
 
+import { useParams } from 'next/navigation';
 import { ReactNode } from 'react';
 import toast from 'react-hot-toast';
 import { FaRegFileAlt } from 'react-icons/fa';
@@ -9,12 +10,19 @@ import yaml from 'yaml';
 
 import { useEditor } from '../hooks/editor.hooks';
 
+import { createWorkflowUseCase } from '@features/editor/application/save-workflow.use-case';
+import { workflowsApiRepository } from '@features/editor/infrastructure/workflows-api.repository';
+import { useCurrentUser } from '@ui/user/hooks/user.hooks';
+
 /**
  * Yaml preview component.
  */
 export function YamlPreview(): ReactNode {
+    const { uuid } = useParams();
+    const { currentUser } = useCurrentUser();
     const { templateConfig, editingWorkflow, errors } = useEditor();
     const fileName = templateConfig ? templateConfig.filename : 'workflow.yml';
+    const workflowId = uuid as string;
 
     const workflowContent = yaml.stringify(editingWorkflow);
 
@@ -45,6 +53,27 @@ export function YamlPreview(): ReactNode {
         } catch (err) {
             console.error('Failed to download YAML', err);
             toast.error('Error downloading YAML');
+        }
+    };
+
+    // Save editing workflow to workspace
+    const saveToWorkspace = async () => {
+        if (!currentUser || !templateConfig) return;
+
+        try {
+            const repository = workflowsApiRepository();
+
+            await createWorkflowUseCase(repository, {
+                id: workflowId,
+                name: 'My workflow',
+                content: yaml.parse(workflowContent),
+                config: templateConfig,
+            });
+
+            toast.success('Workflow saved to workspace!');
+        } catch (err) {
+            console.error('Failed to save workflow', err);
+            toast.error('Error saving workflow');
         }
     };
 
@@ -99,6 +128,16 @@ export function YamlPreview(): ReactNode {
                 >
                     Download YAML
                 </button>
+                {currentUser && (
+                    <button
+                        onClick={() => {
+                            saveToWorkspace();
+                        }}
+                        className="bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition hover:bg-primary-hover cursor-pointer"
+                    >
+                        Save to workspace
+                    </button>
+                )}
             </div>
         </div>
     );

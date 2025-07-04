@@ -1,4 +1,4 @@
-import { EditingWorkflow } from '@features/editor/domain/editor.models';
+import { EditingWorkflow } from '@features/editor/domain/models/editor.models';
 import { Template, TemplateConfig } from '@features/templates/domain/models/template.models';
 
 /**

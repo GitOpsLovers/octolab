@@ -1,4 +1,4 @@
-import { EditingWorkflow, Step } from '../domain/editor.models';
+import { EditingWorkflow, Step } from '../domain/models/editor.models';
 
 import { TemplateConfig } from '@features/templates/domain/models/template.models';
 

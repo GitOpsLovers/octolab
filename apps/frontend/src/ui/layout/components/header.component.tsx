@@ -22,18 +22,17 @@ export async function Header(): Promise<ReactNode> {
                 <Link href="/templates" className="text-muted hover:text-primary transition font-medium">
                     Templates
                 </Link>
-                <Link href="/about" className="text-muted hover:text-primary transition font-medium">
-                    About Us
-                </Link>
-                <Link href="/contact" className="text-muted hover:text-primary transition font-medium">
-                    Contact
-                </Link>
                 {!session && (
                     <Link
                         href={`/auth/login?returnTo=${pathname}`}
                         className="px-4 py-2 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-surface transition"
                     >
                         Sign in
+                    </Link>
+                )}
+                {session && (
+                    <Link href="/my-workflows" className="text-muted hover:text-primary transition font-medium">
+                        My Workflows
                     </Link>
                 )}
                 {session && (

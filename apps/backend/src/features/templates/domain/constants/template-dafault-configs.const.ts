@@ -3,12 +3,12 @@ import { NodePrVerifyTemplateConfig, NpmPublishTemplateConfig } from '../models/
 /**
  * Editor configuration model
  */
-export type TempplateConfig = NpmPublishTemplateConfig | NodePrVerifyTemplateConfig;
+export type TemplateConfig = NpmPublishTemplateConfig | NodePrVerifyTemplateConfig;
 
 /**
  * Default configurations for each template.
  */
-export const templatesDefaultConfigs: Record<string, TempplateConfig> = {
+export const templatesDefaultConfigs: Record<string, TemplateConfig> = {
     'npm-publish': {
         id: 'npm-publish',
         runner: 'ubuntu-latest',

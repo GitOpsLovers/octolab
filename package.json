@@ -36,5 +36,8 @@
   "workspaces": [
     "apps/*"
   ],
-  "packageManager": "npm@10.9.0"
+  "packageManager": "npm@10.9.0",
+  "dependencies": {
+    "uuid": "^11.1.0"
+  }
 }

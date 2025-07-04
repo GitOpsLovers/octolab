@@ -10,10 +10,15 @@ import { getTemplateConfigUseCase } from '@features/templates/application/get-te
 import { Template, TemplateConfig } from '@features/templates/domain/models/template.models';
 import { templatesApiRepository } from '@features/templates/infrastructure/templates-api.repository';
 
+interface EditorProviderProps {
+    children: ReactNode;
+    templateId: string;
+}
+
 /**
  * Editor context provider
  */
-export function EditorProvider({ children, templateId }: { children: ReactNode; templateId: string }) {
+export function EditorProvider({ children, templateId }: EditorProviderProps) {
     const [errors, setErrors] = useState<Record<string, string | null>>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [template, setTemplate] = useState<Template | null>(null);

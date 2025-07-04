@@ -1,20 +1,24 @@
 'use client';
-import { useUser } from '@auth0/nextjs-auth0';
-import Link from 'next/link';
+
+import { useRouter } from 'next/navigation';
 import { useCookies } from 'next-client-cookies';
 import { useState, MouseEvent, useEffect } from 'react';
 import * as FaIcons from 'react-icons/fa';
+import { v4 as uuidv4 } from 'uuid';
 
 import { useTemplates } from '../hooks/templates.hooks';
 
 import { RegisterModalForTemplatesList } from './register-modal.component';
+
+import { useCurrentUser } from '@ui/user/hooks/user.hooks';
 
 /**
  * Templates list component.
  */
 export function TemplatesList() {
     const cookies = useCookies();
-    const { user } = useUser();
+    const router = useRouter();
+    const { currentUser } = useCurrentUser();
     const { templates, loading, error } = useTemplates();
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
@@ -45,8 +49,10 @@ export function TemplatesList() {
         e.preventDefault();
         setSelectedTemplateId(id);
 
-        if (user || skipRegisterModal) {
-            window.location.href = `/editor/${id}`;
+        const draftId = uuidv4();
+
+        if (currentUser || skipRegisterModal) {
+            router.push(`/editor/${id}/${draftId}`);
         } else {
             setModalOpen(true);
         }
@@ -91,15 +97,14 @@ export function TemplatesList() {
                                     ))}
                                 </ul>
 
-                                <Link
-                                    href="#"
+                                <button
                                     onClick={(e) => {
                                         handleSelectTemplate(e, template.id);
                                     }}
-                                    className="bg-primary text-white font-semibold text-center px-4 py-2 rounded-md hover:bg-primary-hover transition mt-6"
+                                    className="bg-primary text-white font-semibold text-center px-4 py-2 rounded-md hover:bg-primary-hover transition mt-6 cursor-pointer"
                                 >
                                     Use template
-                                </Link>
+                                </button>
 
                                 <p className="text-xs text-text-muted mt-2 text-center">You’ll need an account to save your workflow.</p>
                             </div>
