@@ -1,6 +1,9 @@
 # Dependencies
 node_modules
 
+# Production
+dist
+
 # Typescript
 *.tsbuildinfo
 

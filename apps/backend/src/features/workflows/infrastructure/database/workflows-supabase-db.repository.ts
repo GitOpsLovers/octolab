@@ -10,6 +10,32 @@ import { UpdateWorkflowDto } from '@features/workflows/domain/dtos/update-workfl
  * Workflows Supabase database repository.
  */
 export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = {
+    getWorkflows: async (): Promise<DatabaseWorkflow[]> => {
+        const supabase = getSupabaseClient();
+        try {
+            const { data, error } = await supabase.from('workflows').select();
+
+            if (error) {
+                throw new DatabaseError('Failed to retrieve workflows from database', DatabaseErrorType.DATABASE_CONNECTION_ERROR);
+            }
+
+            if (!data || data.length === 0) {
+                return [];
+            }
+
+            const workflows = data.map((item) => ({
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                yaml: item.content,
+                data: item.config,
+            }));
+
+            return workflows as DatabaseWorkflow[];
+        } catch (error: unknown) {
+            throw new DatabaseError(`Failed to retrieve workflows from database: ${(error as Error).message}`, DatabaseErrorType.DATABASE_CONNECTION_ERROR);
+        }
+    },
     getWorkflowById: async (id: string): Promise<DatabaseWorkflow | null> => {
         const supabase = getSupabaseClient();
         try {
