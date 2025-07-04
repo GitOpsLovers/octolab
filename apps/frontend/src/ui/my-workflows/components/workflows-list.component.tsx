@@ -30,7 +30,11 @@ export function WorkflowsList() {
             <h1 className="text-3xl font-bold mb-8 text-center">My workflows</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {workflows.map((workflow) => (
-                    <Link key={workflow.id} href={`/editor/${workflow.id}`} className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col">
+                    <Link
+                        key={workflow.id}
+                        href={`/editor/${workflow.templateId}/${workflow.id}`}
+                        className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col"
+                    >
                         <div className="p-4 flex flex-col flex-1">
                             <LuWorkflow className="w-6 h-6 mb-3 text-primary" />
 

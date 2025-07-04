@@ -60,7 +60,7 @@ export function YamlPreview(): ReactNode {
 
     // Save editing workflow to workspace
     const saveToWorkspace = async () => {
-        if (!currentUser || !editingWorkflow || !template || !authToken) return;
+        if (!currentUser || !editingWorkflow || !authToken) return;
 
         try {
             const repository = editorApiRepository(authToken);
@@ -68,8 +68,8 @@ export function YamlPreview(): ReactNode {
             const response = await createWorkflowUseCase(repository, {
                 id: workflowId,
                 templateId: editingWorkflow.id,
-                name: editingWorkflow.name ?? template.name,
-                description: editingWorkflow.description ?? template.description,
+                name: editingWorkflow.name ?? template?.name,
+                description: editingWorkflow.description ?? template?.description,
                 yaml: yaml.parse(workflowContent),
                 data: editingWorkflow,
             });

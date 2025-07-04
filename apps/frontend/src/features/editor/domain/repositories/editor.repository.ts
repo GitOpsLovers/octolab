@@ -6,6 +6,15 @@ import { WorkflowConfig } from '../models/editor.models';
  */
 export interface EditorRepository {
     /**
+     * Get one workflow
+     *
+     * @param id Workflow id.
+     *
+     * @returns The workflow.
+     */
+    getOne: (id: string) => Promise<any>;
+
+    /**
      * Get workflow configuration.
      *
      * @param id Template id.

@@ -1,14 +1,14 @@
-import { EditingWorkflow, EditingWorkflowYaml, Step } from '../domain/models/editor.models';
+import { Step, WorkflowConfig, WorkflowYaml } from '../domain/models/editor.models';
 
 /**
  * Generate editing workflow from template configuration use case.
  *
- * @param templateConfig Template configuration
+ * @param workflowConfig Template configuration
  *
  * @returns Editing workflow
  */
-export function generateEditingWorkflowFromConfigUseCase(templateConfig: EditingWorkflow): EditingWorkflowYaml {
-    const on = templateConfig.id === 'node-pr-verify' ? { pull_request: {} } : { push: { branches: [templateConfig.branch] } };
+export function generateEditingWorkflowFromConfigUseCase(workflowConfig: WorkflowConfig): WorkflowYaml {
+    const on = workflowConfig.id === 'node-pr-verify' ? { pull_request: {} } : { push: { branches: [workflowConfig.branch] } };
     const steps: Step[] = [
         {
             name: 'Checkout code',
@@ -18,49 +18,49 @@ export function generateEditingWorkflowFromConfigUseCase(templateConfig: Editing
             name: 'Setup Node',
             uses: 'actions/setup-node@v4',
             with: {
-                'node-version': templateConfig.nodeVersion,
+                'node-version': workflowConfig.nodeVersion,
             },
         },
         {
             name: 'Install dependencies',
-            run: templateConfig.installCommand,
+            run: workflowConfig.installCommand,
         },
     ];
 
-    if (templateConfig.id === 'node-pr-verify') {
+    if (workflowConfig.id === 'node-pr-verify') {
         steps.push({
             name: 'Run lint',
-            run: templateConfig.lintCommand,
+            run: workflowConfig.lintCommand,
         });
     }
 
     steps.push(
         {
             name: 'Run tests',
-            run: templateConfig.testCommand,
+            run: workflowConfig.testCommand,
         },
         {
             name: 'Build package',
-            run: templateConfig.buildCommand,
+            run: workflowConfig.buildCommand,
         },
     );
 
-    if (templateConfig.id === 'npm-publish') {
+    if (workflowConfig.id === 'npm-publish') {
         steps.push({
             name: 'Publish to NPM',
             uses: 'JS-DevTools/npm-publish@v3',
             with: {
-                token: `\${{ secrets.${templateConfig.npmTokenSecret} }}`,
+                token: `\${{ secrets.${workflowConfig.npmTokenSecret} }}`,
             },
         });
     }
 
     return {
-        name: templateConfig.workflowName,
+        name: workflowConfig.workflowName,
         on,
         jobs: {
-            [templateConfig.jobName ?? 'build']: {
-                'runs-on': templateConfig.runner,
+            [workflowConfig.jobName ?? 'build']: {
+                'runs-on': workflowConfig.runner,
                 steps,
             },
         },

@@ -76,5 +76,8 @@ export interface UserWorkflow {
     id: string;
     name: string;
     description: string;
+    templateId: string;
+    yaml: string;
+    data: string;
     updatedAt: string;
 }

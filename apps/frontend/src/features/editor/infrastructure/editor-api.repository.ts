@@ -4,7 +4,22 @@ import { EditorRepository } from '../domain/repositories/editor.repository';
 /**
  * Editor Api Repository
  */
-export const editorApiRepository = (token: string): EditorRepository => ({
+export const editorApiRepository = (token?: string): EditorRepository => ({
+    getOne: async (id: string): Promise<any> => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/workflows/${id ?? ''}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching workflow');
+        }
+
+        return response.json();
+    },
     getWorkflowConfig: async (id: string): Promise<WorkflowConfig> => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/workflows/${id}/config`, {
             method: 'GET',

@@ -18,42 +18,56 @@ import { usersApiRepository } from '@features/users/infrastructure/users-api.rep
 export function AuthUserProvider({ children }: AuthUserProviderProps) {
     const router = useRouter();
     const { currentUser } = useCurrentUser();
-    const [state, setState] = useState<{ authUser: User | null; authToken: string | null; userLoadError: Error | null }>({ authUser: null, authToken: null, userLoadError: null });
+    const [state, setState] = useState<{
+        authUser: User | null;
+        authToken: string | null;
+        userLoadError: Error | null;
+        isLoading: boolean;
+    }>({
+        authUser: null,
+        authToken: null,
+        userLoadError: null,
+        isLoading: true, // <-- Mejor empezar en true
+    });
 
     const setAuthUser = (user: User | null) => {
         setState((prev) => ({ ...prev, authUser: user }));
     };
 
     useEffect(() => {
-        // Only fetch user from Backend if current user is available (it means, the user is authenticated)
-        if (currentUser) {
-            const fetchUser = async () => {
-                try {
-                    const token = await getAccessToken();
-                    const currentUserRepository = usersApiRepository(token);
-                    const fetchedUser = await getCurrentUserUseCase(currentUserRepository);
+        const fetchUser = async () => {
+            try {
+                const token = await getAccessToken();
+                const currentUserRepository = usersApiRepository(token);
+                const fetchedUser = await getCurrentUserUseCase(currentUserRepository);
 
-                    setState({
-                        authUser: fetchedUser,
-                        authToken: token,
-                        userLoadError: null,
-                    });
-                } catch (error) {
-                    console.error('Error fetching current user:', error);
+                setState({
+                    authUser: fetchedUser,
+                    authToken: token,
+                    userLoadError: null,
+                    isLoading: false,
+                });
+            } catch (error) {
+                console.error('Error fetching current user:', error);
 
-                    if (error instanceof Error && error.message.includes('The access token has expired')) {
-                        window.location.href = '/auth/logout';
-                    }
-
-                    setState({
-                        authUser: null,
-                        authToken: null,
-                        userLoadError: error as Error,
-                    });
+                if (error instanceof Error && error.message.includes('The access token has expired')) {
+                    window.location.href = '/auth/logout';
                 }
-            };
 
+                setState({
+                    authUser: null,
+                    authToken: null,
+                    userLoadError: error as Error,
+                    isLoading: false,
+                });
+            }
+        };
+
+        if (currentUser) {
             fetchUser();
+        } else {
+            // Si no hay currentUser (por ejemplo, no logueado), marcamos loading como false
+            setState((prev) => ({ ...prev, isLoading: false }));
         }
     }, [router, currentUser]);
 

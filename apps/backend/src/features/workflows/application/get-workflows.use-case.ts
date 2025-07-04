@@ -9,15 +9,20 @@ import { WorkflowsDatabaseRepository } from '../domain/repositories/workflows.re
  *
  * @returns User workflows.
  */
-export function getWorkflowsUseCase(repository: WorkflowsDatabaseRepository, userId: string): Promise<UserWorkflow[]> {
-    const databaseWorkflows = repository.getWorkflows(userId);
+export async function getWorkflowsUseCase(repository: WorkflowsDatabaseRepository, userId: string): Promise<UserWorkflow[]> {
+    const databaseWorkflows = await repository.getWorkflows(userId);
 
-    return databaseWorkflows.then((workflows) =>
-        workflows.map((workflow) => ({
+    return databaseWorkflows.map((workflow) => {
+        const templateId = JSON.parse(workflow.data).id;
+
+        return {
             id: workflow.id,
             name: workflow.name,
             description: workflow.description,
+            templateId,
+            yaml: workflow.yaml,
+            data: workflow.data,
             updatedAt: workflow.updatedAt,
-            // eslint-disable-next-line prettier/prettier
-        })));
+        };
+    });
 }

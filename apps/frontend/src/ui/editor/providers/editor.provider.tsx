@@ -5,6 +5,7 @@ import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { EditorContext } from '../contexts/editor.context';
 
 import { generateEditingWorkflowFromConfigUseCase } from '@features/editor/application/generate-editing-workflow-from-config.use-case';
+import { getOneWorkflowUseCase } from '@features/editor/application/get-one-workflow.use-case';
 import { getWorkflowConfigUseCase } from '@features/editor/application/get-workflow-config.use-case';
 import { WorkflowConfig } from '@features/editor/domain/models/editor.models';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
@@ -16,79 +17,118 @@ import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 interface EditorProviderProps {
     children: ReactNode;
     templateId: string;
+    workflowId: string;
 }
 
 /**
  * Editor context provider
  */
-export function EditorProvider({ children, templateId }: EditorProviderProps) {
-    const { authToken } = useAuthUser();
+export function EditorProvider({ children, templateId, workflowId }: EditorProviderProps) {
+    const { authToken, isLoading } = useAuthUser();
     const [errors, setErrors] = useState<Record<string, string | null>>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [template, setTemplate] = useState<Template | null>(null);
     const [editingWorkflow, setEditingWorkflow] = useState<WorkflowConfig | null>(null);
     const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<WorkflowConfig | null>(null);
 
-    // Fetch the template
     useEffect(() => {
-        const fetchTemplate = async () => {
-            try {
-                const repository = templatesApiRepository();
-                const templateFromApi = await getOneTemplateUseCase(repository, templateId);
-                setTemplate(templateFromApi);
-            } catch (err) {
-                console.error('Error fetching template:', err);
+        const init = async () => {
+            const fetchTemplate = async (): Promise<Template | null> => {
+                try {
+                    const repository = templatesApiRepository();
+                    const templateFromApi = await getOneTemplateUseCase(repository, templateId);
+                    setTemplate(templateFromApi);
+                    return templateFromApi;
+                } catch (err) {
+                    console.error('Error fetching template:', err);
+                    return null;
+                }
+            };
+
+            const fetchWorkflowConfig = async (templateOverride?: Template | null) => {
+                try {
+                    const repository = editorApiRepository();
+                    const workflowConfigFromApi = await getWorkflowConfigUseCase(repository, templateId);
+
+                    const initialWorkflow: WorkflowConfig = {
+                        ...workflowConfigFromApi,
+                        name: templateOverride?.name ?? '',
+                        description: templateOverride?.description ?? '',
+                    };
+
+                    setEditingWorkflow(initialWorkflow);
+                    setInitialEditingWorkflowData(initialWorkflow);
+                } catch (err) {
+                    console.error('Error fetching workflow config:', err);
+                }
+            };
+
+            const fetchWorkflow = async () => {
+                try {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const repository = editorApiRepository(authToken!);
+                    const existingWorkflow = await getOneWorkflowUseCase(repository, workflowId);
+
+                    if (existingWorkflow) {
+                        const existingWorkflowData = JSON.parse(existingWorkflow.data);
+
+                        const workflow: WorkflowConfig = {
+                            id: existingWorkflowData.id,
+                            runner: existingWorkflowData.runner,
+                            nodeVersion: existingWorkflowData.nodeVersion,
+                            installCommand: existingWorkflowData.installCommand,
+                            testCommand: existingWorkflowData.testCommand,
+                            lintCommand: existingWorkflowData.lintCommand,
+                            buildCommand: existingWorkflowData.buildCommand,
+                            workflowName: existingWorkflowData.workflowName,
+                            jobName: existingWorkflowData.jobName,
+                            filename: '????', // Esto puedes reemplazarlo con el que toque
+                            name: existingWorkflow.name,
+                            description: existingWorkflow.description,
+                        };
+
+                        setEditingWorkflow(workflow);
+                        setInitialEditingWorkflowData(workflow);
+                    } else {
+                        const templateFetched = await fetchTemplate();
+                        await fetchWorkflowConfig(templateFetched);
+                    }
+                } catch (err) {
+                    console.error('Error fetching workflow:', err);
+                }
+            };
+
+            if (isLoading) return;
+
+            setLoading(true);
+
+            if (authToken) {
+                await fetchWorkflow();
+            } else {
+                const templateFetched = await fetchTemplate();
+                await fetchWorkflowConfig(templateFetched);
             }
+
+            setLoading(false);
         };
 
-        fetchTemplate();
-    }, [templateId]);
+        init();
+    }, [isLoading, authToken, templateId, workflowId]);
 
-    // Fetch workflow configuration
-    useEffect(() => {
-        if (!authToken || !templateId) return;
-
-        const fetchWorkflowConfig = async () => {
-            try {
-                const repository = editorApiRepository(authToken);
-                const workflowConfigFromApi = await getWorkflowConfigUseCase(repository, templateId);
-                const initialWorkflow: WorkflowConfig = {
-                    ...workflowConfigFromApi,
-                    name: template?.name ?? '',
-                    description: template?.description ?? '',
-                };
-
-                setEditingWorkflow(initialWorkflow);
-                setInitialEditingWorkflowData(initialWorkflow);
-            } catch (err) {
-                console.error('Error fetching workflow configuration:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchWorkflowConfig();
-    }, [templateId, template, authToken]);
-
-    // Generate the editing workflow yaml for the preview
     const editingWorkflowYaml = useMemo(() => {
         if (!editingWorkflow) return null;
-
         return generateEditingWorkflowFromConfigUseCase(editingWorkflow);
     }, [editingWorkflow]);
 
-    // Reset the editing workflow to the default values
     const resetEditingWorkflow = () => {
         if (initialEditingWorkflowData) {
             setEditingWorkflow(initialEditingWorkflowData);
         }
     };
 
-    // Update workflow title and description
     const setWorkflowNameAndDescription = (name: string, description: string) => {
         setEditingWorkflow((prev) => {
             if (!prev) return prev;
-
             return {
                 ...prev,
                 name,

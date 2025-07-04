@@ -59,8 +59,8 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
                 userId: data.user_id,
                 name: data.name,
                 description: data.description,
-                yaml: data.content,
-                data: data.config,
+                yaml: data.yaml,
+                data: data.data,
                 createdAt: data.created_at,
                 updatedAt: data.updated_at,
             };

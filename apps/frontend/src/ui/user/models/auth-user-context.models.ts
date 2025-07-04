@@ -8,6 +8,8 @@ import { User } from '@features/users/domain/models/users.models';
 export interface AuthUserContextValue {
     authUser: User | null;
     authToken: string | null;
+    isLoading: boolean;
+    userLoadError: Error | null;
     setAuthUser: (user: User | null) => void;
 }
 
