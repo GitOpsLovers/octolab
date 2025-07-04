@@ -6,6 +6,7 @@ import { EditingWorkflowYaml } from '../models/workflows.models';
  */
 export interface UpdateWorkflowDto {
     id: string;
+    userId: string;
     templateId: string;
     name: string;
     description: string;

@@ -3,6 +3,7 @@
  */
 export interface DatabaseWorkflow {
     id: string;
+    userId: string;
     name: string;
     yaml: string;
     data: string;

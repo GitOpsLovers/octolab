@@ -6,10 +6,16 @@ import { WorkflowsDatabaseRepository } from '../domain/repositories/workflows.re
  * Update workflow use case.
  *
  * @param repository Workflows database repository
- * @param updateDto Update workflow DTO
+ * @param requestData Request data
+ * @param userId User ID
  *
  * @returns Updated workflow
  */
-export function updateWorkflowUseCase(repository: WorkflowsDatabaseRepository, updateDto: UpdateWorkflowDto): Promise<DatabaseWorkflow> {
+export function updateWorkflowUseCase(repository: WorkflowsDatabaseRepository, requestData: any, userId: string): Promise<DatabaseWorkflow> {
+    const updateDto: UpdateWorkflowDto = {
+        ...requestData,
+        userId,
+    };
+
     return repository.updateWorkflow(updateDto);
 }

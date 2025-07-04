@@ -12,19 +12,20 @@ import { updateWorkflowUseCase } from '@features/workflows/application/update-wo
  * Create or edit workflow controller
  */
 export async function createOrEditWorkflowController(req: Request, res: Response): Promise<void> {
-    const createOrUpdateDto = req.body;
+    const rquestData = req.body;
+    const userId = req.user.identities?.[0].user_id;
 
     try {
-        const existingWorkflow = await getWorkflowByIdUseCase(workflowsSupabaseDatabaseRepository, createOrUpdateDto.id);
+        const existingWorkflow = await getWorkflowByIdUseCase(workflowsSupabaseDatabaseRepository, rquestData.id);
 
         if (existingWorkflow) {
-            const workflow = await updateWorkflowUseCase(workflowsSupabaseDatabaseRepository, createOrUpdateDto);
+            const workflow = await updateWorkflowUseCase(workflowsSupabaseDatabaseRepository, rquestData, userId);
 
             res.status(StatusCodes.OK).json({ message: 'Workflow updated', workflow });
             return;
         }
 
-        const workflow = await createWorkflowUseCase(workflowsSupabaseDatabaseRepository, createOrUpdateDto);
+        const workflow = await createWorkflowUseCase(workflowsSupabaseDatabaseRepository, rquestData, userId);
 
         res.status(StatusCodes.CREATED).json({ message: 'Workflow created', workflow });
     } catch (error: unknown) {

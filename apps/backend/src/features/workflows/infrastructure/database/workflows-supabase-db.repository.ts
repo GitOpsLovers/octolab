@@ -25,6 +25,7 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
 
             const workflows = data.map((item) => ({
                 id: item.id,
+                userId: item.user_id,
                 name: item.name,
                 description: item.description,
                 yaml: item.content,
@@ -52,6 +53,7 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
 
             const workflow = {
                 id: data.id,
+                userId: data.user_id,
                 name: data.name,
                 description: data.description,
                 yaml: data.content,
@@ -71,6 +73,7 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
                 .insert([
                     {
                         id: createDto.id,
+                        user_id: createDto.userId,
                         name: createDto.name,
                         description: createDto.description,
                         yaml: JSON.stringify(createDto.yaml),
@@ -84,6 +87,7 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
 
             const workflow = {
                 id: data.id,
+                userId: data.user_id,
                 name: data.name,
                 description: data.description,
                 yaml: data.content,
@@ -102,6 +106,7 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
                 .from('workflows')
                 .update({
                     id: updateDto.id,
+                    user_id: updateDto.userId,
                     name: updateDto.name,
                     description: updateDto.description,
                     yaml: JSON.stringify(updateDto.yaml),
@@ -115,6 +120,7 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
 
             const workflow = {
                 id: data.id,
+                userId: data.user_id,
                 name: data.name,
                 description: data.description,
                 yaml: data.content,

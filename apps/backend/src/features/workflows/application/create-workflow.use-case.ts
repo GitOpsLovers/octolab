@@ -6,10 +6,15 @@ import { WorkflowsDatabaseRepository } from '../domain/repositories/workflows.re
  * Create workflow use case.
  *
  * @param repository Workflows database repository
- * @param createDto Create workflow DTO
+ * @param requestData Request data
+ * @param userId User ID
  *
  * @returns Created workflow
  */
-export function createWorkflowUseCase(repository: WorkflowsDatabaseRepository, createDto: CreateWorkflowDto): Promise<DatabaseWorkflow> {
+export function createWorkflowUseCase(repository: WorkflowsDatabaseRepository, requestData: any, userId: string): Promise<DatabaseWorkflow> {
+    const createDto: CreateWorkflowDto = {
+        ...requestData,
+        userId,
+    };
     return repository.createWorkflow(createDto);
 }
