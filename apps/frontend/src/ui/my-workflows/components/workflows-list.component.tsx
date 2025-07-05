@@ -29,25 +29,31 @@ export function WorkflowsList() {
         <>
             <h1 className="text-3xl font-bold mb-8 text-center">My workflows</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {workflows.map((workflow) => (
-                    <Link
-                        key={workflow.id}
-                        href={`/editor/${workflow.templateId}/${workflow.id}`}
-                        className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col"
-                    >
-                        <div className="p-4 flex flex-col flex-1">
-                            <LuWorkflow className="w-6 h-6 mb-3 text-primary" />
+                {workflows.map((workflow) => {
+                    const workflowData = JSON.parse(workflow.data);
 
-                            <h2 className="text-base font-semibold text-text mb-1">{workflow.name}</h2>
+                    return (
+                        <Link
+                            key={workflow.id}
+                            href={`/editor/${workflow.templateId}/${workflow.id}`}
+                            className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col"
+                        >
+                            <div className="p-4 flex flex-col flex-1">
+                                <LuWorkflow className="w-6 h-6 mb-3 text-primary" />
 
-                            <p className="text-xs text-text-muted mb-3">Last updated: {new Date(workflow.updatedAt).toLocaleDateString()}</p>
+                                <h2 className="text-lg font-semibold text-text mb-1">{workflow.name}</h2>
 
-                            <div className="mt-auto">
-                                <span className="inline-block bg-primary/10 text-primary text-xs font-medium px-2 py-1 rounded">Open</span>
+                                <p className=" mb-3 txr-sm">{workflow.description}</p>
+
+                                <p className="text-xs text-text-muted mb-3">Last updated: {new Date(workflow.updatedAt).toLocaleDateString()}</p>
+
+                                <div className="mt-auto">
+                                    <span className="inline-block bg-primary/10 text-primary text-xs font-medium px-2 py-1 rounded">{workflowData.id}</span>
+                                </div>
                             </div>
-                        </div>
-                    </Link>
-                ))}
+                        </Link>
+                    );
+                })}
             </div>
         </>
     );

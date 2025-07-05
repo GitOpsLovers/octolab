@@ -1,9 +1,9 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import toast from 'react-hot-toast';
-import { FaRegFileAlt } from 'react-icons/fa';
+import { FaRegFileAlt, FaSpinner } from 'react-icons/fa';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import yaml from 'yaml';
@@ -23,6 +23,8 @@ export function YamlPreview(): ReactNode {
     const { uuid } = useParams();
     const { currentUser } = useCurrentUser();
     const { editingWorkflow, editingWorkflowYaml, errors, template } = useEditor();
+    const [saving, setSaving] = useState(false);
+
     const fileName = editingWorkflow ? editingWorkflow.filename : 'workflow.yml';
     const workflowId = uuid as string;
 
@@ -62,6 +64,8 @@ export function YamlPreview(): ReactNode {
     const saveToWorkspace = async () => {
         if (!currentUser || !editingWorkflow || !authToken) return;
 
+        setSaving(true);
+
         try {
             const repository = editorApiRepository(authToken);
 
@@ -78,6 +82,8 @@ export function YamlPreview(): ReactNode {
         } catch (err) {
             console.error('Failed to save workflow', err);
             toast.error('Error saving workflow');
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -134,12 +140,19 @@ export function YamlPreview(): ReactNode {
                 </button>
                 {currentUser && (
                     <button
-                        onClick={() => {
-                            saveToWorkspace();
-                        }}
-                        className="bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition hover:bg-primary-hover cursor-pointer"
+                        onClick={saveToWorkspace}
+                        disabled={hasErrors || saving}
+                        className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition flex items-center justify-center gap-2
+                            ${hasErrors || saving ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
                     >
-                        Save to workspace
+                        {saving ? (
+                            <>
+                                <FaSpinner className="animate-spin" />
+                                Saving...
+                            </>
+                        ) : (
+                            'Save to workspace'
+                        )}
                     </button>
                 )}
             </div>

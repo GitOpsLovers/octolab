@@ -6,5 +6,6 @@ export interface UserWorkflow {
     name: string;
     description: string;
     templateId: string;
+    data: string;
     updatedAt: string;
 }
