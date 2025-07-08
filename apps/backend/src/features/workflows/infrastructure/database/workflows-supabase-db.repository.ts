@@ -141,4 +141,16 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
             throw new DatabaseError(`Failed to update workflow on database: ${(error as Error).message}`, DatabaseErrorType.DATABASE_CONNECTION_ERROR);
         }
     },
+    deleteWorkflow: async (id: string): Promise<void> => {
+        const supabase = getSupabaseClient();
+        try {
+            const { error } = await supabase.from('workflows').delete().eq('id', id);
+
+            if (error) {
+                throw new DatabaseError('Failed to delete workflow from database', DatabaseErrorType.DATABASE_CONNECTION_ERROR);
+            }
+        } catch (error: unknown) {
+            throw new DatabaseError(`Failed to delete workflow from database: ${(error as Error).message}`, DatabaseErrorType.DATABASE_CONNECTION_ERROR);
+        }
+    },
 };

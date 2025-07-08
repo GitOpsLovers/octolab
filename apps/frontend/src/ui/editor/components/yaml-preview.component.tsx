@@ -29,6 +29,7 @@ export function YamlPreview(): ReactNode {
 
     const workflowContent = yaml.stringify(editingWorkflowYaml);
 
+    // Copy the YAML to the clipboard
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(workflowContent);
@@ -39,6 +40,7 @@ export function YamlPreview(): ReactNode {
         }
     };
 
+    // Download the YAML as a file
     const handleDownload = () => {
         try {
             const blob = new Blob([workflowContent], { type: 'text/yaml' });
@@ -57,6 +59,7 @@ export function YamlPreview(): ReactNode {
         }
     };
 
+    // Save the workflow to the user's workspace
     const saveToWorkspace = async () => {
         if (!authUser || !editingWorkflow || !authToken) return;
 

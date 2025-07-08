@@ -25,6 +25,7 @@ export interface NpmPublishWorkflowConfig {
     buildCommand: string;
     npmTokenSecret: string;
     workflowName: string;
+    jobName: string;
 }
 
 /**
@@ -39,6 +40,7 @@ export interface NodePrVerifyWorkflowConfig {
     testCommand: string;
     buildCommand: string;
     workflowName: string;
+    jobName: string;
 }
 
 /**

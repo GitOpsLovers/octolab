@@ -32,6 +32,12 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
     const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<WorkflowConfig | null>(null);
     const [isEditingExistingWorkflow, setIsEditingExistingWorkflow] = useState<boolean>(false);
 
+    /**
+     * Initialize the editor data
+     *
+     * This effect fecthes an existing workflow from Backend.
+     * If it doesn't exist, it fetches the template and the base workflow configuration.
+     */
     useEffect(() => {
         const init = async () => {
             const fetchTemplate = async (): Promise<Template | null> => {

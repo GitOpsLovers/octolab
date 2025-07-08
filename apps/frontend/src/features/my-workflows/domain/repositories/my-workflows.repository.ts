@@ -10,4 +10,11 @@ export interface MyWorkflowsRepository {
      *  @returns All workflows.
      */
     getAll: () => Promise<UserWorkflow[]>;
+
+    /**
+     * Delete a workflow.
+     *
+     * @param workflowId Workflow ID.
+     */
+    delete: (workflowId: string) => Promise<void>;
 }

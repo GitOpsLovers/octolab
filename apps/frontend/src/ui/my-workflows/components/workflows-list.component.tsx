@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FaPlus, FaSpinner } from 'react-icons/fa';
+import { FaPlus, FaSpinner, FaEdit, FaTrash } from 'react-icons/fa';
 import { LuWorkflow } from 'react-icons/lu';
 
 import { useMyWorkflows } from '../hooks/my-workflows.hooks';
@@ -10,7 +10,7 @@ import { useMyWorkflows } from '../hooks/my-workflows.hooks';
  * Workflows list component.
  */
 export function WorkflowsList() {
-    const { workflows, loading, error } = useMyWorkflows();
+    const { workflows, loading, error, deleteWorkflow } = useMyWorkflows();
 
     const hasReachedLimit = workflows.length >= 3;
 
@@ -35,11 +35,7 @@ export function WorkflowsList() {
                     const workflowData = JSON.parse(workflow.data);
 
                     return (
-                        <Link
-                            key={workflow.id}
-                            href={`/editor/${workflow.templateId}/${workflow.id}`}
-                            className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col hover:border-primary"
-                        >
+                        <div key={workflow.id} className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col">
                             <div className="p-4 flex flex-col flex-1">
                                 <LuWorkflow className="w-6 h-6 mb-3 text-primary" />
 
@@ -49,11 +45,30 @@ export function WorkflowsList() {
 
                                 <p className="text-xs text-text-muted mb-3">Last updated: {workflow.updatedAt}</p>
 
-                                <div className="mt-auto">
+                                <div className="flex items-center justify-between gap-2 mt-auto pt-2">
                                     <span className="inline-block bg-primary/10 text-primary text-xs font-medium px-2 py-1 rounded">{workflowData.id}</span>
+
+                                    <div className="flex gap-2">
+                                        <Link
+                                            href={`/editor/${workflow.templateId}/${workflow.id}`}
+                                            className="flex items-center gap-1 bg-primary text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition cursor-pointer"
+                                        >
+                                            <FaEdit className="w-4 h-4" />
+                                            Edit
+                                        </Link>
+                                        <button
+                                            onClick={() => {
+                                                deleteWorkflow(workflow.id);
+                                            }}
+                                            className="flex items-center gap-1 bg-danger text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-danger/70 transition cursor-pointer"
+                                        >
+                                            <FaTrash className="w-4 h-4" />
+                                            Delete
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     );
                 })}
 

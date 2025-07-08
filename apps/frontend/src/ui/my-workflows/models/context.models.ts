@@ -8,4 +8,5 @@ export interface MyWorkflowsContextType {
     setWorkflows: (workflows: UserWorkflow[]) => void;
     loading: boolean;
     error: string | null;
+    deleteWorkflow: (workflowId: string) => void;
 }

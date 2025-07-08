@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import { createOrEditWorkflowController } from '../controllers/create-edit-workflow.controller';
+import { deleteWorkflowController } from '../controllers/delete-workflow.controller';
 import { getWorkflowConfigController } from '../controllers/get-workflow-config.controller';
 import { getWorkflowByIdController } from '../controllers/get-workflow.controller';
 import { getWorkflowsController } from '../controllers/get-workflows.controller';
@@ -14,5 +15,6 @@ workflowsRoutes.get('/workflows/:workflowId', getWorkflowByIdController);
 workflowsRoutes.get('/workflows/:templateId/config', getWorkflowConfigController);
 workflowsRoutes.get('/workflows', authClient, currentUserMiddleware, getWorkflowsController);
 workflowsRoutes.post('/workflows', authClient, currentUserMiddleware, createOrEditWorkflowController);
+workflowsRoutes.delete('/workflows/:workflowId', authClient, currentUserMiddleware, deleteWorkflowController);
 
 export { workflowsRoutes };

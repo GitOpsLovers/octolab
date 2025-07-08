@@ -41,4 +41,11 @@ export interface WorkflowsDatabaseRepository {
      * @returns Updated database workflow
      */
     updateWorkflow: (updateDto: UpdateWorkflowDto) => Promise<DatabaseWorkflow>;
+
+    /**
+     * Delete a workflow by id.
+     *
+     * @param id Workflow id
+     */
+    deleteWorkflow: (id: string) => Promise<void>;
 }

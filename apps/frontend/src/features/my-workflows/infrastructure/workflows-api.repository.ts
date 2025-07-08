@@ -22,4 +22,17 @@ export const myWorkflowsApiRepository = (token: string): MyWorkflowsRepository =
 
         return response.json();
     },
+    delete: async (workflowId: string): Promise<void> => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/workflows/${workflowId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Error deleting workflow');
+        }
+    },
 });
