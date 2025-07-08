@@ -12,6 +12,8 @@ import { useMyWorkflows } from '../hooks/my-workflows.hooks';
 export function WorkflowsList() {
     const { workflows, loading, error } = useMyWorkflows();
 
+    const hasReachedLimit = workflows.length >= 3;
+
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-text-muted">
@@ -55,14 +57,22 @@ export function WorkflowsList() {
                     );
                 })}
 
-                <Link
-                    href="/templates"
-                    className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col items-center justify-center text-center p-6 hover:border-primary"
-                >
-                    <FaPlus className="w-8 h-8 text-primary mb-3" />
-                    <h2 className="text-lg font-bold text-text mb-1">Create new workflow</h2>
-                    <p className="text-sm text-text-muted">Start from a new template</p>
-                </Link>
+                {hasReachedLimit ? (
+                    <div className="bg-surface rounded-lg border border-border flex flex-col items-center justify-center text-center p-6 opacity-50 cursor-not-allowed">
+                        <FaPlus className="w-8 h-8 text-primary mb-3" />
+                        <h2 className="text-lg font-bold text-text mb-1">Create new workflow</h2>
+                        <p className="text-sm text-text-muted">You’ve reached the limit of 3 workflows. Upgrade to PRO to create more (coming soon).</p>
+                    </div>
+                ) : (
+                    <Link
+                        href="/templates"
+                        className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col items-center justify-center text-center p-6 hover:border-primary"
+                    >
+                        <FaPlus className="w-8 h-8 text-primary mb-3" />
+                        <h2 className="text-lg font-bold text-text mb-1">Create new workflow</h2>
+                        <p className="text-sm text-text-muted">Start from a new template</p>
+                    </Link>
+                )}
             </div>
         </>
     );

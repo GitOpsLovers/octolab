@@ -10,6 +10,5 @@ import { EditorRepository } from '../domain/repositories/editor.repository';
  * @returns The created workflow.
  */
 export function createWorkflowUseCase(workflowsRepository: EditorRepository, createDto: CreateWorkflowDto): Promise<any> {
-    console.log('createWorkflowUseCase', createDto);
     return workflowsRepository.create(createDto);
 }

@@ -9,6 +9,8 @@ import { usersAuth0IdpRepository } from '../../infrastructure/auth0/users-auth0.
 import { getAuth0ManagementClient } from '@core/infrastructure/auth0/auth0-idp.client';
 import { appLogger } from '@core/infrastructure/loggers/winston.logger';
 import { handleError } from '@core/ui/handlers/error.handler';
+import { getWorkflowsUseCase } from '@features/workflows/application/get-workflows.use-case';
+import { workflowsSupabaseDatabaseRepository } from '@features/workflows/infrastructure/database/workflows-supabase-db.repository';
 
 /**
  * Get current user controller
@@ -25,8 +27,11 @@ export const getCurrentUserController: RequestHandler = async (req, res) => {
         const idpRepository = usersAuth0IdpRepository(idpClient);
         const idpUser = await getUserByIdUseCase(idpRepository, auth0Id);
 
+        const workflows = await getWorkflowsUseCase(workflowsSupabaseDatabaseRepository, idpUser.identities?.[0].user_id);
+
         const authenticatedUser: User = {
             id: idpUser.user_id,
+            workflows: workflows.length,
         };
 
         res.status(StatusCodes.OK).json(authenticatedUser);

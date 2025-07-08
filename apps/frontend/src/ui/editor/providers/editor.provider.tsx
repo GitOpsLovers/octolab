@@ -30,6 +30,7 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
     const [template, setTemplate] = useState<Template | null>(null);
     const [editingWorkflow, setEditingWorkflow] = useState<WorkflowConfig | null>(null);
     const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<WorkflowConfig | null>(null);
+    const [isEditingExistingWorkflow, setIsEditingExistingWorkflow] = useState<boolean>(false);
 
     useEffect(() => {
         const init = async () => {
@@ -89,6 +90,7 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
 
                         setEditingWorkflow(workflow);
                         setInitialEditingWorkflowData(workflow);
+                        setIsEditingExistingWorkflow(true);
                     } else {
                         const templateFetched = await fetchTemplate();
                         await fetchWorkflowConfig(templateFetched);
@@ -147,6 +149,7 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
         editingWorkflowYaml,
         loading,
         setWorkflowNameAndDescription,
+        isEditingExistingWorkflow,
     };
 
     return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;

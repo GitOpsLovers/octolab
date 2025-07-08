@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { AuthUserContext } from '../contexts/auth-user.context';
-import { useCurrentUser } from '../hooks/user.hooks';
 import { AuthUserProviderProps } from '../models/auth-user-context.models';
 
 import { getCurrentUserUseCase } from '@features/users/application/get-current-user.use-case';
@@ -17,7 +16,6 @@ import { usersApiRepository } from '@features/users/infrastructure/users-api.rep
  */
 export function AuthUserProvider({ children }: AuthUserProviderProps) {
     const router = useRouter();
-    const { currentUser } = useCurrentUser();
     const [state, setState] = useState<{
         authUser: User | null;
         authToken: string | null;
@@ -27,7 +25,7 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
         authUser: null,
         authToken: null,
         userLoadError: null,
-        isLoading: true, // <-- Mejor empezar en true
+        isLoading: true,
     });
 
     const setAuthUser = (user: User | null) => {
@@ -38,6 +36,12 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
         const fetchUser = async () => {
             try {
                 const token = await getAccessToken();
+
+                if (!token) {
+                    setState((prev) => ({ ...prev, isLoading: false }));
+                    return;
+                }
+
                 const currentUserRepository = usersApiRepository(token);
                 const fetchedUser = await getCurrentUserUseCase(currentUserRepository);
 
@@ -48,11 +52,22 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
                     isLoading: false,
                 });
             } catch (error) {
-                console.error('Error fetching current user:', error);
+                if (error instanceof Error && error.message.includes('The user does not have an active session.')) {
+                    setState({
+                        authUser: null,
+                        authToken: null,
+                        userLoadError: null,
+                        isLoading: false,
+                    });
+                    return;
+                }
 
                 if (error instanceof Error && error.message.includes('The access token has expired')) {
                     window.location.href = '/auth/logout';
+                    return;
                 }
+
+                console.error('Error fetching current user:', error);
 
                 setState({
                     authUser: null,
@@ -63,13 +78,8 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
             }
         };
 
-        if (currentUser) {
-            fetchUser();
-        } else {
-            // Si no hay currentUser (por ejemplo, no logueado), marcamos loading como false
-            setState((prev) => ({ ...prev, isLoading: false }));
-        }
-    }, [router, currentUser]);
+        fetchUser();
+    }, [router]);
 
     return <AuthUserContext.Provider value={{ ...state, setAuthUser }}>{children}</AuthUserContext.Provider>;
 }

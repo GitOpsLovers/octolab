@@ -13,7 +13,6 @@ import { useEditor } from '../hooks/editor.hooks';
 import { createWorkflowUseCase } from '@features/editor/application/save-workflow.use-case';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
 import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
-import { useCurrentUser } from '@ui/user/hooks/user.hooks';
 
 /**
  * Yaml preview component.
@@ -21,8 +20,8 @@ import { useCurrentUser } from '@ui/user/hooks/user.hooks';
 export function YamlPreview(): ReactNode {
     const { authToken } = useAuthUser();
     const { uuid } = useParams();
-    const { currentUser } = useCurrentUser();
-    const { editingWorkflow, editingWorkflowYaml, errors, template } = useEditor();
+    const { authUser } = useAuthUser();
+    const { editingWorkflow, editingWorkflowYaml, errors, template, isEditingExistingWorkflow } = useEditor();
     const [saving, setSaving] = useState(false);
 
     const fileName = editingWorkflow ? editingWorkflow.filename : 'workflow.yml';
@@ -30,7 +29,6 @@ export function YamlPreview(): ReactNode {
 
     const workflowContent = yaml.stringify(editingWorkflowYaml);
 
-    // Copy YAML to clipboard
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(workflowContent);
@@ -41,7 +39,6 @@ export function YamlPreview(): ReactNode {
         }
     };
 
-    // Download YAML file
     const handleDownload = () => {
         try {
             const blob = new Blob([workflowContent], { type: 'text/yaml' });
@@ -60,9 +57,8 @@ export function YamlPreview(): ReactNode {
         }
     };
 
-    // Save editing workflow to workspace
     const saveToWorkspace = async () => {
-        if (!currentUser || !editingWorkflow || !authToken) return;
+        if (!authUser || !editingWorkflow || !authToken) return;
 
         setSaving(true);
 
@@ -88,6 +84,7 @@ export function YamlPreview(): ReactNode {
     };
 
     const hasErrors = Object.keys(errors).length > 0;
+    const reachedWorkflowLimit = !!(authUser && authUser.workflows >= 3);
 
     if (!editingWorkflow) {
         return null;
@@ -111,7 +108,6 @@ export function YamlPreview(): ReactNode {
             {/* Informative banner */}
             <div className="bg-background border border-border px-4 py-3 rounded-md mb-4 flex items-center gap-2">
                 <FaRegFileAlt className="w-5 h-5 text-primary" />
-
                 <div>
                     <p className="text-sm text-text font-medium">
                         Save this file as <code className="bg-muted px-1 py-0.5 rounded">.github/workflows/{fileName}</code>
@@ -120,7 +116,7 @@ export function YamlPreview(): ReactNode {
                 </div>
             </div>
 
-            <div className="flex gap-2 mt-auto mb-4">
+            <div className="flex flex-wrap items-center gap-2 mt-auto mb-2">
                 <button
                     onClick={handleCopy}
                     disabled={hasErrors}
@@ -138,22 +134,29 @@ export function YamlPreview(): ReactNode {
                 >
                     Download YAML
                 </button>
-                {currentUser && (
-                    <button
-                        onClick={saveToWorkspace}
-                        disabled={hasErrors || saving}
-                        className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition flex items-center justify-center gap-2
-                            ${hasErrors || saving ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
-                    >
-                        {saving ? (
-                            <>
-                                <FaSpinner className="animate-spin" />
-                                Saving...
-                            </>
-                        ) : (
-                            'Save to workspace'
+
+                {authUser && (
+                    <>
+                        <button
+                            onClick={saveToWorkspace}
+                            disabled={hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit)}
+                            className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition flex items-center justify-center gap-2
+                                ${hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
+                        >
+                            {saving ? (
+                                <>
+                                    <FaSpinner className="animate-spin" />
+                                    Saving...
+                                </>
+                            ) : (
+                                'Save to workspace'
+                            )}
+                        </button>
+
+                        {!isEditingExistingWorkflow && reachedWorkflowLimit && (
+                            <p className="text-xs text-text-muted">You’ve reached the limit of 3 workflows. Upgrade to PRO to save more (coming soon).</p>
                         )}
-                    </button>
+                    </>
                 )}
             </div>
         </div>

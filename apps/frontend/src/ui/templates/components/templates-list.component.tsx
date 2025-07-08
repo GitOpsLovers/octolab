@@ -10,7 +10,7 @@ import { useTemplates } from '../hooks/templates.hooks';
 
 import { RegisterModalForTemplatesList } from './register-modal.component';
 
-import { useCurrentUser } from '@ui/user/hooks/user.hooks';
+import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 
 /**
  * Templates list component.
@@ -18,22 +18,19 @@ import { useCurrentUser } from '@ui/user/hooks/user.hooks';
 export function TemplatesList() {
     const cookies = useCookies();
     const router = useRouter();
-    const { currentUser } = useCurrentUser();
+    const { authUser, isLoading } = useAuthUser();
     const { templates, loading, error } = useTemplates();
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
     const [skipRegisterModal, setSkipRegisterModal] = useState(false);
 
-    // Check if the user has skipped the register modal
     useEffect(() => {
         const skip = cookies.get('octolab_skip_register_modal');
-
         if (skip === 'true') {
             setSkipRegisterModal(true);
         }
     }, [cookies]);
 
-    // Set the skip register modal cookie
     const setSkipModal = (value: boolean) => {
         if (value) {
             cookies.set('octolab_skip_register_modal', 'true', { expires: 7 });
@@ -44,21 +41,20 @@ export function TemplatesList() {
         }
     };
 
-    // Handle the click event to select a template
     const handleSelectTemplate = (e: MouseEvent, id: string) => {
         e.preventDefault();
         setSelectedTemplateId(id);
 
         const draftId = uuidv4();
 
-        if (currentUser || skipRegisterModal) {
+        if (authUser || skipRegisterModal) {
             router.push(`/editor/${id}/${draftId}`);
         } else {
             setModalOpen(true);
         }
     };
 
-    if (loading) {
+    if (loading || isLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-text-muted">
                 <FaIcons.FaSpinner className="w-8 h-8 animate-spin mb-4 text-primary" />
@@ -81,16 +77,13 @@ export function TemplatesList() {
 
                     return (
                         <div key={template.id} className="bg-surface rounded-xl shadow hover:shadow-lg transition border border-border flex flex-col p-4">
-                            {/* Header: Icon + Title */}
                             <div className="flex items-center gap-3 mb-2">
                                 <Icon className="w-10 h-10" style={{ color: template.iconColor }} />
                                 <h2 className="text-xl font-bold text-text">{template.name}</h2>
                             </div>
 
-                            {/* Description */}
                             <p className="text-sm text-text-muted mb-3">{template.description}</p>
 
-                            {/* Features: opcional 2 columnas si quieres */}
                             <ul className="grid grid-cols-1 gap-y-1 text-sm text-text-muted mb-4">
                                 {template.features.map((feature, index) => (
                                     <li key={index} className="flex items-center gap-2">
@@ -100,7 +93,6 @@ export function TemplatesList() {
                                 ))}
                             </ul>
 
-                            {/* Botón + nota */}
                             <div className="mt-auto flex flex-col">
                                 <button
                                     onClick={(e) => {
@@ -110,14 +102,13 @@ export function TemplatesList() {
                                 >
                                     Use template
                                 </button>
-                                {!currentUser && <p className="text-xs text-text-muted mt-1 text-center">You’ll need an account to save your workflow.</p>}
+                                {!authUser && !isLoading && <p className="text-xs text-text-muted mt-2 text-center">You’ll need an account to save your workflow.</p>}
                             </div>
                         </div>
                     );
                 })}
             </div>
 
-            {/* Register modal */}
             <RegisterModalForTemplatesList
                 templateId={selectedTemplateId}
                 isOpen={modalOpen}

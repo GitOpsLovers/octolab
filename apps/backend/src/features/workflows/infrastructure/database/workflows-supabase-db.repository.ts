@@ -14,7 +14,7 @@ export const workflowsSupabaseDatabaseRepository: WorkflowsDatabaseRepository = 
         const supabase = getSupabaseClient();
 
         try {
-            const { data, error } = await supabase.from('workflows').select().eq('user_id', userId);
+            const { data, error } = await supabase.from('workflows').select().eq('user_id', userId).order('updated_at', { ascending: false });
 
             if (error) {
                 throw new DatabaseError('Failed to retrieve workflows from database', DatabaseErrorType.DATABASE_CONNECTION_ERROR);

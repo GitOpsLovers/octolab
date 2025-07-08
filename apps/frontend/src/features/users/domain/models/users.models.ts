@@ -3,4 +3,5 @@
  */
 export interface User {
     id: string;
+    workflows: number;
 }

@@ -23,4 +23,5 @@ export interface UserIdp {
  */
 export interface User {
     id: string;
+    workflows: number;
 }
