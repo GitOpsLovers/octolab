@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FaSpinner } from 'react-icons/fa';
+import { FaPlus, FaSpinner } from 'react-icons/fa';
 import { LuWorkflow } from 'react-icons/lu';
 
 import { useMyWorkflows } from '../hooks/my-workflows.hooks';
@@ -36,7 +36,7 @@ export function WorkflowsList() {
                         <Link
                             key={workflow.id}
                             href={`/editor/${workflow.templateId}/${workflow.id}`}
-                            className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col"
+                            className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col hover:border-primary"
                         >
                             <div className="p-4 flex flex-col flex-1">
                                 <LuWorkflow className="w-6 h-6 mb-3 text-primary" />
@@ -54,6 +54,16 @@ export function WorkflowsList() {
                         </Link>
                     );
                 })}
+
+                {/* Card extra para crear nuevo workflow */}
+                <Link
+                    href="/templates"
+                    className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col items-center justify-center text-center p-6 hover:border-primary"
+                >
+                    <FaPlus className="w-8 h-8 text-primary mb-3" />
+                    <h2 className="text-lg font-bold text-text mb-1">Create new workflow</h2>
+                    <p className="text-sm text-text-muted">Start from a new template</p>
+                </Link>
             </div>
         </>
     );
