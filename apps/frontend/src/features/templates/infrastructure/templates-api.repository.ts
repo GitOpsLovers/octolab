@@ -1,4 +1,5 @@
-import { Template } from '../domain/models/template.models';
+import { Template } from '@octolab/domain';
+
 import { TemplatesRepository } from '../domain/repositories/templates.repository';
 
 /**

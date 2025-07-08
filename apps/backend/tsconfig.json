@@ -8,8 +8,12 @@
     "baseUrl": ".",
     "paths": {
       "@core/*": ["./src/core/*"],
-      "@features/*": ["./src/features/*"]
+      "@features/*": ["./src/features/*"],
+      "@octolab/domain": ["../../packages/domain/dist"]
     }
   },
+  "references": [
+    { "path": "../../packages/domain" }
+  ],
   "include": ["src"],
 }

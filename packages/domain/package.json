@@ -1,0 +1,15 @@
+{
+  "name": "@octolab/domain",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "imports": {
+    "#*": "./src/*"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "lint": "npx eslint"
+  }
+}

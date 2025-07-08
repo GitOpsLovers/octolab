@@ -16,9 +16,13 @@
     ],
     "paths": {
       "@features/*": ["./src/features/*"],
-      "@ui/*": ["./src/ui/*"]
+      "@ui/*": ["./src/ui/*"],
+      "@octolab/domain": ["../../packages/domain/dist"]
     }
   },
+  "references": [
+    { "path": "../../packages/domain" }
+  ],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

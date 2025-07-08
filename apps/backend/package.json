@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@octolab/backend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "lint": "npx eslint"
   },
   "dependencies": {
+    "@octolab/domain": "workspace:*",
     "@supabase/supabase-js": "^2.50.3",
     "auth0": "^4.27.0",
     "body-parser": "^2.2.0",

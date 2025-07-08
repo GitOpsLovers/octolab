@@ -1,4 +1,4 @@
-import { EditingWorkflow, EditingWorkflowYaml } from '../models/editor.models';
+import { WorkflowConfig, WorkflowYaml } from '../models/editor.models';
 
 /**
  * Create workflow DTO
@@ -8,6 +8,6 @@ export interface CreateWorkflowDto {
     templateId: string;
     name: string;
     description: string;
-    yaml: EditingWorkflowYaml;
-    data: EditingWorkflow;
+    yaml: WorkflowYaml;
+    data: WorkflowConfig;
 }

@@ -13,49 +13,6 @@ export interface DatabaseWorkflow {
 }
 
 /**
- * Template configuration for NPM publish workflow
- */
-export interface NpmPublishWorkflowConfig {
-    id: 'npm-publish';
-    runner: string;
-    branch: string;
-    nodeVersion: string;
-    installCommand: string;
-    testCommand: string;
-    buildCommand: string;
-    npmTokenSecret: string;
-    workflowName: string;
-    jobName: string;
-}
-
-/**
- * Template configuration for Node PR Verify workflow
- */
-export interface NodePrVerifyWorkflowConfig {
-    id: 'node-pr-verify';
-    runner: string;
-    nodeVersion: string;
-    installCommand: string;
-    lintCommand: string;
-    testCommand: string;
-    buildCommand: string;
-    workflowName: string;
-    jobName: string;
-}
-
-/**
- * Template configuration for Node PR Verify workflow
- */
-export interface VercelProDeploymentWorkflowConfig {
-    id: 'vercel-pro-deployment';
-    runner: string;
-    jobName: string;
-    branch: string;
-    workflowName: string;
-    vercelTokenSecret: string;
-}
-
-/**
  * Editing workflow YAML model
  */
 export interface EditingWorkflowYaml {

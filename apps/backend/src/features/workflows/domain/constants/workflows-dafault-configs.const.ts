@@ -1,4 +1,4 @@
-import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig, VercelProDeploymentWorkflowConfig } from '../models/workflows.models';
+import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig, VercelProDeploymentWorkflowConfig } from '@octolab/domain';
 
 /**
  * Workflow configuration model

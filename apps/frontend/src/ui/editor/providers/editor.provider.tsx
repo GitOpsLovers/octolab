@@ -1,5 +1,6 @@
 'use client';
 
+import { Template } from '@octolab/domain';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { EditorContext } from '../contexts/editor.context';
@@ -10,7 +11,6 @@ import { getWorkflowConfigUseCase } from '@features/editor/application/get-workf
 import { WorkflowConfig } from '@features/editor/domain/models/editor.models';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
 import { getOneTemplateUseCase } from '@features/templates/application/get-one-template.use-case';
-import { Template } from '@features/templates/domain/models/template.models';
 import { templatesApiRepository } from '@features/templates/infrastructure/templates-api.repository';
 import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 

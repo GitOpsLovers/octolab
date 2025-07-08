@@ -1,5 +1,6 @@
+import { Template } from '@octolab/domain';
+
 import { availableTemplates } from '../domain/constants/available-templates.const';
-import { Template } from '../domain/models/template.models';
 
 /**
  * Get template by id use case.

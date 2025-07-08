@@ -1,4 +1,4 @@
-import { Template } from '../models/template.models';
+import type { Template } from '@octolab/domain';
 
 /**
  * List of available templates.

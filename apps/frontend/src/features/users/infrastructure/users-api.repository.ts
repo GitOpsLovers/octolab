@@ -1,4 +1,5 @@
-import { User } from '../domain/models/users.models';
+import { User } from '@octolab/domain';
+
 import { UsersRepository } from '../domain/repositories/users.repository';
 
 /**

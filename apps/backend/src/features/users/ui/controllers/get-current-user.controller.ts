@@ -1,9 +1,9 @@
+import { User } from '@octolab/domain';
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import { getCurrentUserIdUseCase } from '../../application/get-current-user-id.use-case';
 import { getUserByIdUseCase } from '../../application/get-user-by-id.use-case';
-import { User } from '../../domain/models/user.models';
 import { usersAuth0IdpRepository } from '../../infrastructure/auth0/users-auth0.idp.repository';
 
 import { getAuth0ManagementClient } from '@core/infrastructure/auth0/auth0-idp.client';

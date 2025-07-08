@@ -1,4 +1,4 @@
-import type { User } from '@workflowerdev/domain';
+import { User } from '@octolab/domain';
 
 /**
  * Users repository

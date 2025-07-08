@@ -1,4 +1,4 @@
-import { Template } from '@features/templates/domain/models/template.models';
+import { Template } from '@octolab/domain';
 
 /**
  * Templates context provider model

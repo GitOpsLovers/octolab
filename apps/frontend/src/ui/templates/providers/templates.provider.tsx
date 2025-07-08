@@ -1,11 +1,11 @@
 'use client';
 
+import { Template } from '@octolab/domain';
 import { ReactNode, useEffect, useState } from 'react';
 
 import { TemplatesContext } from '../contexts/templates.context';
 
 import { getTemplatesUseCase } from '@features/templates/application/get-templates.use-case';
-import { Template } from '@features/templates/domain/models/template.models';
 import { templatesApiRepository } from '@features/templates/infrastructure/templates-api.repository';
 
 /**

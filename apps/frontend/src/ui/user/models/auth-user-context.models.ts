@@ -1,6 +1,5 @@
+import { User } from '@octolab/domain';
 import { ReactNode } from 'react';
-
-import { User } from '@features/users/domain/models/users.models';
 
 /**
  * Authenticated user context value.

@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@octolab/frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.7.0",
+    "@octolab/domain": "workspace:*",
     "next": "15.3.4",
     "next-client-cookies": "^2.1.0",
     "react": "^19.0.0",

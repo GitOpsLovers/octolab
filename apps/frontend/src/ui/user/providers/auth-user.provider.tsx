@@ -1,6 +1,7 @@
 'use client';
 
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { User } from '@octolab/domain';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -8,7 +9,6 @@ import { AuthUserContext } from '../contexts/auth-user.context';
 import { AuthUserProviderProps } from '../models/auth-user-context.models';
 
 import { getCurrentUserUseCase } from '@features/users/application/get-current-user.use-case';
-import { User } from '@features/users/domain/models/users.models';
 import { usersApiRepository } from '@features/users/infrastructure/users-api.repository';
 
 /**
