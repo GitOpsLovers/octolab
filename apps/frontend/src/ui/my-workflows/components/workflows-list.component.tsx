@@ -27,7 +27,7 @@ export function WorkflowsList() {
 
     return (
         <>
-            <h1 className="text-3xl font-bold mb-8 text-center">My workflows</h1>
+            <h1 className="text-3xl font-bold mb-12 mt-4 text-center">My workflows</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {workflows.map((workflow) => {
                     const workflowData = JSON.parse(workflow.data);
@@ -41,9 +41,9 @@ export function WorkflowsList() {
                             <div className="p-4 flex flex-col flex-1">
                                 <LuWorkflow className="w-6 h-6 mb-3 text-primary" />
 
-                                <h2 className="text-lg font-semibold text-text mb-1">{workflow.name}</h2>
+                                <h2 className="text-lg font-bold text-text mb-1">{workflow.name}</h2>
 
-                                <p className=" mb-3 txr-sm">{workflow.description}</p>
+                                <p className="text-sm text-text-muted mb-2">{workflow.description}</p>
 
                                 <p className="text-xs text-text-muted mb-3">Last updated: {new Date(workflow.updatedAt).toLocaleDateString()}</p>
 

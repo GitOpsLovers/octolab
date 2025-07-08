@@ -10,7 +10,6 @@ import { MyWorkflowsProvider } from '@ui/my-workflows/providers/my-workflows.pro
 export default async function MyWorkflowsPage() {
     const session = await auth0Client.getSession();
 
-    // Si no hay usuario autenticado => redirigimos a home
     if (!session?.user) {
         redirect('/');
     }
