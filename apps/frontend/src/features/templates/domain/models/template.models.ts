@@ -7,5 +7,6 @@ export interface Template {
     description: string;
     icon: string;
     iconColor: string;
+    iconLibrary: string;
     features: string[];
 }

@@ -1,9 +1,9 @@
-import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig } from '../models/workflows.models';
+import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig, VercelProDeploymentWorkflowConfig } from '../models/workflows.models';
 
 /**
  * Workflow configuration model
  */
-export type WorkflowConfig = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig;
+export type WorkflowConfig = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig | VercelProDeploymentWorkflowConfig;
 
 /**
  * Default configurations for each workflow.
@@ -31,5 +31,13 @@ export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
         buildCommand: 'npm run build',
         workflowName: 'Node.js Pull request verify',
         jobName: 'verify',
+    },
+    'vercel-pro-deployment': {
+        id: 'vercel-pro-deployment',
+        runner: 'ubuntu-latest',
+        jobName: 'deploy',
+        branch: 'main',
+        workflowName: 'Vercel PRO deployment',
+        vercelTokenSecret: 'VERCEL_TOKEN',
     },
 };

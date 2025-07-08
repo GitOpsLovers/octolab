@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCookies } from 'next-client-cookies';
 import { useState, MouseEvent, useEffect } from 'react';
 import * as FaIcons from 'react-icons/fa';
+import * as Io5Icons from 'react-icons/io5';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useTemplates } from '../hooks/templates.hooks';
@@ -24,6 +25,9 @@ export function TemplatesList() {
     const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
     const [skipRegisterModal, setSkipRegisterModal] = useState(false);
 
+    /**
+     * Check if the user has skipped the register modal.
+     */
     useEffect(() => {
         const skip = cookies.get('octolab_skip_register_modal');
         if (skip === 'true') {
@@ -31,6 +35,7 @@ export function TemplatesList() {
         }
     }, [cookies]);
 
+    // Set the skip register modal cookie and state.
     const setSkipModal = (value: boolean) => {
         if (value) {
             cookies.set('octolab_skip_register_modal', 'true', { expires: 7 });
@@ -41,6 +46,7 @@ export function TemplatesList() {
         }
     };
 
+    // Handle the template selection.
     const handleSelectTemplate = (e: MouseEvent, id: string) => {
         e.preventDefault();
         setSelectedTemplateId(id);
@@ -72,8 +78,14 @@ export function TemplatesList() {
             <h1 className="text-3xl font-bold mb-12 mt-4 text-center">Choose a template to get started</h1>
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-8">
                 {templates?.map((template) => {
-                    // eslint-disable-next-line import/namespace
-                    const Icon = FaIcons[template.icon as keyof typeof FaIcons];
+                    let Icon;
+                    if (template.iconLibrary === 'io5') {
+                        // eslint-disable-next-line import/namespace
+                        Icon = Io5Icons[template.icon as keyof typeof Io5Icons];
+                    } else {
+                        // eslint-disable-next-line import/namespace
+                        Icon = FaIcons[template.icon as keyof typeof FaIcons];
+                    }
 
                     return (
                         <div key={template.id} className="bg-surface rounded-xl shadow hover:shadow-lg transition border border-border flex flex-col p-4">

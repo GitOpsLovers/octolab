@@ -44,6 +44,18 @@ export interface NodePrVerifyWorkflowConfig {
 }
 
 /**
+ * Template configuration for Node PR Verify workflow
+ */
+export interface VercelProDeploymentWorkflowConfig {
+    id: 'vercel-pro-deployment';
+    runner: string;
+    jobName: string;
+    branch: string;
+    workflowName: string;
+    vercelTokenSecret: string;
+}
+
+/**
  * Editing workflow YAML model
  */
 export interface EditingWorkflowYaml {

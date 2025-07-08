@@ -1,7 +1,7 @@
 /**
  * Workflow configuration model
  */
-export type WorkflowConfig = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig;
+export type WorkflowConfig = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig | VercelProDeploymentWorkflowConfig;
 
 /**
  * Workflow configuration for NPM Publish
@@ -38,6 +38,21 @@ export interface NodePrVerifyWorkflowConfig {
     filename: string;
     name: string;
     description: string;
+}
+
+/**
+ * Template configuration for Node PR Verify workflow
+ */
+export interface VercelProDeploymentWorkflowConfig {
+    id: 'vercel-pro-deployment';
+    runner: string;
+    jobName: string;
+    branch: string;
+    workflowName: string;
+    name: string;
+    description: string;
+    filename: string;
+    vercelTokenSecret: string;
 }
 
 /**

@@ -89,9 +89,12 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
                             buildCommand: existingWorkflowData.buildCommand,
                             workflowName: existingWorkflowData.workflowName,
                             jobName: existingWorkflowData.jobName,
+                            npmTokenSecret: existingWorkflowData.npmTokenSecret,
+                            vercelTokenSecret: existingWorkflowData.vercelTokenSecret,
                             filename: '????', // Esto puedes reemplazarlo con el que toque
                             name: existingWorkflow.name,
                             description: existingWorkflow.description,
+                            branch: existingWorkflowData.branch,
                         };
 
                         setEditingWorkflow(workflow);

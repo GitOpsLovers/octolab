@@ -85,38 +85,42 @@ export function EditorForm(): ReactNode {
             )}
 
             {/* Node version */}
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-text mb-1">Node version</label>
-                <select
-                    value={editingWorkflow.nodeVersion}
-                    onChange={(e) => {
-                        setEditingWorkflow({ ...editingWorkflow, nodeVersion: e.target.value });
-                    }}
-                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                >
-                    <option value="16">16</option>
-                    <option value="18">18</option>
-                    <option value="20">20</option>
-                    <option value="22">22</option>
-                </select>
-            </div>
+            {editingWorkflow.id !== 'vercel-pro-deployment' && (
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-text mb-1">Node version</label>
+                    <select
+                        value={editingWorkflow.nodeVersion}
+                        onChange={(e) => {
+                            setEditingWorkflow({ ...editingWorkflow, nodeVersion: e.target.value });
+                        }}
+                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                    >
+                        <option value="16">16</option>
+                        <option value="18">18</option>
+                        <option value="20">20</option>
+                        <option value="22">22</option>
+                    </select>
+                </div>
+            )}
 
-            {/* Template */}
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-text mb-1">Installation command</label>
-                <input
-                    type="text"
-                    value={editingWorkflow.installCommand ?? ''}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        setEditingWorkflow({ ...editingWorkflow, installCommand: value });
-                        validateField('installCommand', value);
-                    }}
-                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                    placeholder="npm install"
-                />
-                {errors.installCommand && <p className="text-red-500 text-sm mt-1">{errors.installCommand}</p>}
-            </div>
+            {/* Install command */}
+            {editingWorkflow.id !== 'vercel-pro-deployment' && (
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-text mb-1">Installation command</label>
+                    <input
+                        type="text"
+                        value={editingWorkflow.installCommand ?? ''}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setEditingWorkflow({ ...editingWorkflow, installCommand: value });
+                            validateField('installCommand', value);
+                        }}
+                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        placeholder="npm install"
+                    />
+                    {errors.installCommand && <p className="text-red-500 text-sm mt-1">{errors.installCommand}</p>}
+                </div>
+            )}
 
             {/* Lint command */}
             {editingWorkflow.id === 'node-pr-verify' && (
@@ -138,38 +142,42 @@ export function EditorForm(): ReactNode {
             )}
 
             {/* Test command */}
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-text mb-1">Test command</label>
-                <input
-                    type="text"
-                    value={editingWorkflow.testCommand ?? ''}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        setEditingWorkflow({ ...editingWorkflow, testCommand: value });
-                        validateField('testCommand', value);
-                    }}
-                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                    placeholder="npm test"
-                />
-                {errors.testCommand && <p className="text-red-500 text-sm mt-1">{errors.testCommand}</p>}
-            </div>
+            {editingWorkflow.id !== 'vercel-pro-deployment' && (
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-text mb-1">Test command</label>
+                    <input
+                        type="text"
+                        value={editingWorkflow.testCommand ?? ''}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setEditingWorkflow({ ...editingWorkflow, testCommand: value });
+                            validateField('testCommand', value);
+                        }}
+                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        placeholder="npm test"
+                    />
+                    {errors.testCommand && <p className="text-red-500 text-sm mt-1">{errors.testCommand}</p>}
+                </div>
+            )}
 
             {/* Build command */}
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-text mb-1">Build command</label>
-                <input
-                    type="text"
-                    value={editingWorkflow.buildCommand ?? ''}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        setEditingWorkflow({ ...editingWorkflow, buildCommand: value });
-                        validateField('buildCommand', value);
-                    }}
-                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                    placeholder="npm run build"
-                />
-                {errors.buildCommand && <p className="text-red-500 text-sm mt-1">{errors.buildCommand}</p>}
-            </div>
+            {editingWorkflow.id !== 'vercel-pro-deployment' && (
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-text mb-1">Build command</label>
+                    <input
+                        type="text"
+                        value={editingWorkflow.buildCommand ?? ''}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setEditingWorkflow({ ...editingWorkflow, buildCommand: value });
+                            validateField('buildCommand', value);
+                        }}
+                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        placeholder="npm run build"
+                    />
+                    {errors.buildCommand && <p className="text-red-500 text-sm mt-1">{errors.buildCommand}</p>}
+                </div>
+            )}
 
             {/* NPM Token Secret Name */}
             {editingWorkflow.id === 'npm-publish' && (
@@ -187,6 +195,25 @@ export function EditorForm(): ReactNode {
                         placeholder="Ej: NPM_TOKEN"
                     />
                     {errors.npmTokenSecret && <p className="text-red-500 text-sm mt-1">{errors.npmTokenSecret}</p>}
+                </div>
+            )}
+
+            {/* Vercel Token Secret Name */}
+            {editingWorkflow.id === 'vercel-pro-deployment' && (
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-text mb-1">Vercel Token Secret Name</label>
+                    <input
+                        type="text"
+                        value={editingWorkflow.vercelTokenSecret ?? ''}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setEditingWorkflow({ ...editingWorkflow, vercelTokenSecret: value });
+                            validateField('vercelTokenSecret', value);
+                        }}
+                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        placeholder="Ej: VERCEL_TOKEN"
+                    />
+                    {errors.vercelTokenSecret && <p className="text-red-500 text-sm mt-1">{errors.vercelTokenSecret}</p>}
                 </div>
             )}
 
