@@ -1,94 +1,108 @@
-import { Step, WorkflowConfig, WorkflowYaml } from '../domain/models/editor.models';
+import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig, Step, VercelProDeploymentWorkflowConfig, WorkflowConfig, WorkflowYaml } from '../domain/models/editor.models';
 
 /**
- * Generate editing workflow from template configuration use case.
- *
- * @param workflowConfig Template configuration
- *
- * @returns Editing workflow
+ * Generate base steps
  */
-export function generateEditingWorkflowFromConfigUseCase(workflowConfig: WorkflowConfig): WorkflowYaml {
-    const on = workflowConfig.id === 'node-pr-verify' ? { pull_request: {} } : { push: { branches: [workflowConfig.branch] } };
-
-    const steps: Step[] = [
+function baseSteps(): Step[] {
+    return [
         {
             name: 'Checkout code',
             uses: 'actions/checkout@v4',
         },
     ];
+}
 
-    // If template is vercel-pro-deployment, add Install Vercel CLI step after checkout
-    if (workflowConfig.id === 'vercel-pro-deployment') {
-        steps.push({
-            name: 'Install Vercel CLI',
-            run: 'npm install --global vercel@latest',
-        });
-    }
-
-    // Add Setup Node only for node-pr-verify or npm-publish
-    if (workflowConfig.id === 'node-pr-verify' || workflowConfig.id === 'npm-publish') {
-        steps.push({
+/**
+ * Generate Node.js steps
+ */
+function nodeSteps(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig): Step[] {
+    const steps: Step[] = [
+        {
             name: 'Setup Node',
             uses: 'actions/setup-node@v4',
             with: {
-                'node-version': workflowConfig.nodeVersion,
+                'node-version': config.nodeVersion,
             },
-        });
-    }
-
-    // Steps to install, test, build only if NOT vercel-pro-deployment
-    if (workflowConfig.id !== 'vercel-pro-deployment') {
-        steps.push({
+        },
+        {
             name: 'Install dependencies',
-            run: workflowConfig.installCommand,
+            run: config.installCommand,
+        },
+        {
+            name: 'Run tests',
+            run: config.testCommand,
+        },
+        {
+            name: 'Build package',
+            run: config.buildCommand,
+        },
+    ];
+
+    if (config.id === 'node-pr-verify') {
+        steps.splice(2, 0, {
+            name: 'Run lint',
+            run: config.lintCommand,
         });
-
-        if (workflowConfig.id === 'node-pr-verify') {
-            steps.push({
-                name: 'Run lint',
-                run: workflowConfig.lintCommand,
-            });
-        }
-
-        steps.push(
-            {
-                name: 'Run tests',
-                run: workflowConfig.testCommand,
-            },
-            {
-                name: 'Build package',
-                run: workflowConfig.buildCommand,
-            },
-        );
     }
 
-    if (workflowConfig.id === 'npm-publish') {
+    if (config.id === 'npm-publish') {
         steps.push({
             name: 'Publish to NPM',
             uses: 'JS-DevTools/npm-publish@v3',
             with: {
-                token: `\${{ secrets.${workflowConfig.npmTokenSecret} }}`,
+                token: `\${{ secrets.${config.npmTokenSecret} }}`,
             },
         });
     }
 
-    // Add final Vercel steps if template is vercel-pro-deployment
-    if (workflowConfig.id === 'vercel-pro-deployment') {
-        steps.push(
-            {
-                name: 'Pull Vercel Environment Information',
-                run: `vercel pull --yes --environment=production --token=\${{ secrets.${workflowConfig.vercelTokenSecret} }}`,
-            },
-            {
-                name: 'Build Project Artifacts',
-                run: `vercel build --prod --token=\${{ secrets.${workflowConfig.vercelTokenSecret} }}`,
-            },
-            {
-                name: 'Deploy Project Artifacts to Vercel',
-                run: `vercel deploy --prebuilt --prod --token=\${{ secrets.${workflowConfig.vercelTokenSecret} }}`,
-            },
-        );
+    return steps;
+}
+
+/**
+ * Generate Vercel steps
+ */
+function vercelSteps(config: VercelProDeploymentWorkflowConfig): Step[] {
+    return [
+        {
+            name: 'Install Vercel CLI',
+            run: 'npm install --global vercel@latest',
+        },
+        {
+            name: 'Pull Vercel Environment Information',
+            run: `vercel pull --yes --environment=production --token=\${{ secrets.${config.vercelTokenSecret} }}`,
+        },
+        {
+            name: 'Build Project Artifacts',
+            run: `vercel build --prod --token=\${{ secrets.${config.vercelTokenSecret} }}`,
+        },
+        {
+            name: 'Deploy Project Artifacts to Vercel',
+            run: `vercel deploy --prebuilt --prod --token=\${{ secrets.${config.vercelTokenSecret} }}`,
+        },
+    ];
+}
+
+/**
+ * Generate steps based on workflow config
+ */
+function generateSteps(config: WorkflowConfig): Step[] {
+    const steps = baseSteps();
+
+    if (config.id === 'node-pr-verify' || config.id === 'npm-publish') {
+        steps.push(...nodeSteps(config));
+    } else if (config.id === 'vercel-pro-deployment') {
+        steps.push(...vercelSteps(config));
     }
+
+    return steps;
+}
+
+/**
+ * Generate a workflow from a workflow config
+ */
+export function generateEditingWorkflowFromConfigUseCase(workflowConfig: WorkflowConfig): WorkflowYaml {
+    const on = workflowConfig.id === 'node-pr-verify' ? { pull_request: {} } : { push: { branches: [workflowConfig.branch] } };
+    const steps = generateSteps(workflowConfig);
 
     return {
         name: workflowConfig.workflowName,
