@@ -1,5 +1,6 @@
+import { WorkflowConfig } from '@octolab/domain';
+
 import { CreateWorkflowDto } from '../dtos/create-workflow.dto';
-import { WorkflowConfig } from '../models/editor.models';
 
 /**
  * Editor repository.

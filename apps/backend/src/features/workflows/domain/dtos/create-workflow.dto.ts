@@ -1,5 +1,4 @@
-import { WorkflowConfig } from '../constants/workflows-dafault-configs.const';
-import { EditingWorkflowYaml } from '../models/workflows.models';
+import { WorkflowConfig, WorkflowYaml } from '@octolab/domain';
 
 /**
  * Create workflow DTO
@@ -10,6 +9,6 @@ export interface CreateWorkflowDto {
     templateId: string;
     name: string;
     description: string;
-    yaml: EditingWorkflowYaml;
+    yaml: WorkflowYaml;
     data: WorkflowConfig;
 }

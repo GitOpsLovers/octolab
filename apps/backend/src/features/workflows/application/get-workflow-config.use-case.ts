@@ -1,4 +1,6 @@
-import { WorkflowConfig, workflowsDefaultConfigs } from '../domain/constants/workflows-dafault-configs.const';
+import { WorkflowConfig } from '@octolab/domain';
+
+import { workflowsDefaultConfigs } from '../domain/constants/workflows-dafault-configs.const';
 
 /**
  * Get template configuration use case.

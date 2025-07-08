@@ -1,6 +1,4 @@
-import { Template } from '@octolab/domain';
-
-import { WorkflowConfig, WorkflowYaml } from '@features/editor/domain/models/editor.models';
+import { Template, WorkflowConfig, WorkflowYaml } from '@octolab/domain';
 
 /**
  * Editor context provider model

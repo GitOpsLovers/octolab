@@ -1,6 +1,4 @@
-import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig, VercelProDeploymentWorkflowConfig } from '@octolab/domain';
-
-import { Step, WorkflowConfig, WorkflowYaml } from '../domain/models/editor.models';
+import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig, Step, VercelProDeploymentWorkflowConfig, WorkflowConfig, WorkflowYaml } from '@octolab/domain';
 
 /**
  * Generate base steps

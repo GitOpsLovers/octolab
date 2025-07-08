@@ -19,6 +19,8 @@ export interface User {
     workflows: number;
 }
 
+export type WorkflowConfig = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig | VercelProDeploymentWorkflowConfig;
+
 /**
  * Template configuration for NPM publish workflow
  */
@@ -69,4 +71,32 @@ export interface VercelProDeploymentWorkflowConfig {
     name: string;
     description: string;
     filename: string;
+}
+
+/**
+ * Workflow YAML model
+ */
+export interface WorkflowYaml {
+    name: string;
+    on: any;
+    jobs: Record<string, Job>;
+}
+
+/**
+ * Jobs model
+ */
+export interface Job {
+    'runs-on': string;
+    steps: Step[];
+}
+
+/**
+ * Step model
+ */
+export interface Step {
+    name: string;
+    run?: string;
+    uses?: string;
+    with?: Record<string, string>;
+    env?: Record<string, string>;
 }

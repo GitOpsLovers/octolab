@@ -1,4 +1,4 @@
-import { WorkflowConfig, WorkflowYaml } from '../models/editor.models';
+import { WorkflowConfig, WorkflowYaml } from '@octolab/domain';
 
 /**
  * Create workflow DTO

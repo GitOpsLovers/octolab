@@ -1,9 +1,8 @@
-import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig, VercelProDeploymentWorkflowConfig } from '@octolab/domain';
+import { WorkflowConfig } from '@octolab/domain';
 
 /**
  * Workflow configuration model
  */
-export type WorkflowConfig = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig | VercelProDeploymentWorkflowConfig;
 
 /**
  * Default configurations for each workflow.
@@ -20,6 +19,9 @@ export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
         npmTokenSecret: 'NPM_TOKEN',
         workflowName: 'Publish to NPM',
         jobName: 'build',
+        name: 'Publish to NPM',
+        description: 'Workflow to publish a package in NPM.',
+        filename: 'npm-publish.yml',
     },
     'node-pr-verify': {
         id: 'node-pr-verify',
@@ -31,6 +33,9 @@ export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
         buildCommand: 'npm run build',
         workflowName: 'Node.js Pull request verify',
         jobName: 'verify',
+        name: 'Node.js pull request verify',
+        description: 'Workflow to check the quality of a pull request in a Node.js stack.',
+        filename: 'node-pr-verify.yml',
     },
     'vercel-pro-deployment': {
         id: 'vercel-pro-deployment',
@@ -39,5 +44,8 @@ export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
         branch: 'main',
         workflowName: 'Vercel PRO deployment',
         vercelTokenSecret: 'VERCEL_TOKEN',
+        name: 'Vercel production deployment',
+        description: 'Deploy a productive application to Vercel',
+        filename: 'vercel-pro-deployment.yml',
     },
 };

@@ -1,4 +1,5 @@
-import { WorkflowConfig } from '../domain/models/editor.models';
+import { WorkflowConfig } from '@octolab/domain';
+
 import { EditorRepository } from '../domain/repositories/editor.repository';
 
 /**
