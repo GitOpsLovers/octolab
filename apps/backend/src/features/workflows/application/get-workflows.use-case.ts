@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 import { UserWorkflow } from '../domain/models/workflows.models';
 import { WorkflowsDatabaseRepository } from '../domain/repositories/workflows.repository';
 
@@ -13,6 +15,7 @@ export async function getWorkflowsUseCase(repository: WorkflowsDatabaseRepositor
     const databaseWorkflows = await repository.getWorkflows(userId);
 
     return databaseWorkflows.map((workflow) => {
+        const formattedUpdatedAt = format(new Date(workflow.updatedAt), 'dd/MM/yyyy');
         const templateId = JSON.parse(workflow.data).id;
 
         return {
@@ -22,7 +25,7 @@ export async function getWorkflowsUseCase(repository: WorkflowsDatabaseRepositor
             templateId,
             yaml: workflow.yaml,
             data: workflow.data,
-            updatedAt: workflow.updatedAt,
+            updatedAt: formattedUpdatedAt,
         };
     });
 }

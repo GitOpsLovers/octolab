@@ -45,7 +45,7 @@ export function WorkflowsList() {
 
                                 <p className="text-sm text-text-muted mb-2">{workflow.description}</p>
 
-                                <p className="text-xs text-text-muted mb-3">Last updated: {new Date(workflow.updatedAt).toLocaleDateString()}</p>
+                                <p className="text-xs text-text-muted mb-3">Last updated: {workflow.updatedAt}</p>
 
                                 <div className="mt-auto">
                                     <span className="inline-block bg-primary/10 text-primary text-xs font-medium px-2 py-1 rounded">{workflowData.id}</span>
@@ -55,7 +55,6 @@ export function WorkflowsList() {
                     );
                 })}
 
-                {/* Card extra para crear nuevo workflow */}
                 <Link
                     href="/templates"
                     className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col items-center justify-center text-center p-6 hover:border-primary"
