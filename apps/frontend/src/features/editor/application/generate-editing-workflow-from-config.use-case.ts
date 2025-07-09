@@ -1,4 +1,12 @@
-import { NodePrVerifyWorkflowConfig, NpmPublishWorkflowConfig, Step, VercelProDeploymentWorkflowConfig, WorkflowConfig, WorkflowYaml } from '@octolab/domain';
+import {
+    NodePrVerifyWorkflowConfig,
+    NpmPublishWorkflowConfig,
+    SemanticReleaseWorkflowConfig,
+    Step,
+    VercelProDeploymentWorkflowConfig,
+    WorkflowConfig,
+    WorkflowYaml,
+} from '@octolab/domain';
 
 /**
  * Generate base steps
@@ -15,28 +23,34 @@ function baseSteps(): Step[] {
 /**
  * Generate Node.js steps
  */
-function nodeSteps(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig): Step[] {
+function nodeSteps(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig): Step[] {
     const steps: Step[] = [
         {
             name: 'Setup Node',
             uses: 'actions/setup-node@v4',
             with: {
-                'node-version': config.nodeVersion,
+                'node-version': config.nodeVersion ?? '18',
             },
         },
         {
             name: 'Install dependencies',
             run: config.installCommand,
         },
-        {
-            name: 'Run tests',
-            run: config.testCommand,
-        },
-        {
-            name: 'Build package',
-            run: config.buildCommand,
-        },
     ];
+
+    // Extra steps for specific workflows
+    if ('testCommand' in config && 'buildCommand' in config) {
+        steps.push(
+            {
+                name: 'Run tests',
+                run: config.testCommand,
+            },
+            {
+                name: 'Build package',
+                run: config.buildCommand,
+            },
+        );
+    }
 
     if (config.id === 'node-pr-verify') {
         steps.splice(2, 0, {
@@ -51,6 +65,16 @@ function nodeSteps(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig
             uses: 'JS-DevTools/npm-publish@v3',
             with: {
                 token: `\${{ secrets.${config.npmTokenSecret} }}`,
+            },
+        });
+    }
+
+    if (config.id === 'semantic-release') {
+        steps.push({
+            name: 'Release with Semantic Release',
+            run: config.releaseCommand,
+            env: {
+                GITHUB_TOKEN: `\${{ secrets.${config.githubTokenSecret} }}`,
             },
         });
     }
@@ -88,8 +112,8 @@ function vercelSteps(config: VercelProDeploymentWorkflowConfig): Step[] {
 function generateSteps(config: WorkflowConfig): Step[] {
     const steps = baseSteps();
 
-    if (config.id === 'node-pr-verify' || config.id === 'npm-publish') {
-        steps.push(...nodeSteps(config));
+    if (config.id === 'node-pr-verify' || config.id === 'npm-publish' || config.id === 'semantic-release') {
+        steps.push(...nodeSteps(config as NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig));
     } else if (config.id === 'vercel-pro-deployment') {
         steps.push(...vercelSteps(config));
     }
@@ -102,6 +126,7 @@ function generateSteps(config: WorkflowConfig): Step[] {
  */
 export function generateEditingWorkflowFromConfigUseCase(workflowConfig: WorkflowConfig): WorkflowYaml {
     const on = workflowConfig.id === 'node-pr-verify' ? { pull_request: {} } : { push: { branches: [workflowConfig.branch] } };
+
     const steps = generateSteps(workflowConfig);
 
     return {

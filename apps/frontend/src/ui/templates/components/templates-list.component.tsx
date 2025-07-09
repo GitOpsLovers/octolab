@@ -1,5 +1,5 @@
 'use client';
-
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCookies } from 'next-client-cookies';
 import { useState, MouseEvent, useEffect } from 'react';
@@ -76,6 +76,7 @@ export function TemplatesList() {
     return (
         <>
             <h1 className="text-3xl font-bold mb-12 mt-4 text-center">Choose a template to get started</h1>
+
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-8">
                 {templates?.map((template) => {
                     let Icon;
@@ -119,6 +120,15 @@ export function TemplatesList() {
                         </div>
                     );
                 })}
+
+                <Link
+                    className="bg-surface border border-dashed border-border rounded-xl flex flex-col p-4 items-center justify-center text-center hover:shadow-lg transition cursor-pointer"
+                    href={'/contact'}
+                >
+                    <Io5Icons.IoAddCircleOutline className="w-10 h-10 text-primary mb-2" />
+                    <h2 className="text-lg font-bold text-text mb-1">Request new template</h2>
+                    <p className="text-sm text-text-muted">Can&apos;t find what you need? Let us know and we&apos;ll add it!</p>
+                </Link>
             </div>
 
             <RegisterModalForTemplatesList

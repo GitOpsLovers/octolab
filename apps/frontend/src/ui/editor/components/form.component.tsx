@@ -4,220 +4,147 @@ import { ReactNode } from 'react';
 
 import { useEditor } from '../hooks/editor.hooks';
 
-/**
- * Editor form component
- */
 export function EditorForm(): ReactNode {
     const { editingWorkflow, setEditingWorkflow, resetEditingWorkflow, errors, setErrors } = useEditor();
 
-    // Validate a field
     const validateField = (field: string, value: string) => {
         if (!value.trim()) {
             setErrors((prev) => ({ ...prev, [field]: 'This field cannot be empty' }));
         } else {
             setErrors((prev) => {
-                const newErrors = Object.fromEntries(Object.entries(prev).filter(([key]) => key !== field));
+                const newErrors = { ...prev };
+                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                delete newErrors[field];
                 return newErrors;
             });
         }
     };
 
-    if (!editingWorkflow) {
-        return null;
-    }
+    if (!editingWorkflow) return null;
+
+    // ⚙️ Campos configurables
+    const fieldsConfig = [
+        {
+            key: 'workflowName',
+            label: 'Name',
+            placeholder: 'CI Workflow',
+            show: true,
+            type: 'input',
+        },
+        {
+            key: 'runner',
+            label: 'Runner',
+            show: true,
+            type: 'select',
+            options: ['ubuntu-latest', 'windows-latest', 'macos-latest'],
+        },
+        {
+            key: 'branch',
+            label: 'Target Branch',
+            show: editingWorkflow.id !== 'node-pr-verify',
+            type: 'input',
+        },
+        {
+            key: 'nodeVersion',
+            label: 'Node version',
+            show: editingWorkflow.id !== 'vercel-pro-deployment',
+            type: 'select',
+            options: ['16', '18', '20', '22'],
+        },
+        {
+            key: 'installCommand',
+            label: 'Installation command',
+            placeholder: 'npm install',
+            show: editingWorkflow.id !== 'vercel-pro-deployment',
+            type: 'input',
+        },
+        {
+            key: 'lintCommand',
+            label: 'Lint command',
+            placeholder: 'npm lint',
+            show: editingWorkflow.id === 'node-pr-verify',
+            type: 'input',
+        },
+        {
+            key: 'testCommand',
+            label: 'Test command',
+            placeholder: 'npm test',
+            show: editingWorkflow.id === 'node-pr-verify' || editingWorkflow.id === 'npm-publish',
+            type: 'input',
+        },
+        {
+            key: 'buildCommand',
+            label: 'Build command',
+            placeholder: 'npm run build',
+            show: editingWorkflow.id !== 'vercel-pro-deployment',
+            type: 'input',
+        },
+        {
+            key: 'npmTokenSecret',
+            label: 'NPM Token Secret Name',
+            placeholder: 'Ej: NPM_TOKEN',
+            show: editingWorkflow.id === 'npm-publish',
+            type: 'input',
+        },
+        {
+            key: 'vercelTokenSecret',
+            label: 'Vercel Token Secret Name',
+            placeholder: 'Ej: VERCEL_TOKEN',
+            show: editingWorkflow.id === 'vercel-pro-deployment',
+            type: 'input',
+        },
+        {
+            key: 'githubTokenSecret',
+            label: 'GitHub Token Secret Name',
+            placeholder: 'Ej: GITHUB_TOKEN',
+            show: editingWorkflow.id === 'semantic-release',
+            type: 'input',
+        },
+    ];
 
     return (
         <div className="w-full lg:w-1/2 bg-surface border border-border p-6 rounded-lg shadow flex flex-col mb-4">
             <h2 className="text-xl font-bold text-text mb-4">Edit Configuration</h2>
 
-            {/* Workflow name */}
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-text mb-1">Name</label>
-                <input
-                    type="text"
-                    value={editingWorkflow.workflowName ?? ''}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        setEditingWorkflow({ ...editingWorkflow, workflowName: value });
-                        validateField('workflowName', value);
-                    }}
-                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                    placeholder="CI Workflow"
-                />
-                {errors.workflowName && <p className="text-red-500 text-sm mt-1">{errors.workflowName}</p>}
-            </div>
+            {fieldsConfig.map((field) => {
+                if (!field.show) return null;
 
-            {/* Runner */}
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-text mb-1">Runner</label>
-                <select
-                    value={editingWorkflow.runner}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        setEditingWorkflow({ ...editingWorkflow, runner: value });
-                        validateField('runner', value);
-                    }}
-                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                >
-                    <option value="ubuntu-latest">ubuntu-latest</option>
-                    <option value="windows-latest">windows-latest</option>
-                    <option value="macos-latest">macos-latest</option>
-                </select>
-                {errors.runner && <p className="text-red-500 text-sm mt-1">{errors.runner}</p>}
-            </div>
+                const value = (editingWorkflow as any)[field.key] ?? '';
+                return (
+                    <div key={field.key} className="mb-4">
+                        <label className="block text-sm font-medium text-text mb-1">{field.label}</label>
+                        {field.type === 'input' ? (
+                            <input
+                                type="text"
+                                value={value}
+                                onChange={(e) => {
+                                    const newValue = e.target.value;
+                                    setEditingWorkflow({ ...editingWorkflow, [field.key]: newValue });
+                                    validateField(field.key, newValue);
+                                }}
+                                className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                placeholder={field.placeholder}
+                            />
+                        ) : (
+                            <select
+                                value={value}
+                                onChange={(e) => {
+                                    setEditingWorkflow({ ...editingWorkflow, [field.key]: e.target.value });
+                                }}
+                                className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                            >
+                                {field.options?.map((opt) => (
+                                    <option key={opt} value={opt}>
+                                        {opt}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+                        {errors[field.key] && <p className="text-red-500 text-sm mt-1">{errors[field.key]}</p>}
+                    </div>
+                );
+            })}
 
-            {/* Target Branch  */}
-            {editingWorkflow.id !== 'node-pr-verify' && (
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-text mb-1">Target Branch</label>
-                    <input
-                        type="text"
-                        value={editingWorkflow.branch}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setEditingWorkflow({ ...editingWorkflow, branch: value });
-                            validateField('branch', value);
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                    />
-                    {errors.branch && <p className="text-red-500 text-sm mt-1">{errors.branch}</p>}
-                </div>
-            )}
-
-            {/* Node version */}
-            {editingWorkflow.id !== 'vercel-pro-deployment' && (
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-text mb-1">Node version</label>
-                    <select
-                        value={editingWorkflow.nodeVersion}
-                        onChange={(e) => {
-                            setEditingWorkflow({ ...editingWorkflow, nodeVersion: e.target.value });
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                    >
-                        <option value="16">16</option>
-                        <option value="18">18</option>
-                        <option value="20">20</option>
-                        <option value="22">22</option>
-                    </select>
-                </div>
-            )}
-
-            {/* Install command */}
-            {editingWorkflow.id !== 'vercel-pro-deployment' && (
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-text mb-1">Installation command</label>
-                    <input
-                        type="text"
-                        value={editingWorkflow.installCommand ?? ''}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setEditingWorkflow({ ...editingWorkflow, installCommand: value });
-                            validateField('installCommand', value);
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        placeholder="npm install"
-                    />
-                    {errors.installCommand && <p className="text-red-500 text-sm mt-1">{errors.installCommand}</p>}
-                </div>
-            )}
-
-            {/* Lint command */}
-            {editingWorkflow.id === 'node-pr-verify' && (
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-text mb-1">Lint command</label>
-                    <input
-                        type="text"
-                        value={editingWorkflow.lintCommand ?? ''}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setEditingWorkflow({ ...editingWorkflow, lintCommand: value });
-                            validateField('lintCommand', value);
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        placeholder="npm lint"
-                    />
-                    {errors.lintCommand && <p className="text-red-500 text-sm mt-1">{errors.lintCommand}</p>}
-                </div>
-            )}
-
-            {/* Test command */}
-            {editingWorkflow.id !== 'vercel-pro-deployment' && (
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-text mb-1">Test command</label>
-                    <input
-                        type="text"
-                        value={editingWorkflow.testCommand ?? ''}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setEditingWorkflow({ ...editingWorkflow, testCommand: value });
-                            validateField('testCommand', value);
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        placeholder="npm test"
-                    />
-                    {errors.testCommand && <p className="text-red-500 text-sm mt-1">{errors.testCommand}</p>}
-                </div>
-            )}
-
-            {/* Build command */}
-            {editingWorkflow.id !== 'vercel-pro-deployment' && (
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-text mb-1">Build command</label>
-                    <input
-                        type="text"
-                        value={editingWorkflow.buildCommand ?? ''}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setEditingWorkflow({ ...editingWorkflow, buildCommand: value });
-                            validateField('buildCommand', value);
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        placeholder="npm run build"
-                    />
-                    {errors.buildCommand && <p className="text-red-500 text-sm mt-1">{errors.buildCommand}</p>}
-                </div>
-            )}
-
-            {/* NPM Token Secret Name */}
-            {editingWorkflow.id === 'npm-publish' && (
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-text mb-1">NPM Token Secret Name</label>
-                    <input
-                        type="text"
-                        value={editingWorkflow.npmTokenSecret ?? ''}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setEditingWorkflow({ ...editingWorkflow, npmTokenSecret: value });
-                            validateField('npmTokenSecret', value);
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        placeholder="Ej: NPM_TOKEN"
-                    />
-                    {errors.npmTokenSecret && <p className="text-red-500 text-sm mt-1">{errors.npmTokenSecret}</p>}
-                </div>
-            )}
-
-            {/* Vercel Token Secret Name */}
-            {editingWorkflow.id === 'vercel-pro-deployment' && (
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-text mb-1">Vercel Token Secret Name</label>
-                    <input
-                        type="text"
-                        value={editingWorkflow.vercelTokenSecret ?? ''}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setEditingWorkflow({ ...editingWorkflow, vercelTokenSecret: value });
-                            validateField('vercelTokenSecret', value);
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        placeholder="Ej: VERCEL_TOKEN"
-                    />
-                    {errors.vercelTokenSecret && <p className="text-red-500 text-sm mt-1">{errors.vercelTokenSecret}</p>}
-                </div>
-            )}
-
-            {/* Reset button */}
             <button
                 type="button"
                 onClick={() => {

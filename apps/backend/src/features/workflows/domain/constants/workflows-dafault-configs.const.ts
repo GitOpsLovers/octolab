@@ -1,10 +1,6 @@
 import { WorkflowConfig } from '@octolab/domain';
 
 /**
- * Workflow configuration model
- */
-
-/**
  * Default configurations for each workflow.
  */
 export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
@@ -47,5 +43,20 @@ export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
         name: 'Vercel production deployment',
         description: 'Deploy a productive application to Vercel',
         filename: 'vercel-pro-deployment.yml',
+    },
+    'semantic-release': {
+        id: 'semantic-release',
+        runner: 'ubuntu-latest',
+        branch: 'main',
+        nodeVersion: '22',
+        installCommand: 'npm install',
+        buildCommand: 'npm run build', // opcional, pero habitual
+        releaseCommand: 'npx semantic-release',
+        githubTokenSecret: 'GH_TOKEN',
+        workflowName: 'Semantic Release',
+        jobName: 'release',
+        name: 'Automated releasing with Semantic Release',
+        description: 'Automate versioning, changelog generation, and releases with semantic-release on every push.',
+        filename: 'semantic-release.yml',
     },
 };

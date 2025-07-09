@@ -19,58 +19,58 @@ export interface User {
     workflows: number;
 }
 
-export type WorkflowConfig = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig | VercelProDeploymentWorkflowConfig;
+export type WorkflowConfig = NpmPublishWorkflowConfig | NodePrVerifyWorkflowConfig | VercelProDeploymentWorkflowConfig | SemanticReleaseWorkflowConfig;
+
+/**
+ * Base workflow configuration model
+ */
+export interface BaseWorkflowConfig {
+    id: string;
+    runner: string;
+    jobName: string;
+    name: string;
+    description: string;
+    filename: string;
+    workflowName: string;
+    branch?: string;
+    nodeVersion?: string;
+    installCommand?: string;
+    buildCommand?: string;
+}
 
 /**
  * Template configuration for NPM publish workflow
  */
-export interface NpmPublishWorkflowConfig {
+export interface NpmPublishWorkflowConfig extends BaseWorkflowConfig {
     id: 'npm-publish';
-    runner: string;
-    branch: string;
-    nodeVersion: string;
-    installCommand: string;
     testCommand: string;
-    buildCommand: string;
     npmTokenSecret: string;
-    workflowName: string;
-    jobName: string;
-    name: string;
-    description: string;
-    filename: string;
 }
 
 /**
  * Template configuration for Node PR Verify workflow
  */
-export interface NodePrVerifyWorkflowConfig {
+export interface NodePrVerifyWorkflowConfig extends BaseWorkflowConfig {
     id: 'node-pr-verify';
-    runner: string;
-    nodeVersion: string;
-    installCommand: string;
     lintCommand: string;
     testCommand: string;
-    buildCommand: string;
-    workflowName: string;
-    jobName: string;
-    name: string;
-    description: string;
-    filename: string;
 }
 
 /**
- * Template configuration for Node PR Verify workflow
+ * Template configuration for Vercel PRO deployment workflow
  */
-export interface VercelProDeploymentWorkflowConfig {
+export interface VercelProDeploymentWorkflowConfig extends BaseWorkflowConfig {
     id: 'vercel-pro-deployment';
-    runner: string;
-    jobName: string;
-    branch: string;
-    workflowName: string;
     vercelTokenSecret: string;
-    name: string;
-    description: string;
-    filename: string;
+}
+
+/**
+ * Template configuration for Semantic Release workflow
+ */
+export interface SemanticReleaseWorkflowConfig extends BaseWorkflowConfig {
+    id: 'semantic-release';
+    releaseCommand: string;
+    githubTokenSecret: string;
 }
 
 /**
