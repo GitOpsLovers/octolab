@@ -100,6 +100,78 @@ export function EditorForm(): ReactNode {
             show: editingWorkflow.id === 'semantic-release',
             type: 'input',
         },
+        {
+            key: 'awsRegionEnvironmentVariable',
+            label: 'AWS region environment variable name',
+            placeholder: 'MY_AWS_REGION',
+            show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
+        {
+            key: 'awsRegionEnvironmentVariableValue',
+            label: 'AWS region environment variable value',
+            placeholder: 'Add your AWS region',
+            show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
+        {
+            key: 'awsRoleNameEnvironmentVariable',
+            label: 'AWS role name environment variable name',
+            placeholder: 'AWS_ROLENAME',
+            show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
+        {
+            key: 'awsRoleNameEnvironmentVariableValue',
+            label: 'AWS role name environment variable value',
+            placeholder: 'Add your AWS role name',
+            show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
+        {
+            key: 'sourceDirEnvironmentVariable',
+            label: 'Source directory environment variable name',
+            placeholder: 'SOURCE_DIR',
+            show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
+        {
+            key: 'sourceDirEnvironmentVariableValue',
+            label: 'Source directory environment variable value',
+            placeholder: './build',
+            show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
+        {
+            // eslint-disable-next-line no-secrets/no-secrets
+            key: 'awsS3BucketEnvironmentVariable',
+            label: 'AWS S3 Bucket environment variable name',
+            placeholder: 'AWS_S3_BUCKET',
+            show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
+        {
+            // eslint-disable-next-line no-secrets/no-secrets
+            key: 'awsS3BucketEnvironmentVariableValue',
+            label: 'AWS S3 Bucket environment variable value',
+            placeholder: 'Add your AWS S3 Bucket',
+            show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
+        {
+            key: 'awsAccountIdSecret',
+            label: 'AWS account ID secret name',
+            placeholder: 'Ej: AWS_ACCOUNT_ID',
+            show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
+        {
+            key: 'cloudfrontDistributionIdSecret',
+            label: 'CloudFront distribution ID secret name',
+            placeholder: 'Ej: CLOUDFRONT_DISTRIBUTION_ID',
+            show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
     ];
 
     return (

@@ -18,6 +18,9 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: ['.next', '.turbo'],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   ...preferArrow,
   ...regex,
