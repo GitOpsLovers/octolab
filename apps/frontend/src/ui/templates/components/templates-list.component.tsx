@@ -5,6 +5,7 @@ import { useCookies } from 'next-client-cookies';
 import { useState, MouseEvent, useEffect } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import * as Io5Icons from 'react-icons/io5';
+import * as SiIcons from 'react-icons/si';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useTemplates } from '../hooks/templates.hooks';
@@ -83,9 +84,12 @@ export function TemplatesList() {
                     if (template.iconLibrary === 'io5') {
                         // eslint-disable-next-line import/namespace
                         Icon = Io5Icons[template.icon as keyof typeof Io5Icons];
-                    } else {
+                    } else if (template.iconLibrary === 'fa') {
                         // eslint-disable-next-line import/namespace
                         Icon = FaIcons[template.icon as keyof typeof FaIcons];
+                    } else {
+                        // eslint-disable-next-line import/namespace
+                        Icon = SiIcons[template.icon as keyof typeof SiIcons];
                     }
 
                     return (

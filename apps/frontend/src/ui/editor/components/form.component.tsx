@@ -41,7 +41,13 @@ export function EditorForm(): ReactNode {
         {
             key: 'branch',
             label: 'Target Branch',
-            show: editingWorkflow.id !== 'node-pr-verify',
+            show: editingWorkflow.id !== 'node-pr-verify' && editingWorkflow.id !== 'nx-pr-verify',
+            type: 'input',
+        },
+        {
+            key: 'baseBranch',
+            label: 'Base Branch',
+            show: editingWorkflow.id === 'nx-pr-verify',
             type: 'input',
         },
         {
@@ -62,14 +68,14 @@ export function EditorForm(): ReactNode {
             key: 'lintCommand',
             label: 'Lint command',
             placeholder: 'npm lint',
-            show: editingWorkflow.id === 'node-pr-verify',
+            show: editingWorkflow.id === 'node-pr-verify' || editingWorkflow.id === 'nx-pr-verify',
             type: 'input',
         },
         {
             key: 'testCommand',
             label: 'Test command',
             placeholder: 'npm test',
-            show: editingWorkflow.id === 'node-pr-verify' || editingWorkflow.id === 'npm-publish',
+            show: editingWorkflow.id === 'node-pr-verify' || editingWorkflow.id === 'npm-publish' || editingWorkflow.id === 'nx-pr-verify',
             type: 'input',
         },
         {

@@ -14,6 +14,15 @@ export const availableTemplates: Template[] = [
         features: ['Configurable runners', 'Multiple Node versions', 'Lint and test checks', 'Build verification'],
     },
     {
+        id: 'nx-pr-verify',
+        name: 'NX pull request verify',
+        description: 'Verify and ensure the quality of pull requests in a monorepo managed with NX.',
+        icon: 'SiNx',
+        iconColor: '#143055',
+        iconLibrary: 'si',
+        features: ['Configurable runners', 'Target branch configuration', 'Affected apps and libs detection', 'Parallelized tasks'],
+    },
+    {
         id: 'npm-publish',
         name: 'Publish to NPM',
         description: 'Publish and release packages to NPM automatically after merging.',

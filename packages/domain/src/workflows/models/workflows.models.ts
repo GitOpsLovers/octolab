@@ -6,7 +6,8 @@ export type WorkflowConfig =
     | NodePrVerifyWorkflowConfig
     | VercelProDeploymentWorkflowConfig
     | SemanticReleaseWorkflowConfig
-    | AwsS3CloudFrontWorkflowConfig;
+    | AwsS3CloudFrontWorkflowConfig
+    | NxPrVerifyWorkflowConfig;
 
 /**
  * Base workflow configuration model
@@ -41,6 +42,16 @@ export interface NodePrVerifyWorkflowConfig extends BaseWorkflowConfig {
     id: 'node-pr-verify';
     lintCommand: string;
     testCommand: string;
+}
+
+/**
+ * Template configuration for NX PR Verify workflow
+ */
+export interface NxPrVerifyWorkflowConfig extends BaseWorkflowConfig {
+    id: 'nx-pr-verify';
+    lintCommand: string;
+    testCommand: string;
+    baseBranch: string;
 }
 
 /**

@@ -4,6 +4,7 @@ export {
     WorkflowConfig,
     NpmPublishWorkflowConfig,
     NodePrVerifyWorkflowConfig,
+    NxPrVerifyWorkflowConfig,
     VercelProDeploymentWorkflowConfig,
     SemanticReleaseWorkflowConfig,
     AwsS3CloudFrontWorkflowConfig,

@@ -3,6 +3,7 @@ import {
     Job,
     NodePrVerifyWorkflowConfig,
     NpmPublishWorkflowConfig,
+    NxPrVerifyWorkflowConfig,
     SemanticReleaseWorkflowConfig,
     Step,
     VercelProDeploymentWorkflowConfig,
@@ -25,7 +26,9 @@ function checkoutStep(): Step[] {
 /**
  * Setup Node step
  */
-function setupNodeStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig): Step {
+function setupNodeStep(
+    config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig | NxPrVerifyWorkflowConfig,
+): Step {
     return {
         name: 'Setup Node',
         uses: 'actions/setup-node@v4',
@@ -38,7 +41,9 @@ function setupNodeStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowCo
 /**
  * Install dependencies step
  */
-function installDependenciesStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig): Step {
+function installDependenciesStep(
+    config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig | NxPrVerifyWorkflowConfig,
+): Step {
     return {
         name: 'Install dependencies',
         run: config.installCommand,
@@ -48,30 +53,48 @@ function installDependenciesStep(config: NodePrVerifyWorkflowConfig | NpmPublish
 /**
  * Lint step
  */
-function lintStep(config: NodePrVerifyWorkflowConfig): Step {
+function lintStep(config: NodePrVerifyWorkflowConfig | NxPrVerifyWorkflowConfig): Step {
+    let runCommand = config.lintCommand;
+
+    if (config.id === 'nx-pr-verify' && config.baseBranch) {
+        runCommand = `${runCommand} --base=origin/${config.baseBranch}`;
+    }
+
     return {
         name: 'Run lint',
-        run: config.lintCommand,
+        run: runCommand,
     };
 }
 
 /**
  * Test step
  */
-function testStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig): Step {
+function testStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | NxPrVerifyWorkflowConfig): Step {
+    let runCommand = config.testCommand;
+
+    if (config.id === 'nx-pr-verify' && config.baseBranch) {
+        runCommand = `${runCommand} --base=origin/${config.baseBranch}`;
+    }
+
     return {
         name: 'Run tests',
-        run: config.testCommand,
+        run: runCommand,
     };
 }
 
 /**
  * Build step
  */
-function buildStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig): Step {
+function buildStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig | NxPrVerifyWorkflowConfig): Step {
+    let runCommand = config.buildCommand;
+
+    if (config.id === 'nx-pr-verify' && config.baseBranch) {
+        runCommand = `${runCommand} --base=origin/${config.baseBranch}`;
+    }
+
     return {
         name: 'Build package',
-        run: config.buildCommand,
+        run: runCommand,
     };
 }
 
@@ -161,6 +184,12 @@ function generateSteps(config: WorkflowConfig): Step[] {
         steps.push(lintStep(config));
         steps.push(testStep(config));
         steps.push(buildStep(config));
+    } else if (config.id === 'nx-pr-verify') {
+        steps.push(setupNodeStep(config));
+        steps.push(installDependenciesStep(config));
+        steps.push(lintStep(config));
+        steps.push(testStep(config));
+        steps.push(buildStep(config));
     } else if (config.id === 'npm-publish') {
         steps.push(setupNodeStep(config));
         steps.push(installDependenciesStep(config));
@@ -188,7 +217,7 @@ function generateSteps(config: WorkflowConfig): Step[] {
  * Generate "on" section based on workflow config
  */
 function generateOnConfig(config: WorkflowConfig): Record<string, any> {
-    if (config.id === 'node-pr-verify') {
+    if (config.id === 'node-pr-verify' || config.id === 'nx-pr-verify') {
         return { pull_request: {} };
     }
     return { push: { branches: [config.branch] } };
