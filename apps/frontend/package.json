@@ -10,15 +10,18 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.7.0",
+    "@hookform/resolvers": "^5.1.1",
     "@octolab/domain": "workspace:*",
     "next": "15.3.4",
     "next-client-cookies": "^2.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.60.0",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-syntax-highlighter": "^15.6.1",
-    "yaml": "^2.8.0"
+    "yaml": "^2.8.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

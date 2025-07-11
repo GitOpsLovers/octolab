@@ -127,7 +127,7 @@ export function TemplatesList() {
 
                 <Link
                     className="bg-surface rounded-lg border border-dashed border-border flex flex-col p-4 items-center justify-center text-center hover:shadow-lg transition cursor-pointer"
-                    href={'/contact'}
+                    href={'/propose-template'}
                 >
                     <Io5Icons.IoAddCircleOutline className="w-10 h-10 text-primary mb-2" />
                     <h2 className="text-lg font-bold text-text mb-1">Request new template</h2>
