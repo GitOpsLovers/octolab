@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { FaPlus, FaSpinner, FaEdit, FaTrash } from 'react-icons/fa';
+import { IoAddCircleOutline } from 'react-icons/io5';
 import { LuWorkflow } from 'react-icons/lu';
 
 import { useMyWorkflows } from '../hooks/my-workflows.hooks';
@@ -73,7 +74,7 @@ export function WorkflowsList() {
                 })}
 
                 {hasReachedLimit ? (
-                    <div className="bg-surface rounded-lg border border-border flex flex-col items-center justify-center text-center p-6 opacity-50 cursor-not-allowed">
+                    <div className="bg-surface rounded-lg border border-dashed border-border flex flex-col p-4 items-center justify-center text-center opacity-50 cursor-not-allowed">
                         <FaPlus className="w-8 h-8 text-primary mb-3" />
                         <h2 className="text-lg font-bold text-text mb-1">Create new workflow</h2>
                         <p className="text-sm text-text-muted">You’ve reached the limit of 3 workflows. Upgrade to PRO to create more (coming soon).</p>
@@ -81,11 +82,11 @@ export function WorkflowsList() {
                 ) : (
                     <Link
                         href="/templates"
-                        className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col items-center justify-center text-center p-6 hover:border-primary"
+                        className="bg-surface rounded-lg border border-dashed border-border flex flex-col p-4 items-center justify-center text-center hover:shadow-lg transition cursor-pointer"
                     >
-                        <FaPlus className="w-8 h-8 text-primary mb-3" />
+                        <IoAddCircleOutline className="w-10 h-10 text-primary mb-2" />
                         <h2 className="text-lg font-bold text-text mb-1">Create new workflow</h2>
-                        <p className="text-sm text-text-muted">Start from a new template</p>
+                        <p className="text-sm text-text-mutedtext-sm text-text-mutedtext-sm text-text-muted">Start from a new template</p>
                     </Link>
                 )}
             </div>

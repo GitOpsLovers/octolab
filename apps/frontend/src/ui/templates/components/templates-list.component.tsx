@@ -93,7 +93,7 @@ export function TemplatesList() {
                     }
 
                     return (
-                        <div key={template.id} className="bg-surface rounded-xl shadow hover:shadow-lg transition border border-border flex flex-col p-4">
+                        <div key={template.id} className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col p-4">
                             <div className="flex items-center gap-3 mb-2">
                                 <Icon className="w-10 h-10" style={{ color: template.iconColor }} />
                                 <h2 className="text-xl font-bold text-text">{template.name}</h2>
@@ -126,7 +126,7 @@ export function TemplatesList() {
                 })}
 
                 <Link
-                    className="bg-surface border border-dashed border-border rounded-xl flex flex-col p-4 items-center justify-center text-center hover:shadow-lg transition cursor-pointer"
+                    className="bg-surface rounded-lg border border-dashed border-border flex flex-col p-4 items-center justify-center text-center hover:shadow-lg transition cursor-pointer"
                     href={'/contact'}
                 >
                     <Io5Icons.IoAddCircleOutline className="w-10 h-10 text-primary mb-2" />
