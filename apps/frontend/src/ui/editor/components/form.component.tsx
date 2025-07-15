@@ -53,7 +53,7 @@ export function EditorForm(): ReactNode {
         {
             key: 'nodeVersion',
             label: 'Node version',
-            show: editingWorkflow.id !== 'vercel-pro-deployment',
+            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk',
             type: 'select',
             options: ['16', '18', '20', '22'],
         },
@@ -61,7 +61,7 @@ export function EditorForm(): ReactNode {
             key: 'installCommand',
             label: 'Installation command',
             placeholder: 'npm install',
-            show: editingWorkflow.id !== 'vercel-pro-deployment',
+            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk',
             type: 'input',
         },
         {
@@ -82,7 +82,7 @@ export function EditorForm(): ReactNode {
             key: 'buildCommand',
             label: 'Build command',
             placeholder: 'npm run build',
-            show: editingWorkflow.id !== 'vercel-pro-deployment',
+            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk',
             type: 'input',
         },
         {
@@ -176,6 +176,27 @@ export function EditorForm(): ReactNode {
             label: 'CloudFront distribution ID secret name',
             placeholder: 'Ej: CLOUDFRONT_DISTRIBUTION_ID',
             show: editingWorkflow.id === 'aws-s3-cloudfront-deploy',
+            type: 'input',
+        },
+        {
+            key: 'snykCodeStack',
+            label: 'Code stack',
+            show: editingWorkflow.id === 'security-scan-snyk',
+            type: 'select',
+            options: ['Dotnet', 'Golang', 'Gradle', 'Maven', 'Node', 'PHP', 'Python', 'Ruby'],
+        },
+        {
+            key: 'snykSeverityThreshold',
+            label: 'Severity threshold',
+            show: editingWorkflow.id === 'security-scan-snyk',
+            type: 'select',
+            options: ['low', 'medium', 'high'],
+        },
+        {
+            key: 'snykTokenSecret',
+            label: 'Snyk token secret name',
+            placeholder: 'Ej: SNYK_TOKEN',
+            show: editingWorkflow.id === 'security-scan-snyk',
             type: 'input',
         },
     ];

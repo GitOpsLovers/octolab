@@ -8,6 +8,7 @@ export {
     VercelProDeploymentWorkflowConfig,
     SemanticReleaseWorkflowConfig,
     AwsS3CloudFrontWorkflowConfig,
+    SnykSecurityScanWorkflowConfig,
     WorkflowYaml,
     Step,
     Job,

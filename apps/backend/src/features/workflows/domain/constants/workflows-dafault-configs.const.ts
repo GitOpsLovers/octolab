@@ -97,4 +97,17 @@ export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
         description: 'Workflow to deploy a static site or frontend app to AWS S3 and invalidate CloudFront cache.',
         filename: 'aws-s3-cloudfront-deploy.yml',
     },
+    'security-scan-snyk': {
+        id: 'security-scan-snyk',
+        runner: 'ubuntu-latest',
+        branch: 'main',
+        snykCodeStack: 'Node',
+        snykSeverityThreshold: 'high',
+        snykTokenSecret: 'SNYK_TOKEN',
+        workflowName: 'Snyk Security Scan',
+        jobName: 'snyk-scan',
+        name: 'Security scan with Snyk',
+        description: 'Scan project dependencies for vulnerabilities using Snyk.',
+        filename: 'security-scan-snyk.yml',
+    },
 };

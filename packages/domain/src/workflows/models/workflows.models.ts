@@ -7,7 +7,8 @@ export type WorkflowConfig =
     | VercelProDeploymentWorkflowConfig
     | SemanticReleaseWorkflowConfig
     | AwsS3CloudFrontWorkflowConfig
-    | NxPrVerifyWorkflowConfig;
+    | NxPrVerifyWorkflowConfig
+    | SnykSecurityScanWorkflowConfig;
 
 /**
  * Base workflow configuration model
@@ -86,6 +87,16 @@ export interface AwsS3CloudFrontWorkflowConfig extends BaseWorkflowConfig {
     sourceDirEnvironmentVariableValue: string;
     cloudfrontDistributionIdSecret: string;
     awsAccountIdSecret: string;
+}
+
+/**
+ * Template configuration for Snyk Security Scan workflow
+ */
+export interface SnykSecurityScanWorkflowConfig extends BaseWorkflowConfig {
+    id: 'security-scan-snyk';
+    snykCodeStack: string;
+    snykSeverityThreshold: string;
+    snykTokenSecret: string;
 }
 
 /**

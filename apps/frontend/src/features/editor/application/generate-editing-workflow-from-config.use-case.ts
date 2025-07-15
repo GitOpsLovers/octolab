@@ -5,11 +5,14 @@ import {
     NpmPublishWorkflowConfig,
     NxPrVerifyWorkflowConfig,
     SemanticReleaseWorkflowConfig,
+    SnykSecurityScanWorkflowConfig,
     Step,
     VercelProDeploymentWorkflowConfig,
     WorkflowConfig,
     WorkflowYaml,
 } from '@octolab/domain';
+
+import { snykStackActionMap } from '../domain/constants/actions.const';
 
 /**
  * Checkout step
@@ -173,6 +176,24 @@ function vercelSteps(config: VercelProDeploymentWorkflowConfig): Step[] {
 }
 
 /**
+ * Snyk specific steps
+ */
+function snykSteps(config: SnykSecurityScanWorkflowConfig): Step {
+    const actionName = snykStackActionMap[config.snykCodeStack];
+
+    return {
+        name: 'Run Snyk to check for vulnerabilities',
+        uses: `snyk/actions/${actionName}@master`,
+        env: {
+            SNYK_TOKEN: `\${{ secrets.${config.snykTokenSecret} }}`,
+        },
+        with: {
+            args: `--severity-threshold=${config.snykSeverityThreshold}`,
+        },
+    };
+}
+
+/**
  * Generate steps based on workflow config
  */
 function generateSteps(config: WorkflowConfig): Step[] {
@@ -208,6 +229,8 @@ function generateSteps(config: WorkflowConfig): Step[] {
         steps.push(...awsSteps(config));
     } else if (config.id === 'vercel-pro-deployment') {
         steps.push(...vercelSteps(config));
+    } else if (config.id === 'security-scan-snyk') {
+        steps.push(snykSteps(config));
     }
 
     return steps;

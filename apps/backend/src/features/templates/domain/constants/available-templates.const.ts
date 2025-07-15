@@ -58,4 +58,13 @@ export const availableTemplates: Template[] = [
         iconLibrary: 'fa',
         features: ['Configurable runners', 'Target branch configuration', 'Secure AWS authentication with IAM roles', 'Automatic CloudFront cache invalidation'],
     },
+    {
+        id: 'security-scan-snyk',
+        name: 'Security scan with Snyk',
+        description: 'Scans dependencies for vulnerabilities for different types of code using Snyk.',
+        icon: 'FaShieldAlt',
+        iconColor: '#e11d48',
+        iconLibrary: 'fa',
+        features: ['Configurable runners', 'Target branch configuration', 'Code stack selection', 'Configurable vulnerability criticality'],
+    },
 ];
