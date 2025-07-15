@@ -1,6 +1,6 @@
-export { Template, TemplateType } from './templates/models/templates.models';
-export { User } from './users/models/users.models';
-export {
+export type { Template, TemplateType } from './templates/models/templates.models';
+export type { User } from './users/models/users.models';
+export type {
     WorkflowConfig,
     NpmPublishWorkflowConfig,
     NodePrVerifyWorkflowConfig,
