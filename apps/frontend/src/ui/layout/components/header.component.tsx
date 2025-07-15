@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 
@@ -15,7 +16,8 @@ export async function Header(): Promise<ReactNode> {
     return (
         <header className="w-full bg-surface px-6 py-4 flex items-center justify-between">
             <Link href="/" className="text-2xl font-bold text-primary transition">
-                OctoLab
+                <Image src="/header-logo-sm.png" alt="OctoLab logo" width={32} height={32} className="inline-block" />
+                <span className="ml-2">OctoLab</span>
             </Link>
 
             <nav className="flex gap-6 items-center">

@@ -114,6 +114,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
         id: 'docker-image-publish',
         runner: 'ubuntu-latest',
         branch: 'main',
+        dockerRegistry: 'ghcr.io',
         dockerUsername: '<YOUR_DOCKER_USERNAME>',
         dockerPasswordSecret: 'DOCKER_PASSWORD',
         dockerBuildContext: '.',

@@ -1,4 +1,4 @@
-export { Template } from './templates/models/templates.models';
+export { Template, TemplateType } from './templates/models/templates.models';
 export { User } from './users/models/users.models';
 export {
     WorkflowConfig,

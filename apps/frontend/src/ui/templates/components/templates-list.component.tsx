@@ -1,4 +1,6 @@
 'use client';
+
+import { TemplateType } from '@octolab/domain';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCookies } from 'next-client-cookies';
@@ -25,6 +27,23 @@ export function TemplatesList() {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
     const [skipRegisterModal, setSkipRegisterModal] = useState(false);
+    const [selectedType, setSelectedType] = useState<string>('all');
+
+    const templateTypeLabels: Record<TemplateType, string> = {
+        verification: 'Verification',
+        distribution: 'Distribution',
+        deployment: 'Deployment',
+        releasing: 'Releasing',
+        security: 'Security',
+    };
+
+    const types = [
+        { label: 'All', value: 'all' },
+        ...Object.entries(templateTypeLabels).map(([value, label]) => ({
+            label,
+            value,
+        })),
+    ];
 
     /**
      * Check if the user has skipped the register modal.
@@ -78,52 +97,70 @@ export function TemplatesList() {
         <>
             <h1 className="text-3xl font-bold mb-12 mt-4 text-center">Choose a template to get started</h1>
 
+            <div className="flex justify-end mb-4">
+                <select
+                    value={selectedType}
+                    onChange={(e) => {
+                        setSelectedType(e.target.value);
+                    }}
+                    className="bg-background border border-border text-text px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
+                >
+                    {types.map((t) => (
+                        <option key={t.value} value={t.value}>
+                            {t.label}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-                {templates?.map((template) => {
-                    let Icon;
-                    if (template.iconLibrary === 'io5') {
-                        // eslint-disable-next-line import/namespace
-                        Icon = Io5Icons[template.icon as keyof typeof Io5Icons];
-                    } else if (template.iconLibrary === 'fa') {
-                        // eslint-disable-next-line import/namespace
-                        Icon = FaIcons[template.icon as keyof typeof FaIcons];
-                    } else {
-                        // eslint-disable-next-line import/namespace
-                        Icon = SiIcons[template.icon as keyof typeof SiIcons];
-                    }
+                {templates
+                    ?.filter((template) => selectedType === 'all' || template.type === selectedType)
+                    .map((template) => {
+                        let Icon;
+                        if (template.iconLibrary === 'io5') {
+                            // eslint-disable-next-line import/namespace
+                            Icon = Io5Icons[template.icon as keyof typeof Io5Icons];
+                        } else if (template.iconLibrary === 'fa') {
+                            // eslint-disable-next-line import/namespace
+                            Icon = FaIcons[template.icon as keyof typeof FaIcons];
+                        } else {
+                            // eslint-disable-next-line import/namespace
+                            Icon = SiIcons[template.icon as keyof typeof SiIcons];
+                        }
 
-                    return (
-                        <div key={template.id} className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col p-4">
-                            <div className="flex items-center gap-3 mb-2">
-                                <Icon className="w-10 h-10" style={{ color: template.iconColor }} />
-                                <h2 className="text-xl font-bold text-text">{template.name}</h2>
+                        return (
+                            <div key={template.id} className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col p-4">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <Icon className="w-10 h-10" style={{ color: template.iconColor }} />
+                                    <h2 className="text-xl font-bold text-text">{template.name}</h2>
+                                </div>
+
+                                <p className="text-sm text-text-muted mb-3">{template.description}</p>
+
+                                <ul className="grid grid-cols-1 gap-y-1 text-sm text-text-muted mb-4">
+                                    {template.features.map((feature, index) => (
+                                        <li key={index} className="flex items-center gap-2">
+                                            <span className="text-success">✔️</span>
+                                            <span>{feature}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                <div className="mt-auto flex flex-col">
+                                    <button
+                                        onClick={(e) => {
+                                            handleSelectTemplate(e, template.id);
+                                        }}
+                                        className="bg-primary text-white font-semibold text-center px-4 py-2 rounded-md hover:bg-primary-hover transition cursor-pointer"
+                                    >
+                                        Use template
+                                    </button>
+                                    {!authUser && !isLoading && <p className="text-xs text-text-muted mt-2 text-center">You’ll need an account to save your workflow.</p>}
+                                </div>
                             </div>
-
-                            <p className="text-sm text-text-muted mb-3">{template.description}</p>
-
-                            <ul className="grid grid-cols-1 gap-y-1 text-sm text-text-muted mb-4">
-                                {template.features.map((feature, index) => (
-                                    <li key={index} className="flex items-center gap-2">
-                                        <span className="text-success">✔️</span>
-                                        <span>{feature}</span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            <div className="mt-auto flex flex-col">
-                                <button
-                                    onClick={(e) => {
-                                        handleSelectTemplate(e, template.id);
-                                    }}
-                                    className="bg-primary text-white font-semibold text-center px-4 py-2 rounded-md hover:bg-primary-hover transition cursor-pointer"
-                                >
-                                    Use template
-                                </button>
-                                {!authUser && !isLoading && <p className="text-xs text-text-muted mt-2 text-center">You’ll need an account to save your workflow.</p>}
-                            </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
 
                 <Link
                     className="bg-surface rounded-lg border border-dashed border-border flex flex-col p-4 items-center justify-center text-center hover:shadow-lg transition cursor-pointer"

@@ -12,6 +12,7 @@ export const availableTemplates: Template[] = [
         iconColor: '#68A063',
         iconLibrary: 'fa',
         features: ['Configurable runners', 'Multiple Node versions', 'Lint and test checks', 'Build verification'],
+        type: 'verification',
     },
     {
         id: 'nx-pr-verify',
@@ -21,6 +22,7 @@ export const availableTemplates: Template[] = [
         iconColor: '#143055',
         iconLibrary: 'si',
         features: ['Configurable runners', 'Target branch configuration', 'Affected apps and libs detection', 'Parallelized tasks'],
+        type: 'verification',
     },
     {
         id: 'npm-publish',
@@ -30,6 +32,7 @@ export const availableTemplates: Template[] = [
         iconColor: '#cb3737',
         iconLibrary: 'fa',
         features: ['Configurable runners', 'Target branch configuration', 'Multiple Node versions', 'Secure NPM authentication'],
+        type: 'distribution',
     },
     {
         id: 'vercel-pro-deployment',
@@ -39,6 +42,7 @@ export const availableTemplates: Template[] = [
         iconColor: '#000000',
         iconLibrary: 'io5',
         features: ['Configurable runners', 'Target branch configuration', 'Sync environment and secrets from Vercel', 'Prebuilt artifact deployment'],
+        type: 'deployment',
     },
     {
         id: 'semantic-release',
@@ -48,6 +52,7 @@ export const availableTemplates: Template[] = [
         iconColor: '#40a9ff',
         iconLibrary: 'fa',
         features: ['Configurable runners', 'Target branch configuration', 'Multiple Node versions', 'Automated versioning and changelog'],
+        type: 'releasing',
     },
     {
         id: 'aws-s3-cloudfront-deploy',
@@ -57,6 +62,7 @@ export const availableTemplates: Template[] = [
         iconColor: '#FF9900',
         iconLibrary: 'fa',
         features: ['Configurable runners', 'Target branch configuration', 'Secure AWS authentication with IAM roles', 'Automatic CloudFront cache invalidation'],
+        type: 'deployment',
     },
     {
         id: 'security-scan-snyk',
@@ -66,6 +72,7 @@ export const availableTemplates: Template[] = [
         iconColor: '#999999',
         iconLibrary: 'si',
         features: ['Configurable runners', 'Target branch configuration', 'Code stack selection', 'Configurable vulnerability criticality'],
+        type: 'security',
     },
     {
         id: 'docker-image-publish',
@@ -75,5 +82,6 @@ export const availableTemplates: Template[] = [
         iconColor: '#2496ED',
         iconLibrary: 'fa',
         features: ['Configurable runners', 'Target branch configuration', 'Support for multiple registries', 'Custom tagging and versioning'],
+        type: 'distribution',
     },
 ];

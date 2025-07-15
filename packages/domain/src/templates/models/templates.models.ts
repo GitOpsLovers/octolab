@@ -9,4 +9,10 @@ export interface Template {
     iconColor: string;
     iconLibrary: string;
     features: string[];
+    type: TemplateType;
 }
+
+/**
+ * Templates types
+ */
+export type TemplateType = 'verification' | 'distribution' | 'deployment' | 'releasing' | 'security';
