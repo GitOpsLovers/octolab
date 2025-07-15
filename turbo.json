@@ -2,8 +2,7 @@
   "$schema": "https://turborepo.com/schema.json",
   "tasks": {
     "start": {
-      "dependsOn": ["^start"],
-      "outputs": []
+      "persistent": true
     },
     "dev": {
       "persistent": true,
