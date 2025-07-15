@@ -3,6 +3,7 @@ import { Montserrat, Poppins } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 
 import './globals.css';
+import { Feedback } from '@ui/layout/components/feedback.component';
 import { toasterConfig } from '@ui/layout/configs/toaster.config';
 
 const montserrat = Montserrat({
@@ -33,6 +34,7 @@ export default function RootLayout({
         <html lang="en">
             <body className={`${montserrat.variable} ${poppins.variable} antialiased overflow-y-auto bg-background`}>
                 {children}
+                <Feedback />
                 <Toaster position="top-right" toastOptions={toasterConfig} />
             </body>
         </html>

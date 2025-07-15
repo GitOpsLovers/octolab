@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start:backend": "turbo run start --filter=@octolab/backend",
     "dev": "turbo run dev",
     "dev:frontend": "turbo run dev --filter=@octolab/frontend",
     "dev:backend": "turbo run dev --filter=@octolab/backend",

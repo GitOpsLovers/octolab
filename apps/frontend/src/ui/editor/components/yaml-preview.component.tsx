@@ -144,7 +144,7 @@ export function YamlPreview(): ReactNode {
                             onClick={saveToWorkspace}
                             disabled={hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit)}
                             className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition flex items-center justify-center gap-2
-                                ${hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
+                ${hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
                         >
                             {saving ? (
                                 <>
@@ -156,8 +156,14 @@ export function YamlPreview(): ReactNode {
                             )}
                         </button>
 
-                        {!isEditingExistingWorkflow && reachedWorkflowLimit && (
+                        <button disabled className="bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition opacity-50 cursor-not-allowed">
+                            Commit to repository
+                        </button>
+
+                        {!isEditingExistingWorkflow && reachedWorkflowLimit ? (
                             <p className="text-xs text-text-muted">You’ve reached the limit of 3 workflows. Upgrade to PRO to save more (coming soon).</p>
+                        ) : (
+                            <p className="text-xs text-text-muted">The commit to repository feature is only available in PRO (coming soon).</p>
                         )}
                     </>
                 )}
