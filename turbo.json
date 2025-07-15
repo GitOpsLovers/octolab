@@ -1,6 +1,10 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "tasks": {
+    "start": {
+      "dependsOn": ["^start"],
+      "outputs": []
+    },
     "dev": {
       "persistent": true,
       "cache": false
