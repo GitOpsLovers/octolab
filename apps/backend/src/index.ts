@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-unassigned-import
-import 'dotenv/config';
+/* import 'dotenv/config'; */
 
 import bodyParser from 'body-parser';
 import express from 'express';
