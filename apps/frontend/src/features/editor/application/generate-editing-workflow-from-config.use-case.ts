@@ -1,5 +1,6 @@
 import {
     AwsS3CloudFrontWorkflowConfig,
+    DockerImagePublishWorkflowConfig,
     Job,
     NodePrVerifyWorkflowConfig,
     NpmPublishWorkflowConfig,
@@ -194,10 +195,52 @@ function snykSteps(config: SnykSecurityScanWorkflowConfig): Step {
 }
 
 /**
+ * Docker publish steps
+ */
+function dockerPublishSteps(config: DockerImagePublishWorkflowConfig): Step[] {
+    // Construir el objeto "with" para login dinámicamente
+    const loginWith: Record<string, string> = {
+        username: config.dockerUsername,
+        password: `\${{ secrets.${config.dockerPasswordSecret} }}`,
+    };
+
+    // Si el usuario selecciona GitHub Container Registry, añadir registry
+    if (config.dockerRegistry === 'Github Container Registry') {
+        loginWith.registry = 'ghcr.io';
+    }
+
+    return [
+        {
+            name: 'Login to Docker Registry',
+            uses: 'docker/login-action@v3',
+            with: loginWith,
+        },
+        {
+            name: 'Set up QEMU',
+            uses: 'docker/setup-qemu-action@v3',
+        },
+        {
+            name: 'Set up Docker Buildx',
+            uses: 'docker/setup-buildx-action@v3',
+        },
+        {
+            name: 'Build and push',
+            uses: 'docker/build-push-action@v6',
+            with: {
+                context: config.dockerBuildContext,
+                file: config.dockerDockerfile,
+                push: true,
+                tags: config.dockerImageTags,
+            },
+        },
+    ];
+}
+
+/**
  * Generate steps based on workflow config
  */
 function generateSteps(config: WorkflowConfig): Step[] {
-    const steps = checkoutStep();
+    const steps = config.id !== 'docker-image-publish' ? checkoutStep() : [];
 
     if (config.id === 'node-pr-verify') {
         steps.push(setupNodeStep(config));
@@ -231,6 +274,8 @@ function generateSteps(config: WorkflowConfig): Step[] {
         steps.push(...vercelSteps(config));
     } else if (config.id === 'security-scan-snyk') {
         steps.push(snykSteps(config));
+    } else if (config.id === 'docker-image-publish') {
+        steps.push(...dockerPublishSteps(config));
     }
 
     return steps;

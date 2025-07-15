@@ -9,6 +9,7 @@ export {
     SemanticReleaseWorkflowConfig,
     AwsS3CloudFrontWorkflowConfig,
     SnykSecurityScanWorkflowConfig,
+    DockerImagePublishWorkflowConfig,
     WorkflowYaml,
     Step,
     Job,

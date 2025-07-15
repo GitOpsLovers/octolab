@@ -8,7 +8,8 @@ export type WorkflowConfig =
     | SemanticReleaseWorkflowConfig
     | AwsS3CloudFrontWorkflowConfig
     | NxPrVerifyWorkflowConfig
-    | SnykSecurityScanWorkflowConfig;
+    | SnykSecurityScanWorkflowConfig
+    | DockerImagePublishWorkflowConfig;
 
 /**
  * Base workflow configuration model
@@ -22,9 +23,6 @@ export interface BaseWorkflowConfig {
     filename: string;
     workflowName: string;
     branch?: string;
-    nodeVersion?: string;
-    installCommand?: string;
-    buildCommand?: string;
 }
 
 /**
@@ -32,8 +30,11 @@ export interface BaseWorkflowConfig {
  */
 export interface NpmPublishWorkflowConfig extends BaseWorkflowConfig {
     id: 'npm-publish';
+    installCommand?: string;
     testCommand: string;
+    buildCommand?: string;
     npmTokenSecret: string;
+    nodeVersion?: string;
 }
 
 /**
@@ -41,8 +42,11 @@ export interface NpmPublishWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface NodePrVerifyWorkflowConfig extends BaseWorkflowConfig {
     id: 'node-pr-verify';
+    installCommand?: string;
     lintCommand: string;
     testCommand: string;
+    buildCommand?: string;
+    nodeVersion?: string;
 }
 
 /**
@@ -50,9 +54,12 @@ export interface NodePrVerifyWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface NxPrVerifyWorkflowConfig extends BaseWorkflowConfig {
     id: 'nx-pr-verify';
+    baseBranch: string;
+    installCommand?: string;
     lintCommand: string;
     testCommand: string;
-    baseBranch: string;
+    buildCommand?: string;
+    nodeVersion?: string;
 }
 
 /**
@@ -68,8 +75,11 @@ export interface VercelProDeploymentWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface SemanticReleaseWorkflowConfig extends BaseWorkflowConfig {
     id: 'semantic-release';
+    installCommand?: string;
+    buildCommand?: string;
     releaseCommand: string;
     githubTokenSecret: string;
+    nodeVersion?: string;
 }
 
 /**
@@ -77,6 +87,8 @@ export interface SemanticReleaseWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface AwsS3CloudFrontWorkflowConfig extends BaseWorkflowConfig {
     id: 'aws-s3-cloudfront-deploy';
+    installCommand?: string;
+    buildCommand?: string;
     awsRegionEnvironmentVariable: string;
     awsRegionEnvironmentVariableValue: string;
     awsRoleNameEnvironmentVariable: string;
@@ -87,6 +99,7 @@ export interface AwsS3CloudFrontWorkflowConfig extends BaseWorkflowConfig {
     sourceDirEnvironmentVariableValue: string;
     cloudfrontDistributionIdSecret: string;
     awsAccountIdSecret: string;
+    nodeVersion?: string;
 }
 
 /**
@@ -97,6 +110,19 @@ export interface SnykSecurityScanWorkflowConfig extends BaseWorkflowConfig {
     snykCodeStack: string;
     snykSeverityThreshold: string;
     snykTokenSecret: string;
+}
+
+/**
+ * Template configuration for Docker image publish workflow
+ */
+export interface DockerImagePublishWorkflowConfig extends BaseWorkflowConfig {
+    id: 'docker-image-publish';
+    dockerRegistry: string;
+    dockerUsername: string;
+    dockerPasswordSecret: string;
+    dockerBuildContext: string;
+    dockerDockerfile: string;
+    dockerImageTags: string;
 }
 
 /**
@@ -125,6 +151,6 @@ export interface Step {
     name: string;
     run?: string;
     uses?: string;
-    with?: Record<string, string>;
+    with?: Record<string, string | number | boolean>;
     env?: Record<string, string>;
 }
