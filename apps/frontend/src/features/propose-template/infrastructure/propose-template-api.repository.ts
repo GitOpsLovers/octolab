@@ -4,13 +4,12 @@ import { ProposeTemplateRepository } from '../domain/repositories/propose-templa
 /**
  * Propose template Api Repository
  */
-export const proposeTemplateApiRepository = (token: string): ProposeTemplateRepository => ({
+export const proposeTemplateApiRepository = (): ProposeTemplateRepository => ({
     send: async (data: ProposalTemplateDto): Promise<void> => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/propose-template`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(data),
         });

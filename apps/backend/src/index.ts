@@ -22,6 +22,8 @@ const requiredEnvVars = [
     'AUTH0_CLIENT_SECRET',
     'AUTH0_AUDIENCE',
     'AUTH0_AUDIENCE',
+    'CONTACT_EMAIL',
+    'RESEND_API_KEY',
 ];
 const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(',') ?? [];
 

@@ -9,7 +9,6 @@ import { z } from 'zod';
 import { sendTemplateProposalUseCase } from '@features/propose-template/application/send-template-proposal.use-case';
 import { proposeTemplateSchema } from '@features/propose-template/domain/schemas/propose-template.schema';
 import { proposeTemplateApiRepository } from '@features/propose-template/infrastructure/propose-template-api.repository';
-import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 
 type FormData = z.infer<typeof proposeTemplateSchema>;
 
@@ -17,7 +16,6 @@ type FormData = z.infer<typeof proposeTemplateSchema>;
  * Propose template form component.
  */
 export function ProposeTemplateForm() {
-    const { authToken } = useAuthUser();
     const [formError, setFormError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -31,13 +29,11 @@ export function ProposeTemplateForm() {
     });
 
     const onSubmit = async (data: FormData) => {
-        if (!authToken) return;
-
         setFormError('');
         setIsLoading(true);
 
         try {
-            const repository = proposeTemplateApiRepository(authToken);
+            const repository = proposeTemplateApiRepository();
             await sendTemplateProposalUseCase(repository, data);
 
             reset();
