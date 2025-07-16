@@ -1,5 +1,6 @@
 'use client';
 
+import { workflowsRunners } from '@octolab/domain';
 import { ReactNode } from 'react';
 
 import { useEditor } from '../hooks/editor.hooks';
@@ -38,7 +39,7 @@ export function TemplateWorkflowForm(): ReactNode {
             label: 'Runner',
             show: true,
             type: 'select',
-            options: ['ubuntu-latest', 'windows-latest', 'macos-latest'],
+            options: workflowsRunners,
         },
         {
             key: 'branch',
