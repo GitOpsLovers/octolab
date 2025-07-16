@@ -19,9 +19,32 @@ interface EditorProviderProps {
     workflowId: string;
 }
 
-/**
- * Editor context provider
- */
+// ✅ función base para un custom vacío
+const createBaseCustomWorkflow = (): WorkflowConfig => ({
+    id: 'custom',
+    name: 'Workflow name',
+    description: 'Workflow description',
+    filename: 'custom-workflow.yml',
+    workflowName: 'Custom workflow',
+    on: 'push',
+    branch: 'main',
+    jobs: [
+        {
+            id: 'job-1',
+            name: 'job-name',
+            runner: 'ubuntu-latest',
+            steps: [
+                {
+                    id: 'step-one',
+                    type: 'run',
+                    name: 'Custom command',
+                    run: 'echo "Hello world"',
+                },
+            ],
+        },
+    ],
+});
+
 export function EditorProvider({ children, templateId, workflowId }: EditorProviderProps) {
     const { authToken, isLoading } = useAuthUser();
     const [errors, setErrors] = useState<Record<string, string | null>>({});
@@ -31,14 +54,58 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
     const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<WorkflowConfig | null>(null);
     const [isEditingExistingWorkflow, setIsEditingExistingWorkflow] = useState<boolean>(false);
 
-    /**
-     * Initialize the editor data
-     *
-     * This effect fecthes an existing workflow from Backend.
-     * If it doesn't exist, it fetches the template and the base workflow configuration.
-     */
     useEffect(() => {
         const init = async () => {
+            // Si hay workflowId, buscamos en DB (incluyendo los custom)
+            if (workflowId) {
+                try {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const repository = editorApiRepository(authToken!);
+                    const existingWorkflow = await getOneWorkflowUseCase(repository, workflowId);
+
+                    if (existingWorkflow) {
+                        const existingWorkflowData = JSON.parse(existingWorkflow.data);
+
+                        const workflow: WorkflowConfig = {
+                            id: existingWorkflowData.id,
+                            runner: existingWorkflowData.runner,
+                            nodeVersion: existingWorkflowData.nodeVersion,
+                            installCommand: existingWorkflowData.installCommand,
+                            testCommand: existingWorkflowData.testCommand,
+                            lintCommand: existingWorkflowData.lintCommand,
+                            buildCommand: existingWorkflowData.buildCommand,
+                            workflowName: existingWorkflowData.workflowName,
+                            jobName: existingWorkflowData.jobName,
+                            npmTokenSecret: existingWorkflowData.npmTokenSecret,
+                            vercelTokenSecret: existingWorkflowData.vercelTokenSecret,
+                            filename: existingWorkflowData.filename ?? 'custom-workflow.yml',
+                            name: existingWorkflow.name,
+                            description: existingWorkflow.description,
+                            branch: existingWorkflowData.branch,
+                            jobs: existingWorkflowData.jobs,
+                            on: existingWorkflowData.on,
+                        };
+
+                        setEditingWorkflow(structuredClone(workflow));
+                        setInitialEditingWorkflowData(structuredClone(workflow));
+                        setIsEditingExistingWorkflow(true);
+                        setLoading(false);
+                        return;
+                    }
+                } catch (err) {
+                    console.error('Error fetching workflow:', err);
+                }
+            }
+
+            // Si no hay workflow guardado (o no existe), seguimos lógica anterior
+            if (templateId === 'custom') {
+                const workflow = createBaseCustomWorkflow();
+                setEditingWorkflow(structuredClone(workflow));
+                setInitialEditingWorkflowData(structuredClone(workflow));
+                setLoading(false);
+                return;
+            }
+
             const fetchTemplate = async (): Promise<Template | null> => {
                 try {
                     const repository = templatesApiRepository();
@@ -62,67 +129,23 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
                         description: templateOverride?.description ?? '',
                     };
 
-                    setEditingWorkflow(initialWorkflow);
-                    setInitialEditingWorkflowData(initialWorkflow);
+                    setEditingWorkflow(structuredClone(initialWorkflow));
+                    setInitialEditingWorkflowData(structuredClone(initialWorkflow));
                 } catch (err) {
                     console.error('Error fetching workflow config:', err);
                 }
             };
 
-            const fetchWorkflow = async () => {
-                try {
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    const repository = editorApiRepository(authToken!);
-                    const existingWorkflow = await getOneWorkflowUseCase(repository, workflowId);
-
-                    if (existingWorkflow) {
-                        const existingWorkflowData = JSON.parse(existingWorkflow.data);
-
-                        const workflow: WorkflowConfig = {
-                            id: existingWorkflowData.id,
-                            runner: existingWorkflowData.runner,
-                            nodeVersion: existingWorkflowData.nodeVersion,
-                            installCommand: existingWorkflowData.installCommand,
-                            testCommand: existingWorkflowData.testCommand,
-                            lintCommand: existingWorkflowData.lintCommand,
-                            buildCommand: existingWorkflowData.buildCommand,
-                            workflowName: existingWorkflowData.workflowName,
-                            jobName: existingWorkflowData.jobName,
-                            npmTokenSecret: existingWorkflowData.npmTokenSecret,
-                            vercelTokenSecret: existingWorkflowData.vercelTokenSecret,
-                            filename: '????', // Esto puedes reemplazarlo con el que toque
-                            name: existingWorkflow.name,
-                            description: existingWorkflow.description,
-                            branch: existingWorkflowData.branch,
-                        };
-
-                        setEditingWorkflow(workflow);
-                        setInitialEditingWorkflowData(workflow);
-                        setIsEditingExistingWorkflow(true);
-                    } else {
-                        const templateFetched = await fetchTemplate();
-                        await fetchWorkflowConfig(templateFetched);
-                    }
-                } catch (err) {
-                    console.error('Error fetching workflow:', err);
-                }
-            };
-
-            if (isLoading) return;
-
-            setLoading(true);
-
-            if (authToken) {
-                await fetchWorkflow();
-            } else {
-                const templateFetched = await fetchTemplate();
-                await fetchWorkflowConfig(templateFetched);
-            }
+            const templateFetched = await fetchTemplate();
+            await fetchWorkflowConfig(templateFetched);
 
             setLoading(false);
         };
 
-        init();
+        if (!isLoading) {
+            setLoading(true);
+            init();
+        }
     }, [isLoading, authToken, templateId, workflowId]);
 
     const editingWorkflowYaml = useMemo(() => {
@@ -132,7 +155,7 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
 
     const resetEditingWorkflow = () => {
         if (initialEditingWorkflowData) {
-            setEditingWorkflow(initialEditingWorkflowData);
+            setEditingWorkflow(structuredClone(initialEditingWorkflowData));
         }
     };
 

@@ -4,7 +4,10 @@ import { ReactNode } from 'react';
 
 import { useEditor } from '../hooks/editor.hooks';
 
-export function EditorForm(): ReactNode {
+/**
+ * Template workflow form component
+ */
+export function TemplateWorkflowForm(): ReactNode {
     const { editingWorkflow, setEditingWorkflow, resetEditingWorkflow, errors, setErrors } = useEditor();
 
     const validateField = (field: string, value: string) => {
@@ -22,7 +25,6 @@ export function EditorForm(): ReactNode {
 
     if (!editingWorkflow) return null;
 
-    // ⚙️ Campos configurables
     const fieldsConfig = [
         {
             key: 'workflowName',
@@ -53,7 +55,11 @@ export function EditorForm(): ReactNode {
         {
             key: 'nodeVersion',
             label: 'Node version',
-            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk' && editingWorkflow.id !== 'docker-image-publish',
+            show:
+                editingWorkflow.id !== 'vercel-pro-deployment' &&
+                editingWorkflow.id !== 'security-scan-snyk' &&
+                editingWorkflow.id !== 'docker-image-publish' &&
+                editingWorkflow.id !== 'custom',
             type: 'select',
             options: ['16', '18', '20', '22'],
         },
@@ -61,7 +67,11 @@ export function EditorForm(): ReactNode {
             key: 'installCommand',
             label: 'Installation command',
             placeholder: 'npm install',
-            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk' && editingWorkflow.id !== 'docker-image-publish',
+            show:
+                editingWorkflow.id !== 'vercel-pro-deployment' &&
+                editingWorkflow.id !== 'security-scan-snyk' &&
+                editingWorkflow.id !== 'docker-image-publish' &&
+                editingWorkflow.id !== 'custom',
             type: 'input',
         },
         {
@@ -82,7 +92,11 @@ export function EditorForm(): ReactNode {
             key: 'buildCommand',
             label: 'Build command',
             placeholder: 'npm run build',
-            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk' && editingWorkflow.id !== 'docker-image-publish',
+            show:
+                editingWorkflow.id !== 'vercel-pro-deployment' &&
+                editingWorkflow.id !== 'security-scan-snyk' &&
+                editingWorkflow.id !== 'docker-image-publish' &&
+                editingWorkflow.id !== 'custom',
             type: 'input',
         },
         {

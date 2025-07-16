@@ -2,6 +2,7 @@
  * Workflow configuration model
  */
 export type WorkflowConfig =
+    | CustomWorkflowConfig
     | NpmPublishWorkflowConfig
     | NodePrVerifyWorkflowConfig
     | VercelProDeploymentWorkflowConfig
@@ -16,20 +17,35 @@ export type WorkflowConfig =
  */
 export interface BaseWorkflowConfig {
     id: string;
-    runner: string;
-    jobName: string;
     name: string;
     description: string;
     filename: string;
     workflowName: string;
-    branch?: string;
 }
+
+/**
+ * Configuration for custom workflows
+ */
+export interface CustomWorkflowConfig extends BaseWorkflowConfig {
+    id: 'custom';
+    on: WorkflowTrigger;
+    branch?: string;
+    jobs: Job[];
+}
+
+/**
+ * Workflow trigger types
+ */
+export type WorkflowTrigger = 'push' | 'pull_request' | 'workflow_dispatch' | 'schedule';
 
 /**
  * Template configuration for NPM publish workflow
  */
 export interface NpmPublishWorkflowConfig extends BaseWorkflowConfig {
     id: 'npm-publish';
+    runner: string;
+    jobName: string;
+    branch: string;
     installCommand?: string;
     testCommand: string;
     buildCommand?: string;
@@ -42,6 +58,8 @@ export interface NpmPublishWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface NodePrVerifyWorkflowConfig extends BaseWorkflowConfig {
     id: 'node-pr-verify';
+    runner: string;
+    jobName: string;
     installCommand?: string;
     lintCommand: string;
     testCommand: string;
@@ -54,6 +72,8 @@ export interface NodePrVerifyWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface NxPrVerifyWorkflowConfig extends BaseWorkflowConfig {
     id: 'nx-pr-verify';
+    runner: string;
+    jobName: string;
     baseBranch: string;
     installCommand?: string;
     lintCommand: string;
@@ -67,6 +87,9 @@ export interface NxPrVerifyWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface VercelProDeploymentWorkflowConfig extends BaseWorkflowConfig {
     id: 'vercel-pro-deployment';
+    runner: string;
+    jobName: string;
+    branch: string;
     vercelTokenSecret: string;
 }
 
@@ -75,6 +98,9 @@ export interface VercelProDeploymentWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface SemanticReleaseWorkflowConfig extends BaseWorkflowConfig {
     id: 'semantic-release';
+    runner: string;
+    jobName: string;
+    branch: string;
     installCommand?: string;
     buildCommand?: string;
     releaseCommand: string;
@@ -87,6 +113,9 @@ export interface SemanticReleaseWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface AwsS3CloudFrontWorkflowConfig extends BaseWorkflowConfig {
     id: 'aws-s3-cloudfront-deploy';
+    runner: string;
+    jobName: string;
+    branch: string;
     installCommand?: string;
     buildCommand?: string;
     awsRegionEnvironmentVariable: string;
@@ -107,6 +136,9 @@ export interface AwsS3CloudFrontWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface SnykSecurityScanWorkflowConfig extends BaseWorkflowConfig {
     id: 'security-scan-snyk';
+    runner: string;
+    jobName: string;
+    branch: string;
     snykCodeStack: string;
     snykSeverityThreshold: string;
     snykTokenSecret: string;
@@ -117,6 +149,9 @@ export interface SnykSecurityScanWorkflowConfig extends BaseWorkflowConfig {
  */
 export interface DockerImagePublishWorkflowConfig extends BaseWorkflowConfig {
     id: 'docker-image-publish';
+    runner: string;
+    jobName: string;
+    branch: string;
     dockerRegistry: string;
     dockerUsername: string;
     dockerPasswordSecret: string;
@@ -136,11 +171,12 @@ export interface WorkflowYaml {
 }
 
 /**
- * Jobs model
+ * Job model
  */
 export interface Job {
-    'runs-on': string;
-    permissions?: Record<string, string>;
+    id: string;
+    name: string;
+    runner: string;
     steps: Step[];
 }
 
@@ -148,7 +184,9 @@ export interface Job {
  * Step model
  */
 export interface Step {
+    id: string;
     name: string;
+    type: 'run' | 'uses';
     run?: string;
     uses?: string;
     with?: Record<string, string | number | boolean>;
