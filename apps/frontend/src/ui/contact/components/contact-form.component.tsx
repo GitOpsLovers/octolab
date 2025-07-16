@@ -6,16 +6,16 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { sendTemplateProposalUseCase } from '@features/propose-template/application/send-template-proposal.use-case';
-import { proposeTemplateSchema } from '@features/propose-template/domain/schemas/propose-template.schema';
-import { proposeTemplateApiRepository } from '@features/propose-template/infrastructure/propose-template-api.repository';
+import { sendContactSubmissionUseCase } from '@features/contact/application/send-contact-submission.use-case';
+import { contactSchema } from '@features/contact/domain/schemas/contact.schema';
+import { contactApiRepository } from '@features/contact/infrastructure/contact-api.repository';
 
-type FormData = z.infer<typeof proposeTemplateSchema>;
+type FormData = z.infer<typeof contactSchema>;
 
 /**
- * Propose template form component.
+ * Contact form component.
  */
-export function ProposeTemplateForm() {
+export function ContactForm() {
     const [formError, setFormError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -25,7 +25,7 @@ export function ProposeTemplateForm() {
         reset,
         formState: { errors, isSubmitSuccessful },
     } = useForm<FormData>({
-        resolver: zodResolver(proposeTemplateSchema),
+        resolver: zodResolver(contactSchema),
     });
 
     const onSubmit = async (data: FormData) => {
@@ -33,13 +33,13 @@ export function ProposeTemplateForm() {
         setIsLoading(true);
 
         try {
-            const repository = proposeTemplateApiRepository();
-            await sendTemplateProposalUseCase(repository, data);
+            const repository = contactApiRepository();
+            await sendContactSubmissionUseCase(repository, data);
 
             reset();
         } catch (error) {
-            console.error('Error submitting proposal', error);
-            setFormError('Something went wrong while submitting your proposal. Please try again.');
+            console.error('Error submitting contact form', error);
+            setFormError('Something went wrong while submitting your contact submission. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -48,7 +48,7 @@ export function ProposeTemplateForm() {
     if (isSubmitSuccessful) {
         return (
             <div className="flex flex-col justify-center items-center min-h-[60vh] text-center">
-                <h2 className="text-3xl font-bold mb-2 text-primary">Thank you for your suggestion!</h2>
+                <h2 className="text-3xl font-bold mb-2 text-primary">Thank you for contacting us!</h2>
                 <p className="text-text-muted max-w-md">We’ll review it and get back to you if needed.</p>
             </div>
         );
@@ -56,41 +56,28 @@ export function ProposeTemplateForm() {
 
     return (
         <>
-            <h1 className="text-3xl font-bold mb-12 mt-4 text-center">Propose a template</h1>
+            <h1 className="text-3xl font-bold mb-12 mt-4 text-center">Contact</h1>
 
             <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl mx-auto bg-surface border border-border p-6 rounded-lg shadow flex flex-col gap-4">
-                <h2 className="text-xl font-bold text-text mb-2 text-center">Suggest a new template</h2>
-
                 <div>
                     <label className="block text-sm font-medium text-text mb-1">Name *</label>
                     <input
                         {...register('name')}
                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        placeholder="e.g., Astro deploy to Vercel"
+                        placeholder="Your name"
                     />
                     {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-text mb-1">Description *</label>
+                    <label className="block text-sm font-medium text-text mb-1">Message *</label>
                     <textarea
-                        {...register('description')}
+                        {...register('message')}
                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        placeholder="Short description of what this template does"
-                        rows={3}
+                        placeholder="Your message"
+                        rows={5}
                     />
-                    {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-text mb-1">Motivation *</label>
-                    <textarea
-                        {...register('motivation')}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        placeholder="Why do you need this template? What problem does it solve?"
-                        rows={3}
-                    />
-                    {errors.motivation && <p className="text-red-500 text-sm mt-1">{errors.motivation.message}</p>}
+                    {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>}
                 </div>
 
                 <div>

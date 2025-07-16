@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import { initSupabaseClient } from '@core/infrastructure/database/supabase.client';
 import { configureCorsMiddleware } from '@core/infrastructure/express/cors-config.express';
 import { checkRequiredEnvVariables } from '@core/infrastructure/express/env-config.express';
+import { contactRoutes } from '@features/contact/ui/routes/contact.routes';
 import { templatesRoutes } from '@features/templates/ui/routes/templates.routes';
 import { usersRoutes } from '@features/users/ui/routes/users.routes';
 import { workflowsRoutes } from '@features/workflows/ui/routes/workflows.routes';
@@ -45,6 +46,7 @@ app.use(configureCorsMiddleware(allowedOrigins));
 app.use('/api', usersRoutes);
 app.use('/api', templatesRoutes);
 app.use('/api', workflowsRoutes);
+app.use('/api', contactRoutes);
 
 const PORT = process.env.BACKEND_PORT || 4000;
 
