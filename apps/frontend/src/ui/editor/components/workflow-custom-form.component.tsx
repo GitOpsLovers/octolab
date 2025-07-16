@@ -11,7 +11,7 @@ import { useEditor } from '../hooks/editor.hooks';
  * Custom workflow form component
  */
 export function CustomWorkflowForm(): ReactNode {
-    const { editingWorkflow, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditor();
+    const { editingWorkflow, setEditingWorkflow, resetEditingWorkflow, setErrors, errors } = useEditor();
     const [collapsedJobs, setCollapsedJobs] = useState<Record<string, boolean>>({});
     const [collapsedSteps, setCollapsedSteps] = useState<Record<string, boolean>>({});
 
@@ -19,6 +19,19 @@ export function CustomWorkflowForm(): ReactNode {
 
     const customWorkflow = editingWorkflow;
     const triggerOptions: WorkflowTrigger[] = ['push', 'pull_request', 'workflow_dispatch', 'schedule'];
+
+    const validateField = (field: string, value: string) => {
+        if (!value.trim()) {
+            setErrors((prev) => ({ ...prev, [field]: 'This field cannot be empty' }));
+        } else {
+            setErrors((prev) => {
+                const newErrors = { ...prev };
+                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                delete newErrors[field];
+                return newErrors;
+            });
+        }
+    };
 
     const handleTriggerChange = (value: WorkflowTrigger) => {
         if (value !== 'push' && value !== 'pull_request') {
@@ -61,8 +74,10 @@ export function CustomWorkflowForm(): ReactNode {
 
     const handleStepChange = (jobIndex: number, stepIndex: number, key: 'name' | 'run' | 'uses', value: string) => {
         const newJobs = [...customWorkflow.jobs];
+        const stepId = newJobs[jobIndex].steps[stepIndex].id;
         newJobs[jobIndex].steps[stepIndex][key] = value;
         setEditingWorkflow({ ...customWorkflow, jobs: newJobs });
+        validateField(`step-${stepId}-${key}`, value);
     };
 
     const handleAddStepToJob = (jobIndex: number) => {
@@ -95,17 +110,11 @@ export function CustomWorkflowForm(): ReactNode {
     };
 
     const toggleCollapseJob = (jobId: string) => {
-        setCollapsedJobs((prev) => ({
-            ...prev,
-            [jobId]: !prev[jobId],
-        }));
+        setCollapsedJobs((prev) => ({ ...prev, [jobId]: !prev[jobId] }));
     };
 
     const toggleCollapseStep = (stepId: string) => {
-        setCollapsedSteps((prev) => ({
-            ...prev,
-            [stepId]: !prev[stepId],
-        }));
+        setCollapsedSteps((prev) => ({ ...prev, [stepId]: !prev[stepId] }));
     };
 
     return (
@@ -119,10 +128,13 @@ export function CustomWorkflowForm(): ReactNode {
                     type="text"
                     value={customWorkflow.workflowName}
                     onChange={(e) => {
-                        setEditingWorkflow({ ...customWorkflow, workflowName: e.target.value });
+                        const value = e.target.value;
+                        setEditingWorkflow({ ...customWorkflow, workflowName: value });
+                        validateField('workflowName', value);
                     }}
                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                 />
+                {errors.workflowName && <p className="text-red-500 text-sm mt-1">{errors.workflowName}</p>}
             </div>
 
             {/* Trigger */}
@@ -151,10 +163,13 @@ export function CustomWorkflowForm(): ReactNode {
                         type="text"
                         value={customWorkflow.branch || ''}
                         onChange={(e) => {
-                            setEditingWorkflow({ ...customWorkflow, branch: e.target.value });
+                            const value = e.target.value;
+                            setEditingWorkflow({ ...customWorkflow, branch: value });
+                            validateField('branch', value);
                         }}
                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                     />
+                    {errors.branch && <p className="text-red-500 text-sm mt-1">{errors.branch}</p>}
                 </div>
             )}
 
@@ -186,15 +201,18 @@ export function CustomWorkflowForm(): ReactNode {
                                         type="text"
                                         value={job.name}
                                         onChange={(e) => {
+                                            const value = e.target.value;
                                             const newJobs = [...customWorkflow.jobs];
-                                            newJobs[jobIndex].name = e.target.value;
+                                            newJobs[jobIndex].name = value;
                                             setEditingWorkflow({ ...customWorkflow, jobs: newJobs });
+                                            validateField(`job-${job.id}-name`, value);
                                         }}
                                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                     />
+                                    {errors[`job-${job.id}-name`] && <p className="text-red-500 text-sm mt-1">{errors[`job-${job.id}-name`]}</p>}
                                 </div>
 
-                                {/* Job runner */}
+                                {/* Runner */}
                                 <div className="mb-2">
                                     <label className="block text-sm font-medium text-text mb-1">Runner</label>
                                     <select
@@ -245,6 +263,7 @@ export function CustomWorkflowForm(): ReactNode {
                                                             }}
                                                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                                         />
+                                                        {errors[`step-${step.id}-name`] && <p className="text-red-500 text-sm mt-1">{errors[`step-${step.id}-name`]}</p>}
                                                     </div>
 
                                                     <div className="mb-2">
@@ -285,6 +304,7 @@ export function CustomWorkflowForm(): ReactNode {
                                                                 }}
                                                                 className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                                             />
+                                                            {errors[`step-${step.id}-run`] && <p className="text-red-500 text-sm mt-1">{errors[`step-${step.id}-run`]}</p>}
                                                         </div>
                                                     ) : (
                                                         <div className="mb-2">
@@ -297,6 +317,7 @@ export function CustomWorkflowForm(): ReactNode {
                                                                 }}
                                                                 className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                                             />
+                                                            {errors[`step-${step.id}-uses`] && <p className="text-red-500 text-sm mt-1">{errors[`step-${step.id}-uses`]}</p>}
                                                         </div>
                                                     )}
 
