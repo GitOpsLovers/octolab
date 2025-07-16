@@ -1,6 +1,6 @@
 'use client';
 
-import { WorkflowTrigger } from '@octolab/domain';
+import { Step, WorkflowTrigger } from '@octolab/domain';
 import { ReactNode, useState } from 'react';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
@@ -51,11 +51,11 @@ export function CustomWorkflowForm(): ReactNode {
 
     const handleRemoveJob = (jobIndex: number) => {
         const newJobs = [...customWorkflow.jobs];
+        const removedJob = newJobs[jobIndex];
         newJobs.splice(jobIndex, 1);
         setEditingWorkflow({ ...customWorkflow, jobs: newJobs });
 
-        const updatedCollapsed = { ...collapsedJobs };
-        delete updatedCollapsed[customWorkflow.jobs[jobIndex].id];
+        const { [removedJob.id]: _, ...updatedCollapsed } = collapsedJobs;
         setCollapsedJobs(updatedCollapsed);
     };
 
@@ -67,7 +67,7 @@ export function CustomWorkflowForm(): ReactNode {
 
     const handleAddStepToJob = (jobIndex: number) => {
         const newJobs = [...customWorkflow.jobs];
-        const newStep = {
+        const newStep: Step = {
             id: uuidv4(),
             name: `Step ${newJobs[jobIndex].steps.length + 1}`,
             type: 'run',
@@ -83,8 +83,7 @@ export function CustomWorkflowForm(): ReactNode {
         newJobs[jobIndex].steps = newJobs[jobIndex].steps.filter((_, i) => i !== stepIndex);
         setEditingWorkflow({ ...customWorkflow, jobs: newJobs });
 
-        const updatedCollapsedSteps = { ...collapsedSteps };
-        delete updatedCollapsedSteps[stepId];
+        const { [stepId]: _, ...updatedCollapsedSteps } = collapsedSteps;
         setCollapsedSteps(updatedCollapsedSteps);
     };
 
