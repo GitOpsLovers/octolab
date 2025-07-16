@@ -15,13 +15,22 @@ import {
 
 import { snykStackActionMap } from '../domain/constants/actions.const';
 
+function slugify(name: string): string {
+    return name
+        .toLowerCase()
+        .replace(/[^\da-z]+/g, '-') // Reemplaza todo lo que no sea alfanumérico por guiones
+        .replace(/^-+|-+$/g, ''); // Quita guiones al principio y al final
+}
+
 /**
  * Checkout step
  */
 function checkoutStep(): Step[] {
     return [
         {
+            id: 'checkout-step',
             name: 'Checkout code',
+            type: 'uses',
             uses: 'actions/checkout@v4',
         },
     ];
@@ -34,7 +43,9 @@ function setupNodeStep(
     config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig | NxPrVerifyWorkflowConfig,
 ): Step {
     return {
+        id: 'setup-node-step',
         name: 'Setup Node',
+        type: 'uses',
         uses: 'actions/setup-node@v4',
         with: {
             'node-version': config.nodeVersion ?? '18',
@@ -49,7 +60,9 @@ function installDependenciesStep(
     config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig | NxPrVerifyWorkflowConfig,
 ): Step {
     return {
+        id: 'install-dependencies-step',
         name: 'Install dependencies',
+        type: 'run',
         run: config.installCommand,
     };
 }
@@ -65,7 +78,9 @@ function lintStep(config: NodePrVerifyWorkflowConfig | NxPrVerifyWorkflowConfig)
     }
 
     return {
+        id: 'lint-step',
         name: 'Run lint',
+        type: 'run',
         run: runCommand,
     };
 }
@@ -81,7 +96,9 @@ function testStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig 
     }
 
     return {
+        id: 'test-step',
         name: 'Run tests',
+        type: 'run',
         run: runCommand,
     };
 }
@@ -97,7 +114,9 @@ function buildStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig
     }
 
     return {
+        id: 'build-step',
         name: 'Build package',
+        type: 'run',
         run: runCommand,
     };
 }
@@ -107,7 +126,9 @@ function buildStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig
  */
 function npmPublishStep(config: NpmPublishWorkflowConfig): Step {
     return {
+        id: 'npm-publish-step',
         name: 'Publish to NPM',
+        type: 'uses',
         uses: 'JS-DevTools/npm-publish@v3',
         with: {
             token: `\${{ secrets.${config.npmTokenSecret} }}`,
@@ -120,7 +141,9 @@ function npmPublishStep(config: NpmPublishWorkflowConfig): Step {
  */
 function semanticReleaseStep(config: SemanticReleaseWorkflowConfig): Step {
     return {
+        id: 'semantic-release-step',
         name: 'Release with Semantic Release',
+        type: 'uses',
         run: config.releaseCommand,
         env: {
             GITHUB_TOKEN: `\${{ secrets.${config.githubTokenSecret} }}`,
@@ -134,7 +157,9 @@ function semanticReleaseStep(config: SemanticReleaseWorkflowConfig): Step {
 function awsSteps(config: AwsS3CloudFrontWorkflowConfig): Step[] {
     return [
         {
+            id: 'configure-aws-credentials-step',
             name: 'Configure AWS credentials with IAM Role',
+            type: 'uses',
             uses: 'aws-actions/configure-aws-credentials@v4',
             with: {
                 'role-to-assume': `arn:aws:iam::\${{ secrets.${config.awsAccountIdSecret} }}:role/\${{ env.${config.awsRoleNameEnvironmentVariable} }}`,
@@ -142,11 +167,15 @@ function awsSteps(config: AwsS3CloudFrontWorkflowConfig): Step[] {
             },
         },
         {
+            id: 'sync-files-to-s3-step',
             name: 'Sync files to S3',
+            type: 'run',
             run: `aws s3 sync \${{ env.${config.sourceDirEnvironmentVariable} }} s3://\${{ env.${config.awsS3BucketEnvironmentVariable} }}/ --delete --exclude '.*git*'`,
         },
         {
+            id: 'invalidate-cloudfront-cache-step',
             name: 'Invalidate CloudFront Cache',
+            type: 'run',
             run: `aws cloudfront create-invalidation --distribution-id \${{ secrets.${config.cloudfrontDistributionIdSecret} }} --paths "/*"`,
         },
     ];
@@ -158,19 +187,27 @@ function awsSteps(config: AwsS3CloudFrontWorkflowConfig): Step[] {
 function vercelSteps(config: VercelProDeploymentWorkflowConfig): Step[] {
     return [
         {
+            id: 'install-vercel-cli-step',
             name: 'Install Vercel CLI',
+            type: 'run',
             run: 'npm install --global vercel@latest',
         },
         {
+            id: 'pull-vercel-env-info-step',
             name: 'Pull Vercel Environment Information',
+            type: 'run',
             run: `vercel pull --yes --environment=production --token=\${{ secrets.${config.vercelTokenSecret} }}`,
         },
         {
+            id: 'build-vercel-artifacts-step',
             name: 'Build Project Artifacts',
+            type: 'run',
             run: `vercel build --prod --token=\${{ secrets.${config.vercelTokenSecret} }}`,
         },
         {
+            id: 'deploy-vercel-artifacts-step',
             name: 'Deploy Project Artifacts to Vercel',
+            type: 'run',
             run: `vercel deploy --prebuilt --prod --token=\${{ secrets.${config.vercelTokenSecret} }}`,
         },
     ];
@@ -183,7 +220,9 @@ function snykSteps(config: SnykSecurityScanWorkflowConfig): Step {
     const actionName = snykStackActionMap[config.snykCodeStack];
 
     return {
+        id: 'run-snyk-step',
         name: 'Run Snyk to check for vulnerabilities',
+        type: 'uses',
         uses: `snyk/actions/${actionName}@master`,
         env: {
             SNYK_TOKEN: `\${{ secrets.${config.snykTokenSecret} }}`,
@@ -211,20 +250,28 @@ function dockerPublishSteps(config: DockerImagePublishWorkflowConfig): Step[] {
 
     return [
         {
+            id: 'login-to-docker-registry-step',
             name: 'Login to Docker Registry',
+            type: 'uses',
             uses: 'docker/login-action@v3',
             with: loginWith,
         },
         {
+            id: 'setup-qemu-step',
             name: 'Set up QEMU',
+            type: 'uses',
             uses: 'docker/setup-qemu-action@v3',
         },
         {
+            id: 'setup-buildx-step',
             name: 'Set up Docker Buildx',
+            type: 'uses',
             uses: 'docker/setup-buildx-action@v3',
         },
         {
+            id: 'build-and-push-step',
             name: 'Build and push',
+            type: 'uses',
             uses: 'docker/build-push-action@v6',
             with: {
                 context: config.dockerBuildContext,
@@ -285,10 +332,31 @@ function generateSteps(config: WorkflowConfig): Step[] {
  * Generate "on" section based on workflow config
  */
 function generateOnConfig(config: WorkflowConfig): Record<string, any> {
+    if (config.id === 'custom') {
+        if (config.on === 'push' || config.on === 'pull_request') {
+            return {
+                [config.on]: {
+                    branches: config.branch ? [config.branch] : ['main'],
+                },
+            };
+        } else if (config.on === 'workflow_dispatch') {
+            return { workflow_dispatch: {} };
+        } else if (config.on === 'schedule') {
+            return {
+                schedule: [
+                    {
+                        cron: '0 0 * * *', // Default cron example
+                    },
+                ],
+            };
+        }
+    }
+
     if (config.id === 'node-pr-verify' || config.id === 'nx-pr-verify') {
         return { pull_request: {} };
     }
-    return { push: { branches: [config.branch] } };
+
+    return { push: { branches: [config.branch ?? 'main'] } };
 }
 
 /**
@@ -307,45 +375,64 @@ function generateEnvConfig(config: WorkflowConfig): Record<string, string> | und
 }
 
 /**
+ * Generate "jobs" section based on workflow config
+ */
+function generateJobs(config: WorkflowConfig): Record<string, Job> {
+    if (config.id === 'custom') {
+        const jobs: Record<string, Job> = {};
+
+        for (const customJob of config.jobs) {
+            jobs[customJob.id] = {
+                id: customJob.id,
+                name: customJob.name,
+                runner: customJob.runner,
+                steps: customJob.steps,
+            };
+        }
+
+        return jobs;
+    }
+
+    // 👇 lógica para workflows no custom
+    const steps = generateSteps(config);
+
+    return {
+        [config.jobName ?? 'build']: {
+            id: config.jobName ?? 'build',
+            name: config.jobName ?? 'build',
+            runner: config.runner,
+            steps,
+        },
+    };
+}
+
+/**
  * Generate a workflow from a workflow config
  */
 export function generateEditingWorkflowFromConfigUseCase(workflowConfig: WorkflowConfig): WorkflowYaml {
     const on = generateOnConfig(workflowConfig);
     const env = generateEnvConfig(workflowConfig);
-    const steps = generateSteps(workflowConfig);
+    const jobsInternal = generateJobs(workflowConfig);
 
-    let job: Job;
+    const jobsYaml: Record<string, any> = {};
 
-    if (workflowConfig.id === 'aws-s3-cloudfront-deploy') {
-        job = {
-            'runs-on': workflowConfig.runner,
-            permissions: {
-                'id-token': 'write',
-                contents: 'read',
-            },
-            steps,
-        };
+    for (const [, job] of Object.entries(jobsInternal)) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const stepsYaml = job.steps.map(({ id, type, ...rest }) => rest);
 
-        return {
-            name: workflowConfig.workflowName,
-            on,
-            env,
-            jobs: {
-                [workflowConfig.jobName ?? 'build']: job,
-            },
-        };
-    } else {
-        job = {
-            'runs-on': workflowConfig.runner,
-            steps,
-        };
+        const jobKey = slugify(job.name);
 
-        return {
-            name: workflowConfig.workflowName,
-            on,
-            jobs: {
-                [workflowConfig.jobName ?? 'build']: job,
-            },
+        jobsYaml[jobKey] = {
+            name: job.name,
+            'runs-on': job.runner,
+            steps: stepsYaml,
         };
     }
+
+    return {
+        name: workflowConfig.workflowName,
+        on,
+        env,
+        jobs: jobsYaml,
+    };
 }

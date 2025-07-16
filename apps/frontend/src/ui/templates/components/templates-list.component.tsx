@@ -80,6 +80,20 @@ export function TemplatesList() {
         }
     };
 
+    // Handle the custom workflow selection.
+    const handleSelectCustom = (e: MouseEvent) => {
+        e.preventDefault();
+        setSelectedTemplateId('custom');
+
+        const draftId = uuidv4();
+
+        if (authUser || skipRegisterModal) {
+            router.push(`/editor/custom/${draftId}`);
+        } else {
+            setModalOpen(true);
+        }
+    };
+
     if (loading || isLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-text-muted">
@@ -114,6 +128,26 @@ export function TemplatesList() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+                <div className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col p-4 text-center">
+                    <div className="flex flex-col items-center justify-center flex-1">
+                        <Io5Icons.IoBuildOutline className="w-12 h-12 text-primary mb-3" />
+                        <h2 className="text-xl font-bold text-text mb-1">Start from scratch</h2>
+                        <p className="text-sm text-text-muted mb-4">Create a workflow manually with full control.</p>
+                    </div>
+
+                    <div className="mt-auto w-full flex flex-col">
+                        <button
+                            onClick={(e) => {
+                                handleSelectCustom(e);
+                            }}
+                            className="bg-primary text-white font-semibold px-4 py-2 rounded-md hover:bg-primary-hover transition w-full cursor-pointer"
+                        >
+                            Create workflow
+                        </button>
+                        {!authUser && !isLoading && <p className="text-xs text-text-muted mt-2 text-center">You’ll need an account to save your workflow.</p>}
+                    </div>
+                </div>
+
                 {templates
                     ?.filter((template) => selectedType === 'all' || template.type === selectedType)
                     .map((template) => {

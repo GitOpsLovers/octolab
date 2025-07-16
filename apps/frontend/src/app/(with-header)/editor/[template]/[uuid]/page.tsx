@@ -1,4 +1,4 @@
-import { EditorForm } from '@ui/editor/components/form.component';
+import { EditorForm } from '@ui/editor/components/editor-form.component';
 import { LoadingEditor } from '@ui/editor/components/loading.component';
 import { EditorTitle } from '@ui/editor/components/title.component';
 import { YamlPreview } from '@ui/editor/components/yaml-preview.component';
