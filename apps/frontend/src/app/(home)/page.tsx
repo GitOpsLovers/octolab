@@ -12,9 +12,13 @@ export default async function Home() {
     return (
         <div className="flex flex-col min-h-screen bg-background">
             <main className="flex flex-col items-center justify-center flex-grow px-4">
-                <div className="flex items-end gap-2 mb-6">
+                <div className="relative flex items-end gap-2 mb-6">
                     <Image src="/header-logo-sm.png" alt="OctoLab logo" width={300} height={40} className="inline-block" />
-                    <span className="text-7xl md:text-8xl font-bold text-primary ml-4">OctoLab</span>
+
+                    <span className="text-7xl md:text-8xl font-bold text-primary ml-4 relative">
+                        OctoLab
+                        <span className="absolute -top-3 -right-10 bg-secondary text-surface text-sm md:text-base font-bold px-3 py-1 rounded-full shadow-lg">Beta</span>{' '}
+                    </span>
                 </div>
 
                 <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-text">

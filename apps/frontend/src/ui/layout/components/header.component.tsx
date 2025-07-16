@@ -15,9 +15,12 @@ export async function Header(): Promise<ReactNode> {
 
     return (
         <header className="w-full bg-surface px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold text-primary transition">
+            <Link href="/" className="flex items-center gap-1 relative group">
                 <Image src="/header-logo-sm.png" alt="OctoLab logo" width={32} height={32} className="inline-block" />
-                <span className="ml-2">OctoLab</span>
+                <div className="flex items-center relative">
+                    <span className="text-2xl font-bold text-primary ml-1">OctoLab</span>
+                    <span className="absolute -top-1 -right-9 bg-secondary text-surface text-[8px] md:text-xs font-semibold px-1 py-0.2 rounded-full shadow-md">Beta</span>
+                </div>
             </Link>
 
             <nav className="flex gap-6 items-center">

@@ -9,7 +9,8 @@
         "AUTH0_CLIENT_SECRET",
         "AUTH0_SECRET",
         "AUTH0_AUDIENCE",
-        "APP_BASE_URL"
+        "APP_BASE_URL",
+        "CONTACT_EMAIL"
       ]
     }
   }
