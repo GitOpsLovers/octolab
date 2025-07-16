@@ -1,6 +1,6 @@
 'use client';
 
-import { Step, WorkflowTrigger } from '@octolab/domain';
+import { Step, workflowsRunners, WorkflowTrigger } from '@octolab/domain';
 import { ReactNode, useState } from 'react';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
@@ -224,9 +224,11 @@ export function CustomWorkflowForm(): ReactNode {
                                         }}
                                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                     >
-                                        <option value="ubuntu-latest">ubuntu-latest</option>
-                                        <option value="windows-latest">windows-latest</option>
-                                        <option value="macos-latest">macos-latest</option>
+                                        {workflowsRunners.map((runner) => (
+                                            <option key={runner} value={runner}>
+                                                {runner}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
 
