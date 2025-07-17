@@ -15,6 +15,9 @@ import {
 
 import { snykStackActionMap } from '../domain/constants/actions.const';
 
+/**
+ * Convert strings to slugs
+ */
 function slugify(name: string): string {
     return name
         .toLowerCase()
@@ -345,7 +348,7 @@ function generateOnConfig(config: WorkflowConfig): Record<string, any> {
             return {
                 schedule: [
                     {
-                        cron: '0 0 * * *', // Default cron example
+                        cron: config.schedule?.trim() || '0 0 * * *',
                     },
                 ],
             };

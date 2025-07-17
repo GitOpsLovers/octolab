@@ -1,4 +1,4 @@
-import { WorkflowConfig } from '@octolab/domain';
+import { Action, Runner, Trigger, WorkflowConfig } from '@octolab/domain';
 
 import { EditorRepository } from '../domain/repositories/editor.repository';
 
@@ -47,6 +47,48 @@ export const editorApiRepository = (token?: string): EditorRepository => ({
 
         if (!response.ok) {
             throw new Error('Error fetching workflows');
+        }
+
+        return response.json();
+    },
+    getRunners: async (): Promise<Runner[]> => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/runners`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching runners');
+        }
+
+        return response.json();
+    },
+    getTriggers: async (): Promise<Trigger[]> => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/triggers`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching triggers');
+        }
+
+        return response.json();
+    },
+    getActions: async (): Promise<Action[]> => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/actions`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching actions');
         }
 
         return response.json();
