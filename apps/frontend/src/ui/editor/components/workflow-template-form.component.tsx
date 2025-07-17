@@ -1,6 +1,5 @@
 'use client';
 
-import { workflowsRunners } from '@octolab/domain';
 import { ReactNode } from 'react';
 
 import { useEditor } from '../hooks/editor.hooks';
@@ -9,7 +8,7 @@ import { useEditor } from '../hooks/editor.hooks';
  * Template workflow form component
  */
 export function TemplateWorkflowForm(): ReactNode {
-    const { editingWorkflow, setEditingWorkflow, resetEditingWorkflow, errors, setErrors } = useEditor();
+    const { editingWorkflow, availableRunners, errors, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditor();
 
     const validateField = (field: string, value: string) => {
         if (!value.trim()) {
@@ -39,7 +38,7 @@ export function TemplateWorkflowForm(): ReactNode {
             label: 'Runner',
             show: true,
             type: 'select',
-            options: workflowsRunners,
+            options: availableRunners,
         },
         {
             key: 'branch',

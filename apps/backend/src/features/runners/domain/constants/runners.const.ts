@@ -1,7 +1,9 @@
+import { Runner } from '@octolab/domain';
+
 /**
  * List of available workflow runners
  */
-export const workflowsRunners = [
+export const workflowsRunners: Runner[] = [
     // Ubuntu
     'ubuntu-latest',
     'ubuntu-24.04',

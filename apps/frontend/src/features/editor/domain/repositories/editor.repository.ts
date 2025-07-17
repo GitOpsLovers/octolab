@@ -1,4 +1,4 @@
-import { WorkflowConfig } from '@octolab/domain';
+import { Action, Runner, Trigger, WorkflowConfig } from '@octolab/domain';
 
 import { CreateWorkflowDto } from '../dtos/create-workflow.dto';
 
@@ -32,4 +32,25 @@ export interface EditorRepository {
      * @returns The created workflow.
      */
     create: (createDto: CreateWorkflowDto) => Promise<any>;
+
+    /**
+     * Get runners
+     *
+     * @returns List of runners.
+     */
+    getRunners: () => Promise<Runner[]>;
+
+    /**
+     * Get triggers
+     *
+     * @returns List of triggers.
+     */
+    getTriggers: () => Promise<Trigger[]>;
+
+    /**
+     * Get actions
+     *
+     * @returns List of actions.
+     */
+    getActions: () => Promise<Action[]>;
 }
