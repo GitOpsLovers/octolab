@@ -7,6 +7,7 @@ import { EditorContext } from '../contexts/editor.context';
 
 import { generateEditingWorkflowFromConfigUseCase } from '@features/editor/application/generate-editing-workflow-from-config.use-case';
 import { getOneWorkflowUseCase } from '@features/editor/application/get-one-workflow.use-case';
+import { getRunnersUseCase } from '@features/editor/application/get-runners.use-case';
 import { getWorkflowConfigUseCase } from '@features/editor/application/get-workflow-config.use-case';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
 import { getOneTemplateUseCase } from '@features/templates/application/get-one-template.use-case';
@@ -19,7 +20,6 @@ interface EditorProviderProps {
     workflowId: string;
 }
 
-// ✅ función base para un custom vacío
 const createBaseCustomWorkflow = (): WorkflowConfig => ({
     id: 'custom',
     name: 'Workflow name',
@@ -28,6 +28,7 @@ const createBaseCustomWorkflow = (): WorkflowConfig => ({
     workflowName: 'Custom workflow',
     on: 'push',
     branch: 'main',
+    schedule: '0 0 * * *',
     jobs: [
         {
             id: 'job-1',
@@ -45,6 +46,9 @@ const createBaseCustomWorkflow = (): WorkflowConfig => ({
     ],
 });
 
+/**
+ * Editor provider
+ */
 export function EditorProvider({ children, templateId, workflowId }: EditorProviderProps) {
     const { authToken, isLoading } = useAuthUser();
     const [errors, setErrors] = useState<Record<string, string | null>>({});
@@ -53,6 +57,7 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
     const [editingWorkflow, setEditingWorkflow] = useState<WorkflowConfig | null>(null);
     const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<WorkflowConfig | null>(null);
     const [isEditingExistingWorkflow, setIsEditingExistingWorkflow] = useState<boolean>(false);
+    const [availableRunners, setAvailableRunners] = useState<string[]>([]);
 
     useEffect(() => {
         const init = async () => {
@@ -148,6 +153,24 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
         }
     }, [isLoading, authToken, templateId, workflowId]);
 
+    /**
+     * Get runners
+     */
+    useEffect(() => {
+        const fetchRunners = async () => {
+            try {
+                const repository = editorApiRepository();
+                const runners = await getRunnersUseCase(repository);
+
+                setAvailableRunners(runners);
+            } catch (err) {
+                console.error('Error fetching runners:', err);
+            }
+        };
+
+        fetchRunners();
+    }, []);
+
     const editingWorkflowYaml = useMemo(() => {
         if (!editingWorkflow) return null;
         return generateEditingWorkflowFromConfigUseCase(editingWorkflow);
@@ -181,6 +204,7 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
         loading,
         setWorkflowNameAndDescription,
         isEditingExistingWorkflow,
+        availableRunners,
     };
 
     return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;

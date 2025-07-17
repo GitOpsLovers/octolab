@@ -1,3 +1,5 @@
+import { Trigger } from '../../triggers/models/triggers.models';
+
 /**
  * Workflow configuration model
  */
@@ -28,15 +30,11 @@ export interface BaseWorkflowConfig {
  */
 export interface CustomWorkflowConfig extends BaseWorkflowConfig {
     id: 'custom';
-    on: WorkflowTrigger;
+    on: Trigger;
     branch?: string;
+    schedule?: string;
     jobs: Job[];
 }
-
-/**
- * Workflow trigger types
- */
-export type WorkflowTrigger = 'push' | 'pull_request' | 'workflow_dispatch' | 'schedule';
 
 /**
  * Template configuration for NPM publish workflow
