@@ -2,7 +2,6 @@
 
 import { Trigger } from '@octolab/domain';
 import { ReactNode, useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 import { useEditor } from '../hooks/editor.hooks';
 
@@ -68,22 +67,22 @@ export function CustomWorkflowForm(): ReactNode {
 
     // On add job
     const handleAddJob = () => {
-        const existingNames = customWorkflow.jobs.map((j) => j.name);
-        let newJobName = 'job-name';
+        const existingIds = customWorkflow.jobs.map((j) => j.id);
+        let newJobId = 'job-id';
         let counter = 1;
 
-        while (existingNames.includes(newJobName)) {
-            newJobName = `job-name-${counter}`;
+        while (existingIds.includes(newJobId)) {
+            newJobId = `job-id-${counter}`;
             counter++;
         }
 
         const newJob = {
-            id: uuidv4(),
-            name: newJobName,
+            id: newJobId,
+            name: 'New Job',
             runner: 'ubuntu-latest',
-            branch: 'main',
             steps: [],
         };
+
         setEditingWorkflow({ ...customWorkflow, jobs: [...customWorkflow.jobs, newJob] });
     };
 
@@ -99,38 +98,40 @@ export function CustomWorkflowForm(): ReactNode {
         <div className="w-full lg:w-1/2 bg-surface border border-border p-6 rounded-lg shadow flex flex-col mb-4">
             <h2 className="text-xl font-bold text-text mb-4">Edit Configuration</h2>
 
-            {/* Workflow Name */}
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-text mb-1">Name</label>
-                <input
-                    type="text"
-                    value={customWorkflow.workflowName}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        setEditingWorkflow({ ...customWorkflow, workflowName: value });
-                        validateField('workflowName', value);
-                    }}
-                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                />
-                {errors.workflowName && <p className="text-red-500 text-sm mt-1">{errors.workflowName}</p>}
-            </div>
+            <div className="mb-4 flex gap-x-4">
+                {/* Workflow Name */}
+                <div className="w-1/2">
+                    <label className="block text-sm font-medium text-text mb-1">Name</label>
+                    <input
+                        type="text"
+                        value={customWorkflow.workflowName}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setEditingWorkflow({ ...customWorkflow, workflowName: value });
+                            validateField('workflowName', value);
+                        }}
+                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                    />
+                    {errors.workflowName && <p className="text-red-500 text-sm mt-1">{errors.workflowName}</p>}
+                </div>
 
-            {/* Trigger */}
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-text mb-1">Trigger</label>
-                <select
-                    value={customWorkflow.on || 'push'}
-                    onChange={(e) => {
-                        handleTriggerChange(e.target.value);
-                    }}
-                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                >
-                    {availableTriggers.map((opt) => (
-                        <option key={opt} value={opt}>
-                            {opt}
-                        </option>
-                    ))}
-                </select>
+                {/* Trigger */}
+                <div className="w-1/2">
+                    <label className="block text-sm font-medium text-text mb-1">Trigger</label>
+                    <select
+                        value={customWorkflow.on || 'push'}
+                        onChange={(e) => {
+                            handleTriggerChange(e.target.value);
+                        }}
+                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                    >
+                        {availableTriggers.map((opt) => (
+                            <option key={opt} value={opt}>
+                                {opt}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
 
             {/* Branch */}
@@ -170,27 +171,24 @@ export function CustomWorkflowForm(): ReactNode {
             )}
 
             {/* Jobs and steps */}
-            {availableRunners &&
-                customWorkflow.jobs.map((job, index) => (
-                    <CustomWorkflowFormJobsSteps
-                        key={job.id}
-                        job={job}
-                        jobIndex={index}
-                        errors={errors}
-                        collapsed={collapsedJobs[job.id] ?? false}
-                        collapsedSteps={collapsedSteps}
-                        toggleCollapseJob={(id) => {
-                            setCollapsedJobs((prev) => ({ ...prev, [id]: !prev[id] }));
-                        }}
-                        toggleCollapseStep={(id) => {
-                            setCollapsedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
-                        }}
-                        validateField={validateField}
-                        setEditingWorkflow={setEditingWorkflow}
-                        editingWorkflow={customWorkflow}
-                        availableRunners={availableRunners}
-                    />
-                ))}
+            {availableRunners && (
+                <CustomWorkflowFormJobsSteps
+                    jobs={customWorkflow.jobs}
+                    errors={errors}
+                    collapsedJobs={collapsedJobs}
+                    collapsedSteps={collapsedSteps}
+                    toggleCollapseJob={(id) => {
+                        setCollapsedJobs((prev) => ({ ...prev, [id]: !prev[id] }));
+                    }}
+                    toggleCollapseStep={(id) => {
+                        setCollapsedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
+                    }}
+                    validateField={validateField}
+                    setEditingWorkflow={setEditingWorkflow}
+                    editingWorkflow={customWorkflow}
+                    availableRunners={availableRunners}
+                />
+            )}
 
             <div className="flex gap-2 mt-4">
                 <button type="button" onClick={handleAddJob} className="bg-primary text-white font-semibold px-4 py-2 rounded-md hover:bg-primary-hover transition cursor-pointer">

@@ -1,16 +1,19 @@
+import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Action, CustomWorkflowConfig, Step, WorkflowConfig } from '@octolab/domain';
 import { useEffect, useState } from 'react';
-import { FaMinus, FaPlus } from 'react-icons/fa';
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
+
+import { SortableStep } from './workflow-custom-form-sortable-step.component';
 
 import { getActionsUseCase } from '@features/editor/application/get-actions.use-case';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
 
 interface CustomWorkflowFormJobsStepsProps {
-    job: CustomWorkflowConfig['jobs'][number];
-    jobIndex: number;
+    jobs: CustomWorkflowConfig['jobs'];
     errors: Record<string, string | null>;
-    collapsed: boolean;
+    collapsedJobs: Record<string, boolean>;
     collapsedSteps: Record<string, boolean>;
     toggleCollapseJob: (id: string) => void;
     toggleCollapseStep: (id: string) => void;
@@ -20,11 +23,13 @@ interface CustomWorkflowFormJobsStepsProps {
     availableRunners: string[];
 }
 
+/**
+ * Custom workflow form jobs and steps component
+ */
 export function CustomWorkflowFormJobsSteps({
-    job,
-    jobIndex,
+    jobs,
     errors,
-    collapsed,
+    collapsedJobs,
     collapsedSteps,
     toggleCollapseJob,
     toggleCollapseStep,
@@ -34,6 +39,7 @@ export function CustomWorkflowFormJobsSteps({
     availableRunners,
 }: CustomWorkflowFormJobsStepsProps) {
     const [availableActions, setAvailableActions] = useState<Action[]>([]);
+    const sensors = useSensors(useSensor(PointerSensor));
 
     useEffect(() => {
         const fetchActions = async () => {
@@ -49,21 +55,35 @@ export function CustomWorkflowFormJobsSteps({
         fetchActions();
     }, []);
 
-    const handleStepChange = (stepIndex: number, key: 'name' | 'run' | 'uses', value: string) => {
+    const handleStepChange = (jobIndex: number, stepIndex: number, key: 'id' | 'name' | 'run' | 'uses' | 'type' | number, value: string) => {
         const newJobs = [...editingWorkflow.jobs];
         const step = newJobs[jobIndex].steps[stepIndex];
-        step[key] = value;
 
-        // If action changes, reset its inputs
-        if (key === 'uses') {
+        if (key === 'type') {
+            const type = value as 'run' | 'uses';
+            step.type = type;
+
+            if (type === 'run') {
+                step.run = 'echo "Hello World"';
+                step.uses = undefined;
+                step.with = undefined;
+            } else {
+                step.uses = '';
+                step.with = {};
+                step.run = undefined;
+            }
+        } else if (key === 'uses') {
+            step.uses = value;
             step.with = {};
+        } else {
+            step[key] = value;
         }
 
         setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
         validateField(`step-${step.id}-${key}`, value);
     };
 
-    const handleStepInputChange = (stepIndex: number, inputKey: string, value: string | number | boolean) => {
+    const handleStepInputChange = (jobIndex: number, stepIndex: number, inputKey: string | number, value: string | number | boolean) => {
         const newJobs = [...editingWorkflow.jobs];
         const step = newJobs[jobIndex].steps[stepIndex];
 
@@ -81,10 +101,11 @@ export function CustomWorkflowFormJobsSteps({
         setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
     };
 
-    const handleAddStep = () => {
+    const handleAddStep = (jobIndex: number) => {
         const newJobs = [...editingWorkflow.jobs];
         const newStep: Step = {
-            id: uuidv4(),
+            internalId: uuidv4(),
+            id: `step-${newJobs[jobIndex].steps.length + 1}`,
             name: `Step ${newJobs[jobIndex].steps.length + 1}`,
             type: 'run',
             run: 'echo "Hello World"',
@@ -93,244 +114,174 @@ export function CustomWorkflowFormJobsSteps({
         setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
     };
 
-    const handleRemoveStep = (stepIndex: number) => {
+    const handleRemoveStep = (jobIndex: number, stepIndex: number) => {
         const newJobs = [...editingWorkflow.jobs];
         newJobs[jobIndex].steps.splice(stepIndex, 1);
         setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
     };
 
-    const handleRemoveJob = () => {
+    const handleRemoveJob = (jobIndex: number) => {
         const newJobs = [...editingWorkflow.jobs];
         newJobs.splice(jobIndex, 1);
+        setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
+    };
+
+    const handleDragEnd = (jobIndex: number, event: DragEndEvent) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+
+        const currentSteps = editingWorkflow.jobs[jobIndex].steps;
+        const oldIndex = currentSteps.findIndex((s) => s.internalId === active.id);
+        const newIndex = currentSteps.findIndex((s) => s.internalId === over.id);
+        if (oldIndex === -1 || newIndex === -1) return;
+
+        const newJobs = [...editingWorkflow.jobs];
+        const reorderedSteps = arrayMove(currentSteps, oldIndex, newIndex);
+        newJobs[jobIndex].steps = reorderedSteps;
         setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
     };
 
     const findAction = (id: string): Action | undefined => availableActions.find((action) => action.id === id);
 
     return (
-        <div className="border border-border p-4 rounded mb-4 bg-muted">
-            <div className="flex justify-between items-center mb-2">
-                <h3 className="text-md font-bold">Job: {job.name}</h3>
-                <button
-                    type="button"
-                    onClick={() => {
-                        toggleCollapseJob(job.id);
-                    }}
-                    className="text-text hover:text-text-hover transition cursor-pointer"
-                >
-                    {collapsed ? <FaPlus size={16} /> : <FaMinus size={16} />}
-                </button>
-            </div>
+        <>
+            {jobs.map((job, jobIndex) => {
+                const isCollapsed = collapsedJobs[job.id] ?? false;
 
-            {!collapsed && (
-                <>
-                    {/* Job name */}
-                    <div className="mb-2">
-                        <label className="block text-sm font-medium text-text mb-1">Name</label>
-                        <input
-                            type="text"
-                            value={job.name}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                const newJobs = [...editingWorkflow.jobs];
-                                newJobs[jobIndex].name = value;
-                                setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
-                                validateField(`job-${job.id}-name`, value);
-                            }}
-                            className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        />
-                        {errors[`job-${job.id}-name`] && <p className="text-red-500 text-sm mt-1">{errors[`job-${job.id}-name`]}</p>}
-                    </div>
+                return (
+                    <div key={jobIndex} className="border border-border p-4 rounded mb-4 bg-muted">
+                        <div className="flex justify-between items-center">
+                            <h3 className="text-md font-bold">Job: {job.name}</h3>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    toggleCollapseJob(job.id);
+                                }}
+                                className="text-text hover:text-text-hover transition cursor-pointer"
+                            >
+                                {isCollapsed ? <FaAngleDown size={16} /> : <FaAngleUp size={16} />}
+                            </button>
+                        </div>
 
-                    {/* Runner */}
-                    <div className="mb-2">
-                        <label className="block text-sm font-medium text-text mb-1">Runner</label>
-                        <select
-                            value={job.runner}
-                            onChange={(e) => {
-                                const newJobs = [...editingWorkflow.jobs];
-                                newJobs[jobIndex].runner = e.target.value;
-                                setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
-                            }}
-                            className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                        >
-                            {availableRunners.map((runner) => (
-                                <option key={runner} value={runner}>
-                                    {runner}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                        {!isCollapsed && (
+                            <>
+                                <div className="mb-2 grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-text mb-1">ID</label>
+                                        <input
+                                            type="text"
+                                            value={job.id}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                const newJobs = [...editingWorkflow.jobs];
+                                                newJobs[jobIndex].id = value;
+                                                setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
+                                                validateField(`job-${jobIndex}-id`, value);
+                                            }}
+                                            className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                        />
+                                        {errors[`job-${jobIndex}-id`] && <p className="text-red-500 text-sm mt-1">{errors[`job-${jobIndex}-id`]}</p>}
+                                    </div>
 
-                    {/* Steps */}
-                    {job.steps.length > 0 && <h4 className="text-md font-semibold mt-4 mb-2">Steps</h4>}
-
-                    {job.steps.map((step, stepIndex) => {
-                        const isCollapsed = collapsedSteps[step.id] ?? false;
-                        const selectedAction = findAction(step.uses || '');
-
-                        return (
-                            <div key={step.id} className="border border-border p-3 rounded mb-2">
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="text-sm font-medium">Step: {step.name}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            toggleCollapseStep(step.id);
-                                        }}
-                                        className="text-text hover:text-text-hover transition cursor-pointer"
-                                    >
-                                        {isCollapsed ? <FaPlus size={14} /> : <FaMinus size={14} />}
-                                    </button>
+                                    <div>
+                                        <label className="block text-sm font-medium text-text mb-1">Name</label>
+                                        <input
+                                            type="text"
+                                            value={job.name}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                const newJobs = [...editingWorkflow.jobs];
+                                                newJobs[jobIndex].name = value;
+                                                setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
+                                                validateField(`job-${job.id}-name`, value);
+                                            }}
+                                            className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                        />
+                                        {errors[`job-${job.id}-name`] && <p className="text-red-500 text-sm mt-1">{errors[`job-${job.id}-name`]}</p>}
+                                    </div>
                                 </div>
 
-                                {!isCollapsed && (
-                                    <>
-                                        {/* Step name */}
-                                        <div className="mb-2">
-                                            <label className="block text-sm font-medium text-text mb-1">Name</label>
-                                            <input
-                                                type="text"
-                                                value={step.name}
-                                                onChange={(e) => {
-                                                    handleStepChange(stepIndex, 'name', e.target.value);
-                                                }}
-                                                className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                                            />
-                                            {errors[`step-${step.id}-name`] && <p className="text-red-500 text-sm mt-1">{errors[`step-${step.id}-name`]}</p>}
-                                        </div>
+                                <div className="mb-2">
+                                    <label className="block text-sm font-medium text-text mb-1">Runner</label>
+                                    <select
+                                        value={job.runner}
+                                        onChange={(e) => {
+                                            const newJobs = [...editingWorkflow.jobs];
+                                            newJobs[jobIndex].runner = e.target.value;
+                                            setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
+                                        }}
+                                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                    >
+                                        {availableRunners.map((runner) => (
+                                            <option key={runner} value={runner}>
+                                                {runner}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
 
-                                        {/* Step type */}
-                                        <div className="mb-2">
-                                            <label className="block text-sm font-medium text-text mb-1">Type</label>
-                                            <select
-                                                value={step.type}
-                                                onChange={(e) => {
-                                                    const newType = e.target.value as 'run' | 'uses';
-                                                    const newJobs = [...editingWorkflow.jobs];
-                                                    const currentStep = newJobs[jobIndex].steps[stepIndex];
+                                {job.steps.length > 0 && <h4 className="text-md font-semibold mt-4 mb-2">Steps</h4>}
 
-                                                    currentStep.type = newType;
-                                                    if (newType === 'run') {
-                                                        currentStep.run = '';
-                                                        currentStep.uses = undefined;
-                                                        currentStep.with = undefined;
-                                                    } else {
-                                                        currentStep.uses = '';
-                                                        currentStep.run = undefined;
-                                                        currentStep.with = {};
-                                                    }
+                                <DndContext
+                                    sensors={sensors}
+                                    collisionDetection={closestCenter}
+                                    onDragEnd={(event) => {
+                                        handleDragEnd(jobIndex, event);
+                                    }}
+                                >
+                                    <SortableContext items={job.steps.map((step) => step.internalId)} strategy={verticalListSortingStrategy}>
+                                        {job.steps.map((step, stepIndex) => {
+                                            const isStepCollapsed = collapsedSteps[step.id] ?? false;
+                                            const selectedAction = findAction(step.uses || '');
 
-                                                    setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
-                                                }}
-                                                className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                                            >
-                                                <option value="run">Run</option>
-                                                <option value="uses">Uses</option>
-                                            </select>
-                                        </div>
-
-                                        {/* Step content */}
-                                        {step.type === 'run' ? (
-                                            <div className="mb-2">
-                                                <label className="block text-sm font-medium text-text mb-1">Command</label>
-                                                <input
-                                                    type="text"
-                                                    value={step.run || ''}
-                                                    onChange={(e) => {
-                                                        handleStepChange(stepIndex, 'run', e.target.value);
+                                            return (
+                                                <SortableStep
+                                                    key={step.internalId}
+                                                    step={step}
+                                                    jobIndex={jobIndex}
+                                                    stepIndex={stepIndex}
+                                                    errors={errors}
+                                                    collapsed={isStepCollapsed}
+                                                    availableActions={availableActions}
+                                                    selectedAction={selectedAction}
+                                                    onToggleCollapse={toggleCollapseStep}
+                                                    onChange={(key, value) => {
+                                                        handleStepChange(jobIndex, stepIndex, key, value);
                                                     }}
-                                                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                                    onInputChange={handleStepInputChange}
+                                                    onRemove={() => {
+                                                        handleRemoveStep(jobIndex, stepIndex);
+                                                    }}
                                                 />
-                                                {errors[`step-${step.id}-run`] && <p className="text-red-500 text-sm mt-1">{errors[`step-${step.id}-run`]}</p>}
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <div className="mb-2">
-                                                    <label className="block text-sm font-medium text-text mb-1">Action</label>
-                                                    <select
-                                                        value={step.uses || ''}
-                                                        onChange={(e) => {
-                                                            handleStepChange(stepIndex, 'uses', e.target.value);
-                                                        }}
-                                                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                                                    >
-                                                        <option value="" disabled>
-                                                            Select an action
-                                                        </option>
-                                                        {availableActions.map((action) => (
-                                                            <option key={action.id} value={action.id}>
-                                                                {action.id}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    {errors[`step-${step.id}-uses`] && <p className="text-red-500 text-sm mt-1">{errors[`step-${step.id}-uses`]}</p>}
-                                                </div>
+                                            );
+                                        })}
+                                    </SortableContext>
+                                </DndContext>
 
-                                                {/* Action inputs */}
-                                                {selectedAction?.inputs.map((input) => {
-                                                    const inputType = input.type ?? 'string';
-                                                    const rawValue = step.with?.[input.key];
-                                                    const value = rawValue !== undefined ? String(rawValue) : '';
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        handleAddStep(jobIndex);
+                                    }}
+                                    className="mt-2 bg-secondary text-surface font-semibold px-2 py-1 rounded hover:bg-secondary-hover text-sm"
+                                >
+                                    Add Step
+                                </button>
 
-                                                    return (
-                                                        <div key={input.key} className="mb-2">
-                                                            <label className="block text-sm font-medium text-text mb-1">{input.label}</label>
-
-                                                            {inputType === 'boolean' ? (
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={!!rawValue}
-                                                                    onChange={(e) => {
-                                                                        handleStepInputChange(stepIndex, input.key, e.target.checked);
-                                                                    }}
-                                                                />
-                                                            ) : (
-                                                                <input
-                                                                    type={inputType === 'number' ? 'number' : 'text'}
-                                                                    placeholder={input.placeholder}
-                                                                    value={value}
-                                                                    onChange={(e) => {
-                                                                        const val = inputType === 'number' ? Number(e.target.value) : e.target.value;
-                                                                        handleStepInputChange(stepIndex, input.key, val);
-                                                                    }}
-                                                                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                                                                />
-                                                            )}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </>
-                                        )}
-
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                handleRemoveStep(stepIndex);
-                                            }}
-                                            className="border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white text-sm mt-2"
-                                        >
-                                            Remove Step
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        );
-                    })}
-
-                    <button type="button" onClick={handleAddStep} className="mt-2 bg-secondary text-surface font-semibold px-2 py-1 rounded hover:bg-secondary-hover text-sm">
-                        Add Step
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={handleRemoveJob}
-                        className="ml-2 mt-4 border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white text-sm"
-                    >
-                        Remove Job
-                    </button>
-                </>
-            )}
-        </div>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        handleRemoveJob(jobIndex);
+                                    }}
+                                    className="ml-2 mt-4 border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white text-sm"
+                                >
+                                    Remove Job
+                                </button>
+                            </>
+                        )}
+                    </div>
+                );
+            })}
+        </>
     );
 }

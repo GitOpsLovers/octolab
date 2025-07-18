@@ -26,13 +26,6 @@ export const workflowsActions: Action[] = [
                 required: false,
                 type: 'string',
             },
-            {
-                key: 'node-version-file',
-                label: 'Node version file',
-                placeholder: '.nvmrc',
-                required: false,
-                type: 'string',
-            },
         ],
     },
 ];

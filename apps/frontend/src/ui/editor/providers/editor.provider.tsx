@@ -2,6 +2,7 @@
 
 import { Template, WorkflowConfig } from '@octolab/domain';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { EditorContext } from '../contexts/editor.context';
 
@@ -32,10 +33,11 @@ const createBaseCustomWorkflow = (): WorkflowConfig => ({
     jobs: [
         {
             id: 'job-1',
-            name: 'job-name',
+            name: 'Name',
             runner: 'ubuntu-latest',
             steps: [
                 {
+                    internalId: uuidv4(),
                     id: 'step-one',
                     type: 'run',
                     name: 'Custom command',
