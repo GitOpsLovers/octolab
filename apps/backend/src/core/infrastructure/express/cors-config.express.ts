@@ -1,12 +1,14 @@
 import cors from 'cors';
 
+import { appLogger } from '../loggers/winston.logger';
+
 /**
  * Configures the CORS on server middleware.
  *
  * @param allowedOrigins Allowed origins
  */
 export function configureCorsMiddleware(allowedOrigins: string[]) {
-    console.info(`CORS allowed origins: ${allowedOrigins}`, 'Application');
+    appLogger.info(`CORS allowed origins: ${allowedOrigins}`, 'Application');
 
     return cors({
         origin: (origin, callback) => {

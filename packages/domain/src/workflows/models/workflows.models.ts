@@ -182,6 +182,7 @@ export interface Job {
  * Step model
  */
 export interface Step {
+    internalId: string;
     id: string;
     name: string;
     type: 'run' | 'uses';
