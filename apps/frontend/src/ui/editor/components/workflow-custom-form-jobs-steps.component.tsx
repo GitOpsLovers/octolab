@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/named
 import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Action, CustomWorkflowConfig, Step, WorkflowConfig } from '@octolab/domain';
@@ -55,7 +56,7 @@ export function CustomWorkflowFormJobsSteps({
         fetchActions();
     }, []);
 
-    const handleStepChange = (jobIndex: number, stepIndex: number, key: 'id' | 'name' | 'run' | 'uses' | 'type' | number, value: string) => {
+    const handleStepChange = (jobIndex: number, stepIndex: number, key: 'id' | 'name' | 'run' | 'uses' | 'type', value: string) => {
         const newJobs = [...editingWorkflow.jobs];
         const step = newJobs[jobIndex].steps[stepIndex];
 
