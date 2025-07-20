@@ -10,7 +10,7 @@ import { configureCorsMiddleware } from '@core/infrastructure/express/cors-confi
 import { checkRequiredEnvVariables } from '@core/infrastructure/express/env-config.express';
 import { actionsRoutes } from '@features/actions/ui/routes/actions.routes';
 import { contactRoutes } from '@features/contact/ui/routes/contact.routes';
-import { runnersRoutes } from '@features/runners/ui/routes/workflows.routes';
+import { runnersRoutes } from '@features/runners/ui/routes/runners.routes';
 import { templatesRoutes } from '@features/templates/ui/routes/templates.routes';
 import { triggersRoutes } from '@features/triggers/ui/routes/triggers.routes';
 import { usersRoutes } from '@features/users/ui/routes/users.routes';

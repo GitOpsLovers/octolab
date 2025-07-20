@@ -2,12 +2,12 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { proposeTemplateSchema } from '@octolab/domain';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { sendTemplateProposalUseCase } from '@features/propose-template/application/send-template-proposal.use-case';
-import { proposeTemplateSchema } from '@features/propose-template/domain/schemas/propose-template.schema';
 import { proposeTemplateApiRepository } from '@features/propose-template/infrastructure/propose-template-api.repository';
 
 type FormData = z.infer<typeof proposeTemplateSchema>;

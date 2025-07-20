@@ -10,7 +10,8 @@
         "AUTH0_SECRET",
         "AUTH0_AUDIENCE",
         "APP_BASE_URL",
-        "CONTACT_EMAIL"
+        "CONTACT_EMAIL",
+        "NEXT_PUBLIC_UMAMI_WEBSITE_ID"
       ]
     }
   }

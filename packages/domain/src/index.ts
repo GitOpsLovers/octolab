@@ -18,3 +18,7 @@ export type {
 export type { Runner } from './runners/models/runners.models';
 export type { Trigger } from './triggers/models/triggers.models';
 export type { Action } from './actions/models/actions.models';
+
+export { proposeTemplateSchema } from './propose-template/schemas/propose-template.schema';
+export { contactSchema } from './contact/schemas/contact.schema';
+export { workflowSchema } from './workflows/schemas/workdflow.schema';
