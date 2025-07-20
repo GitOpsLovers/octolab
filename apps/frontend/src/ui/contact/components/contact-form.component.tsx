@@ -2,12 +2,12 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { contactSchema } from '@octolab/domain';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { sendContactSubmissionUseCase } from '@features/contact/application/send-contact-submission.use-case';
-import { contactSchema } from '@features/contact/domain/schemas/contact.schema';
 import { contactApiRepository } from '@features/contact/infrastructure/contact-api.repository';
 
 type FormData = z.infer<typeof contactSchema>;
