@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 
 import './globals.css';
 import { Feedback } from '@ui/layout/components/feedback.component';
+import { UmamiAnalytics } from '@ui/layout/components/umami.component';
 import { toasterConfig } from '@ui/layout/configs/toaster.config';
 
 const montserrat = Montserrat({
@@ -36,6 +37,7 @@ export default function RootLayout({
                 {children}
                 <Feedback />
                 <Toaster position="top-right" toastOptions={toasterConfig} />
+                <UmamiAnalytics />
             </body>
         </html>
     );
