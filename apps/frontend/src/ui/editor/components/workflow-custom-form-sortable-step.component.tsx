@@ -1,47 +1,37 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Action, Step } from '@octolab/domain';
+import { useFormContext } from 'react-hook-form';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { MdDragIndicator } from 'react-icons/md';
+
+import { CustomWorkflowFormSchema } from '../models/custom-workflow-form.models';
 
 interface SortableStepProps {
     step: Step;
     jobIndex: number;
     stepIndex: number;
-    errors: Record<string, string | null>;
     collapsed: boolean;
     availableActions: Action[];
     selectedAction?: Action;
     onToggleCollapse: (id: string) => void;
-    onChange: (key: 'id' | 'name' | 'type' | 'run' | 'uses', value: string) => void;
-    onInputChange: (jobIndex: number, stepIndex: number, key: string, value: string | number | boolean) => void;
     onRemove: (index: number) => void;
 }
 
 /**
  * Sortable step for the workflow custom form component.
  */
-export function SortableStep({
-    step,
-    jobIndex,
-    stepIndex,
-    errors,
-    collapsed,
-    availableActions,
-    selectedAction,
-    onToggleCollapse,
-    onChange,
-    onInputChange,
-    onRemove,
-}: SortableStepProps) {
+export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableActions, selectedAction, onToggleCollapse, onRemove }: SortableStepProps) {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: step.internalId });
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<CustomWorkflowFormSchema>();
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
     };
-
-    const inputValue = (val: string | number | boolean | undefined) => (val !== undefined ? String(val) : '');
 
     return (
         <div ref={setNodeRef} style={style} {...attributes} className="border border-border p-3 rounded mb-2 bg-background">
@@ -71,12 +61,12 @@ export function SortableStep({
                             <label className="block text-sm font-medium text-text mb-1">ID</label>
                             <input
                                 type="text"
-                                value={step.id}
-                                onChange={(e) => {
-                                    onChange('id', e.target.value);
-                                }}
+                                {...register(`jobs.${jobIndex}.steps.${stepIndex}.id`)}
                                 className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
+                            {errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.id && (
+                                <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.steps?.[stepIndex]?.id?.message}</p>
+                            )}
                         </div>
 
                         {/* Name */}
@@ -84,13 +74,12 @@ export function SortableStep({
                             <label className="block text-sm font-medium text-text mb-1">Name</label>
                             <input
                                 type="text"
-                                value={step.name}
-                                onChange={(e) => {
-                                    onChange('name', e.target.value);
-                                }}
+                                {...register(`jobs.${jobIndex}.steps.${stepIndex}.name`)}
                                 className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
-                            {errors[`step-${step.id}-name`] && <p className="text-red-500 text-sm mt-1">{errors[`step-${step.id}-name`]}</p>}
+                            {errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.name && (
+                                <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.steps?.[stepIndex]?.name?.message}</p>
+                            )}{' '}
                         </div>
                     </div>
 
@@ -98,10 +87,7 @@ export function SortableStep({
                     <div className="mb-2">
                         <label className="block text-sm font-medium text-text mb-1">Type</label>
                         <select
-                            value={step.type}
-                            onChange={(e) => {
-                                onChange('type', e.target.value as 'run' | 'uses');
-                            }}
+                            {...register(`jobs.${jobIndex}.steps.${stepIndex}.type`)}
                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                         >
                             <option value="run">Run</option>
@@ -115,13 +101,12 @@ export function SortableStep({
                             <label className="block text-sm font-medium text-text mb-1">Command</label>
                             <input
                                 type="text"
-                                value={step.run || ''}
-                                onChange={(e) => {
-                                    onChange('run', e.target.value);
-                                }}
+                                {...register(`jobs.${jobIndex}.steps.${stepIndex}.run`)}
                                 className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
-                            {errors[`step-${step.id}-run`] && <p className="text-red-500 text-sm mt-1">{errors[`step-${step.id}-run`]}</p>}
+                            {errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.run && (
+                                <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.steps?.[stepIndex]?.run?.message}</p>
+                            )}{' '}
                         </div>
                     ) : (
                         <>
@@ -129,42 +114,37 @@ export function SortableStep({
                             <div className="mb-2">
                                 <label className="block text-sm font-medium text-text mb-1">Action</label>
                                 <select
+                                    {...register(`jobs.${jobIndex}.steps.${stepIndex}.uses`)}
                                     value={step.uses || ''}
-                                    onChange={(e) => {
-                                        onChange('uses', e.target.value);
-                                    }}
                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                 >
-                                    <option value="" disabled>
-                                        Select an action
-                                    </option>
+                                    <option value="">-- Select an action --</option>
                                     {availableActions.map((action) => (
                                         <option key={action.id} value={action.id}>
                                             {action.id}
                                         </option>
                                     ))}
                                 </select>
-                                {errors[`step-${step.id}-uses`] && <p className="text-red-500 text-sm mt-1">{errors[`step-${step.id}-uses`]}</p>}
+                                {errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.uses && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.steps?.[stepIndex]?.uses?.message}</p>
+                                )}
                             </div>
 
                             {/* Inputs */}
                             {selectedAction?.inputs.map((input) => {
                                 const type = input.type ?? 'string';
-                                const raw = step.with?.[input.key];
+                                const inputError = errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.with?.[input.key];
 
                                 return (
                                     <div key={input.key} className="mb-2">
                                         <label className="block text-sm font-medium text-text mb-1">{input.label}</label>
                                         <input
+                                            {...register(`jobs.${jobIndex}.steps.${stepIndex}.with.${input.key}`)}
                                             type={type === 'number' ? 'number' : 'text'}
                                             placeholder={input.placeholder}
-                                            value={inputValue(raw)}
-                                            onChange={(e) => {
-                                                const value = type === 'number' ? Number(e.target.value) : e.target.value;
-                                                onInputChange(jobIndex, stepIndex, input.key, value);
-                                            }}
                                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                         />
+                                        {inputError && <p className="text-red-500 text-sm mt-1">{inputError.message}</p>}
                                     </div>
                                 );
                             })}
