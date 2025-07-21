@@ -1,5 +1,6 @@
 'use client';
 
+import { plansLimits } from '@octolab/domain';
 import Link from 'next/link';
 import { FaPlus, FaSpinner, FaEdit, FaTrash } from 'react-icons/fa';
 import { IoAddCircleOutline } from 'react-icons/io5';
@@ -7,13 +8,18 @@ import { LuWorkflow } from 'react-icons/lu';
 
 import { useMyWorkflows } from '../hooks/my-workflows.hooks';
 
+import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
+
 /**
  * Workflows list component.
  */
 export function WorkflowsList() {
+    const { authUser } = useAuthUser();
     const { workflows, loading, error, deleteWorkflow } = useMyWorkflows();
 
-    const hasReachedLimit = workflows.length >= 3;
+    // const hasReachedLimit = workflows.length >= 3;
+    const planLimit = plansLimits[authUser?.plan ?? 'free']?.workflows ?? 0;
+    const hasReachedLimit = !!(workflows.length >= planLimit);
 
     if (loading) {
         return (
@@ -77,7 +83,7 @@ export function WorkflowsList() {
                     <div className="bg-surface rounded-lg border border-dashed border-border flex flex-col p-4 items-center justify-center text-center opacity-50 cursor-not-allowed">
                         <FaPlus className="w-8 h-8 text-primary mb-3" />
                         <h2 className="text-lg font-bold text-text mb-1">Create new workflow</h2>
-                        <p className="text-sm text-text-muted">You’ve reached the limit of 3 workflows. Upgrade to PRO to create more (coming soon).</p>
+                        <p className="text-sm text-text-muted">You’ve reached the limit of 1 workflows. Upgrade to PRO to create more (coming soon).</p>
                     </div>
                 ) : (
                     <Link

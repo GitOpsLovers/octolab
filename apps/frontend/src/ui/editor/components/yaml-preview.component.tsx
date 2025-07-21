@@ -1,5 +1,6 @@
 'use client';
 
+import { plansLimits } from '@octolab/domain';
 import { useParams } from 'next/navigation';
 import { ReactNode, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -87,7 +88,8 @@ export function YamlPreview(): ReactNode {
     };
 
     const hasErrors = Object.keys(errors).length > 0;
-    const reachedWorkflowLimit = !!(authUser && authUser.workflows >= 3);
+    const planLimit = plansLimits[authUser?.plan ?? 'free']?.workflows ?? 0;
+    const reachedWorkflowLimit = !!(authUser && authUser.workflows >= planLimit);
 
     if (!editingWorkflow) {
         return null;
@@ -161,7 +163,7 @@ export function YamlPreview(): ReactNode {
                         </button>
 
                         {!isEditingExistingWorkflow && reachedWorkflowLimit ? (
-                            <p className="text-xs text-text-muted">You’ve reached the limit of 3 workflows. Upgrade to PRO to save more (coming soon).</p>
+                            <p className="text-xs text-text-muted">You’ve reached the limit of 1 workflows. Upgrade to PRO to save more (coming soon).</p>
                         ) : (
                             <p className="text-xs text-text-muted">The commit to repository feature is only available in PRO (coming soon).</p>
                         )}

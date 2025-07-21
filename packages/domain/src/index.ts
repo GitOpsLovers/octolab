@@ -22,3 +22,5 @@ export type { Action } from './actions/models/actions.models';
 export { proposeTemplateSchema } from './propose-template/schemas/propose-template.schema';
 export { contactSchema } from './contact/schemas/contact.schema';
 export { workflowSchema } from './workflows/schemas/workdflow.schema';
+
+export { plansLimits } from './users/constants/plans-limits.const';

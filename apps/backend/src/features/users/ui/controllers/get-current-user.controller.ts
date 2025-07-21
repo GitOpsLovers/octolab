@@ -32,6 +32,7 @@ export const getCurrentUserController: RequestHandler = async (req, res) => {
         const authenticatedUser: User = {
             id: idpUser.user_id,
             workflows: workflows.length,
+            plan: 'free',
         };
 
         res.status(StatusCodes.OK).json(authenticatedUser);

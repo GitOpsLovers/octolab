@@ -31,13 +31,15 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const isLocal = process.env.NODE_ENV === 'development';
+
     return (
         <html lang="en">
             <body className={`${montserrat.variable} ${poppins.variable} antialiased overflow-y-auto bg-background`}>
                 {children}
                 <Feedback />
                 <Toaster position="top-right" toastOptions={toasterConfig} />
-                <UmamiAnalytics />
+                {!isLocal && <UmamiAnalytics />}
             </body>
         </html>
     );
