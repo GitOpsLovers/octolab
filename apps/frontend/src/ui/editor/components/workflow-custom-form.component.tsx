@@ -1,9 +1,12 @@
 'use client';
 
-import { Trigger } from '@octolab/domain';
-import { ReactNode, useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Trigger, WorkflowConfig } from '@octolab/domain';
+import { ReactNode, useEffect, useRef, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { useEditor } from '../hooks/editor.hooks';
+import { CustomWorkflowFormSchema, customWorkflowSchema } from '../models/custom-workflow-form.models';
 
 import { CustomWorkflowFormJobsSteps } from './workflow-custom-form-jobs-steps.component';
 
@@ -14,10 +17,31 @@ import { editorApiRepository } from '@features/editor/infrastructure/editor-api.
  * Custom workflow form component
  */
 export function CustomWorkflowForm(): ReactNode {
-    const { editingWorkflow, availableRunners, errors, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditor();
+    const { editingWorkflow, availableRunners, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditor();
     const [availableTriggers, setAvailableTriggers] = useState<string[]>([]);
     const [collapsedJobs, setCollapsedJobs] = useState<Record<string, boolean>>({});
     const [collapsedSteps, setCollapsedSteps] = useState<Record<string, boolean>>({});
+
+    const isCustomWorkflow = editingWorkflow?.id === 'custom';
+    const customWorkflow = isCustomWorkflow ? editingWorkflow : undefined;
+    const form = useForm<CustomWorkflowFormSchema>({
+        resolver: zodResolver(customWorkflowSchema),
+        mode: 'onChange',
+        defaultValues: {
+            workflowName: customWorkflow?.workflowName,
+            on: customWorkflow?.on,
+            branch: customWorkflow?.branch,
+            schedule: customWorkflow?.schedule,
+            jobs: customWorkflow?.jobs,
+        },
+    });
+    const initialFormValues = useRef({
+        workflowName: customWorkflow?.workflowName,
+        on: customWorkflow?.on,
+        branch: customWorkflow?.branch,
+        schedule: customWorkflow?.schedule,
+        jobs: customWorkflow?.jobs,
+    });
 
     /**
      * Get triggers
@@ -37,31 +61,35 @@ export function CustomWorkflowForm(): ReactNode {
         fetchTriggers();
     }, []);
 
-    if (!editingWorkflow || editingWorkflow.id !== 'custom') return null;
+    useEffect(() => {
+        const subscription = form.watch((values) => {
+            if (isCustomWorkflow && editingWorkflow) {
+                setEditingWorkflow({
+                    ...editingWorkflow,
+                    ...values,
+                } as WorkflowConfig);
+            }
+        });
 
-    const customWorkflow = editingWorkflow;
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, [form, isCustomWorkflow, setEditingWorkflow, editingWorkflow]);
 
-    // Validate form fields
-    const validateField = (field: string, value: string) => {
-        if (!value.trim()) {
-            setErrors((prev) => ({ ...prev, [field]: 'This field cannot be empty' }));
-        } else {
-            setErrors((prev) => {
-                const newErrors = { ...prev };
-                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-                delete newErrors[field];
-                return newErrors;
-            });
-        }
-    };
+    if (!customWorkflow) return null;
 
     // On trigger change
     const handleTriggerChange = (value: Trigger) => {
+        form.setValue('on', value);
+
         if (value !== 'push' && value !== 'pull_request') {
             const { ...rest } = customWorkflow;
             setEditingWorkflow({ ...rest, on: value });
+            form.setValue('branch', '');
         } else {
-            setEditingWorkflow({ ...customWorkflow, on: value, branch: customWorkflow.branch || 'main' });
+            const branch = customWorkflow.branch || 'main';
+            setEditingWorkflow({ ...customWorkflow, on: value, branch });
+            form.setValue('branch', branch);
         }
     };
 
@@ -83,7 +111,19 @@ export function CustomWorkflowForm(): ReactNode {
             steps: [],
         };
 
-        setEditingWorkflow({ ...customWorkflow, jobs: [...customWorkflow.jobs, newJob] });
+        const updatedJobs = [...customWorkflow.jobs, newJob];
+
+        // Actualiza el estado global
+        setEditingWorkflow({
+            ...customWorkflow,
+            jobs: updatedJobs,
+        });
+
+        // Actualiza también el formulario
+        form.setValue('jobs', updatedJobs, {
+            shouldDirty: true,
+            shouldValidate: true,
+        });
     };
 
     // On reset form values
@@ -92,117 +132,105 @@ export function CustomWorkflowForm(): ReactNode {
         setErrors({});
         setCollapsedJobs({});
         setCollapsedSteps({});
+
+        form.reset(initialFormValues.current);
     };
 
     return (
         <div className="w-full lg:w-1/2 bg-surface border border-border p-6 rounded-lg shadow flex flex-col mb-4">
             <h2 className="text-xl font-bold text-text mb-4">Edit Configuration</h2>
 
-            <div className="mb-4 flex gap-x-4">
-                {/* Workflow Name */}
-                <div className="w-1/2">
-                    <label className="block text-sm font-medium text-text mb-1">Name</label>
-                    <input
-                        type="text"
-                        value={customWorkflow.workflowName}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setEditingWorkflow({ ...customWorkflow, workflowName: value });
-                            validateField('workflowName', value);
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                    />
-                    {errors.workflowName && <p className="text-red-500 text-sm mt-1">{errors.workflowName}</p>}
-                </div>
+            <FormProvider {...form}>
+                <div className="mb-4 flex gap-x-4">
+                    {/* Workflow Name */}
+                    <div className="w-1/2">
+                        <label className="block text-sm font-medium text-text mb-1">Name</label>
+                        <input
+                            type="text"
+                            {...form.register('workflowName')}
+                            className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        />
+                        {form.formState.errors.workflowName && <p className="text-red-500 text-sm mt-1">{form.formState.errors.workflowName.message}</p>}{' '}
+                    </div>
 
-                {/* Trigger */}
-                <div className="w-1/2">
-                    <label className="block text-sm font-medium text-text mb-1">Trigger</label>
-                    <select
-                        value={customWorkflow.on || 'push'}
-                        onChange={(e) => {
-                            handleTriggerChange(e.target.value);
+                    {/* Trigger */}
+                    <div className="w-1/2">
+                        <label className="block text-sm font-medium text-text mb-1">Trigger</label>
+                        <select
+                            value={customWorkflow.on || 'push'}
+                            onChange={(e) => {
+                                handleTriggerChange(e.target.value);
+                            }}
+                            className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        >
+                            {availableTriggers.map((opt) => (
+                                <option key={opt} value={opt}>
+                                    {opt}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                {/* Branch */}
+                {(customWorkflow.on === 'push' || customWorkflow.on === 'pull_request') && (
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-text mb-1">Target Branch</label>
+                        <input
+                            type="text"
+                            {...form.register('branch')}
+                            className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        />
+                        {form.formState.errors.branch && <p className="text-red-500 text-sm mt-1">{form.formState.errors.branch.message}</p>}
+                    </div>
+                )}
+                {/* Schedule */}
+                {customWorkflow.on === 'schedule' && (
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-text mb-1">Cron Schedule</label>
+                        <input
+                            type="text"
+                            {...form.register('schedule')}
+                            className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        />
+                        {form.formState.errors.schedule && <p className="text-red-500 text-sm mt-1">{form.formState.errors.schedule.message}</p>}
+                    </div>
+                )}
+                {/* Jobs and steps */}
+                {availableRunners && (
+                    <CustomWorkflowFormJobsSteps
+                        collapsedJobs={collapsedJobs}
+                        collapsedSteps={collapsedSteps}
+                        toggleCollapseJob={(id) => {
+                            setCollapsedJobs((prev) => ({ ...prev, [id]: !prev[id] }));
                         }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        toggleCollapseStep={(id) => {
+                            setCollapsedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
+                        }}
+                        setEditingWorkflow={setEditingWorkflow}
+                        editingWorkflow={customWorkflow}
+                        availableRunners={availableRunners}
+                    />
+                )}
+                {/* Add new job */}
+                <div className="flex gap-2 mt-4">
+                    <button
+                        type="button"
+                        onClick={handleAddJob}
+                        className="bg-primary text-white font-semibold px-4 py-2 rounded-md hover:bg-primary-hover transition cursor-pointer"
                     >
-                        {availableTriggers.map((opt) => (
-                            <option key={opt} value={opt}>
-                                {opt}
-                            </option>
-                        ))}
-                    </select>
+                        Add Job
+                    </button>
+
+                    {/* Reset values to default */}
+                    <button
+                        type="button"
+                        onClick={handleResetValues}
+                        className="border border-secondary font-semibold text-secondary px-4 py-2 rounded-md hover:bg-secondary/80 transition cursor-pointer"
+                    >
+                        Reset Values
+                    </button>
                 </div>
-            </div>
-
-            {/* Branch */}
-            {(customWorkflow.on === 'push' || customWorkflow.on === 'pull_request') && (
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-text mb-1">Target Branch</label>
-                    <input
-                        type="text"
-                        value={customWorkflow.branch || ''}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setEditingWorkflow({ ...customWorkflow, branch: value });
-                            validateField('branch', value);
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                    />
-                    {errors.branch && <p className="text-red-500 text-sm mt-1">{errors.branch}</p>}
-                </div>
-            )}
-
-            {/* Schedule Expression */}
-            {customWorkflow.on === 'schedule' && (
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-text mb-1">Cron Schedule</label>
-                    <input
-                        type="text"
-                        value={customWorkflow.schedule || ''}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            setEditingWorkflow({ ...customWorkflow, schedule: value });
-                            validateField('schedule', value);
-                        }}
-                        className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                    />
-                    {errors.schedule && <p className="text-red-500 text-sm mt-1">{errors.schedule}</p>}
-                </div>
-            )}
-
-            {/* Jobs and steps */}
-            {availableRunners && (
-                <CustomWorkflowFormJobsSteps
-                    jobs={customWorkflow.jobs}
-                    errors={errors}
-                    collapsedJobs={collapsedJobs}
-                    collapsedSteps={collapsedSteps}
-                    toggleCollapseJob={(id) => {
-                        setCollapsedJobs((prev) => ({ ...prev, [id]: !prev[id] }));
-                    }}
-                    toggleCollapseStep={(id) => {
-                        setCollapsedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
-                    }}
-                    validateField={validateField}
-                    setEditingWorkflow={setEditingWorkflow}
-                    editingWorkflow={customWorkflow}
-                    availableRunners={availableRunners}
-                />
-            )}
-
-            <div className="flex gap-2 mt-4">
-                <button type="button" onClick={handleAddJob} className="bg-primary text-white font-semibold px-4 py-2 rounded-md hover:bg-primary-hover transition cursor-pointer">
-                    Add Job
-                </button>
-
-                <button
-                    type="button"
-                    onClick={handleResetValues}
-                    className="border border-secondary font-semibold text-secondary px-4 py-2 rounded-md hover:bg-secondary/80 transition cursor-pointer"
-                >
-                    Reset Values
-                </button>
-            </div>
+            </FormProvider>
         </div>
     );
 }

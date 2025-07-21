@@ -3,8 +3,11 @@ import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useS
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Action, CustomWorkflowConfig, Step, WorkflowConfig } from '@octolab/domain';
 import { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
+
+import { CustomWorkflowFormSchema } from '../models/custom-workflow-form.models';
 
 import { SortableStep } from './workflow-custom-form-sortable-step.component';
 
@@ -12,13 +15,10 @@ import { getActionsUseCase } from '@features/editor/application/get-actions.use-
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
 
 interface CustomWorkflowFormJobsStepsProps {
-    jobs: CustomWorkflowConfig['jobs'];
-    errors: Record<string, string | null>;
     collapsedJobs: Record<string, boolean>;
     collapsedSteps: Record<string, boolean>;
     toggleCollapseJob: (id: string) => void;
     toggleCollapseStep: (id: string) => void;
-    validateField: (field: string, value: string) => void;
     setEditingWorkflow: (workflow: WorkflowConfig) => void;
     editingWorkflow: CustomWorkflowConfig;
     availableRunners: string[];
@@ -28,19 +28,23 @@ interface CustomWorkflowFormJobsStepsProps {
  * Custom workflow form jobs and steps component
  */
 export function CustomWorkflowFormJobsSteps({
-    jobs,
-    errors,
     collapsedJobs,
     collapsedSteps,
     toggleCollapseJob,
     toggleCollapseStep,
-    validateField,
     setEditingWorkflow,
     editingWorkflow,
     availableRunners,
 }: CustomWorkflowFormJobsStepsProps) {
     const [availableActions, setAvailableActions] = useState<Action[]>([]);
     const sensors = useSensors(useSensor(PointerSensor));
+    const {
+        register,
+        watch,
+        formState: { errors },
+    } = useFormContext<CustomWorkflowFormSchema>();
+
+    const jobs = watch('jobs');
 
     useEffect(() => {
         const fetchActions = async () => {
@@ -55,52 +59,6 @@ export function CustomWorkflowFormJobsSteps({
 
         fetchActions();
     }, []);
-
-    const handleStepChange = (jobIndex: number, stepIndex: number, key: 'id' | 'name' | 'run' | 'uses' | 'type', value: string) => {
-        const newJobs = [...editingWorkflow.jobs];
-        const step = newJobs[jobIndex].steps[stepIndex];
-
-        if (key === 'type') {
-            const type = value as 'run' | 'uses';
-            step.type = type;
-
-            if (type === 'run') {
-                step.run = 'echo "Hello World"';
-                step.uses = undefined;
-                step.with = undefined;
-            } else {
-                step.uses = '';
-                step.with = {};
-                step.run = undefined;
-            }
-        } else if (key === 'uses') {
-            step.uses = value;
-            step.with = {};
-        } else {
-            step[key] = value;
-        }
-
-        setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
-        validateField(`step-${step.id}-${key}`, value);
-    };
-
-    const handleStepInputChange = (jobIndex: number, stepIndex: number, inputKey: string | number, value: string | number | boolean) => {
-        const newJobs = [...editingWorkflow.jobs];
-        const step = newJobs[jobIndex].steps[stepIndex];
-
-        if (!step.with) step.with = {};
-
-        const isEmpty = value === '' || value === undefined || value === null;
-
-        if (isEmpty) {
-            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-            delete step.with[inputKey];
-        } else {
-            step.with[inputKey] = value;
-        }
-
-        setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
-    };
 
     const handleAddStep = (jobIndex: number) => {
         const newJobs = [...editingWorkflow.jobs];
@@ -167,50 +125,34 @@ export function CustomWorkflowFormJobsSteps({
                         {!isCollapsed && (
                             <>
                                 <div className="mb-2 grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    {/* ID */}
                                     <div>
                                         <label className="block text-sm font-medium text-text mb-1">ID</label>
                                         <input
                                             type="text"
-                                            value={job.id}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-                                                const newJobs = [...editingWorkflow.jobs];
-                                                newJobs[jobIndex].id = value;
-                                                setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
-                                                validateField(`job-${jobIndex}-id`, value);
-                                            }}
+                                            {...register(`jobs.${jobIndex}.id`)}
                                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                         />
-                                        {errors[`job-${jobIndex}-id`] && <p className="text-red-500 text-sm mt-1">{errors[`job-${jobIndex}-id`]}</p>}
+                                        {errors.jobs?.[jobIndex]?.id && <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.id?.message}</p>}{' '}
                                     </div>
 
+                                    {/* Name */}
                                     <div>
                                         <label className="block text-sm font-medium text-text mb-1">Name</label>
                                         <input
                                             type="text"
-                                            value={job.name}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-                                                const newJobs = [...editingWorkflow.jobs];
-                                                newJobs[jobIndex].name = value;
-                                                setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
-                                                validateField(`job-${job.id}-name`, value);
-                                            }}
+                                            {...register(`jobs.${jobIndex}.name`)}
                                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                         />
-                                        {errors[`job-${job.id}-name`] && <p className="text-red-500 text-sm mt-1">{errors[`job-${job.id}-name`]}</p>}
+                                        {errors.jobs?.[jobIndex]?.name && <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.name?.message}</p>}{' '}
                                     </div>
                                 </div>
 
+                                {/* Runner */}
                                 <div className="mb-2">
                                     <label className="block text-sm font-medium text-text mb-1">Runner</label>
                                     <select
-                                        value={job.runner}
-                                        onChange={(e) => {
-                                            const newJobs = [...editingWorkflow.jobs];
-                                            newJobs[jobIndex].runner = e.target.value;
-                                            setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
-                                        }}
+                                        {...register(`jobs.${jobIndex}.runner`)}
                                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                     >
                                         {availableRunners.map((runner) => (
@@ -221,6 +163,7 @@ export function CustomWorkflowFormJobsSteps({
                                     </select>
                                 </div>
 
+                                {/* Steps */}
                                 {job.steps.length > 0 && <h4 className="text-md font-semibold mt-4 mb-2">Steps</h4>}
 
                                 <DndContext
@@ -241,15 +184,10 @@ export function CustomWorkflowFormJobsSteps({
                                                     step={step}
                                                     jobIndex={jobIndex}
                                                     stepIndex={stepIndex}
-                                                    errors={errors}
                                                     collapsed={isStepCollapsed}
                                                     availableActions={availableActions}
                                                     selectedAction={selectedAction}
                                                     onToggleCollapse={toggleCollapseStep}
-                                                    onChange={(key, value) => {
-                                                        handleStepChange(jobIndex, stepIndex, key, value);
-                                                    }}
-                                                    onInputChange={handleStepInputChange}
                                                     onRemove={() => {
                                                         handleRemoveStep(jobIndex, stepIndex);
                                                     }}
