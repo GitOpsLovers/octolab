@@ -1,5 +1,5 @@
 import { UserIdp } from '../domain/models/user.models';
-import { UsersIdpRepository } from '../domain/repositories/users.repository';
+import { UsersIdpRepository } from '../domain/repositories/users-idp.repository';
 
 /**
  * Get user by id use case

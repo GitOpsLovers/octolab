@@ -1,0 +1,20 @@
+import { CreateUserDto } from '../domain/dtos/create-user.dto';
+import { DatabaseUser } from '../domain/models/user.models';
+import { UsersDatabaseRepository } from '../domain/repositories/users-db.repository';
+
+/**
+ * Create user use case.
+ *
+ * @param repository Users database repository
+ * @param data User data
+ *
+ * @returns Created user from the database
+ */
+export async function createUserUseCase(repository: UsersDatabaseRepository, data: any): Promise<DatabaseUser> {
+    const createDto: CreateUserDto = {
+        auth0Id: data.userId,
+        provider: data.provider,
+    };
+
+    return repository.create(createDto);
+}

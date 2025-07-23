@@ -17,3 +17,11 @@ export interface UserIdp {
     phone_number: string;
     user_metadata: Record<string, any>;
 }
+
+/**
+ * User from database
+ */
+export interface DatabaseUser {
+    auth0Id: string;
+    provider: string;
+}

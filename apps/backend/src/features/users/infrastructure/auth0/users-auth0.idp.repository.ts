@@ -1,6 +1,6 @@
 import { ManagementClient } from 'auth0';
 
-import { UsersIdpRepository } from '../../domain/repositories/users.repository';
+import { UsersIdpRepository } from '../../domain/repositories/users-idp.repository';
 
 import { Auth0Error, Auth0ErrorType } from '@core/infrastructure/auth0/auth0.error';
 
