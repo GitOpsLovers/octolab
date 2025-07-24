@@ -28,12 +28,12 @@ export async function Header(): Promise<ReactNode> {
                     Templates
                 </Link>
                 {!session && (
-                    <Link
+                    <a
                         href={`/auth/login?returnTo=${pathname}`}
                         className="px-4 py-2 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-surface transition"
                     >
                         Sign in
-                    </Link>
+                    </a>
                 )}
                 {session && (
                     <Link href="/my-workflows" className="text-muted hover:text-primary transition font-medium">
@@ -41,9 +41,9 @@ export async function Header(): Promise<ReactNode> {
                     </Link>
                 )}
                 {session && (
-                    <Link href="/auth/logout" className="text-muted hover:text-primary transition font-medium">
+                    <a href="/auth/logout" className="text-muted hover:text-primary transition font-medium">
                         Logout
-                    </Link>
+                    </a>
                 )}
             </nav>
         </header>
