@@ -104,7 +104,7 @@ export function CustomWorkflowFormJobsSteps({
 
     return (
         <>
-            {jobs.map((job, jobIndex) => {
+            {jobs?.map((job, jobIndex) => {
                 const isCollapsed = collapsedJobs[job.id] ?? false;
 
                 return (
