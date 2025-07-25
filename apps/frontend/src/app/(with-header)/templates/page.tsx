@@ -1,3 +1,5 @@
+'use client';
+
 import { TemplatesList } from '@ui/templates/components/templates-list.component';
 import { TemplatesProvider } from '@ui/templates/providers/templates.provider';
 

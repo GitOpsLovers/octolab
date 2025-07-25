@@ -32,6 +32,9 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
         setState((prev) => ({ ...prev, authUser: user }));
     };
 
+    /**
+     * Check if the user is authenticated and fetch the current user data.
+     */
     useEffect(() => {
         const fetchUser = async () => {
             try {
