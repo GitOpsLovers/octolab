@@ -146,6 +146,7 @@ export function YamlPreview(): ReactNode {
                     {/* Copy code */}
                     <button
                         onClick={handleCopy}
+                        data-umami-event="[Workflow editor] Copy YAML"
                         disabled={hasErrors}
                         className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition 
                         ${hasErrors ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
@@ -157,6 +158,7 @@ export function YamlPreview(): ReactNode {
                     <button
                         onClick={handleDownload}
                         disabled={hasErrors}
+                        data-umami-event="[Workflow editor] Download YAML"
                         className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition 
                         ${hasErrors ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
                     >
@@ -166,6 +168,7 @@ export function YamlPreview(): ReactNode {
                     {/* Save to workspace */}
                     <button
                         onClick={saveToWorkspace}
+                        data-umami-event="[Workflow editor] Save workflow"
                         disabled={!authUser || hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit)}
                         className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition flex items-center justify-center gap-2
                     ${!authUser || hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
