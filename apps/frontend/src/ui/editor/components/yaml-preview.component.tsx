@@ -25,8 +25,8 @@ export function YamlPreview(): ReactNode {
     const cookies = useCookies();
     const { authToken } = useAuthUser();
     const { uuid } = useParams();
-    const { authUser } = useAuthUser();
-    const { editingWorkflow, editingWorkflowYaml, errors, template, isEditingExistingWorkflow } = useEditor();
+    const { authUser, fetchUser } = useAuthUser();
+    const { editingWorkflow, editingWorkflowYaml, errors, template, isEditingExistingWorkflow, setIsEditingExistingWorkflow } = useEditor();
     const [saving, setSaving] = useState(false);
     const [showFirstWorkflowModal, setShowFirstWorkflowModal] = useState(false);
 
@@ -84,6 +84,9 @@ export function YamlPreview(): ReactNode {
             });
 
             toast.success(response.message);
+
+            await fetchUser();
+            setIsEditingExistingWorkflow(true);
 
             if (authUser.workflows === 0 && cookies.get('octolab_hide_first_workflow_modal') !== 'true') {
                 setShowFirstWorkflowModal(true);

@@ -15,4 +15,5 @@ export interface EditorContextType {
     setWorkflowNameAndDescription: (name: string, description: string) => void;
     isEditingExistingWorkflow: boolean;
     availableRunners: Runner[] | null;
+    setIsEditingExistingWorkflow: (isEditing: boolean) => void;
 }
