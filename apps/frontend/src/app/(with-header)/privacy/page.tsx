@@ -64,9 +64,14 @@ export default function PrivacyPage() {
                                 <td className="p-3">Remembers if you dismissed the beta banner.</td>
                                 <td className="p-3">Persistent</td>
                             </tr>
-                            <tr>
+                            <tr className="border-b border-border">
                                 <td className="p-3">octolab_skip_register_modal</td>
                                 <td className="p-3">Saves whether you’ve seen the register modal.</td>
+                                <td className="p-3">Persistent</td>
+                            </tr>
+                            <tr>
+                                <td className="p-3">octolab_cookie_consent</td>
+                                <td className="p-3">Saves whether you’ve accepted cookies.</td>
                                 <td className="p-3">Persistent</td>
                             </tr>
                         </tbody>
