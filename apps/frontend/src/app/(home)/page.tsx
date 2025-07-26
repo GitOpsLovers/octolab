@@ -54,6 +54,12 @@ export default async function Home() {
                 <Link href="/contact" className="hover:text-primary transition">
                     Contact
                 </Link>
+                <Link href="/privacy" className="hover:text-primary transition">
+                    Privacy policy
+                </Link>
+                <Link href="/terms" className="hover:text-primary transition">
+                    Terms of use
+                </Link>
             </footer>
         </div>
     );
