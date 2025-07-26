@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import { Montserrat, Poppins } from 'next/font/google';
+import { CookiesProvider } from 'next-client-cookies/server';
 import { Toaster } from 'react-hot-toast';
 
-import './globals.css';
 import { Feedback } from '@ui/layout/components/feedback.component';
 import { UmamiAnalytics } from '@ui/layout/components/umami.component';
 import { toasterConfig } from '@ui/layout/configs/toaster.config';
+
+import './globals.css';
 
 const montserrat = Montserrat({
     variable: '--font-montserrat',
@@ -36,10 +38,12 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${montserrat.variable} ${poppins.variable} antialiased overflow-y-auto bg-background`}>
-                {children}
-                <Feedback />
-                <Toaster position="top-right" toastOptions={toasterConfig} />
-                {!isLocal && <UmamiAnalytics />}
+                <CookiesProvider>
+                    {children}
+                    <Feedback />
+                    <Toaster position="top-right" toastOptions={toasterConfig} />
+                    {!isLocal && <UmamiAnalytics />}
+                </CookiesProvider>
             </body>
         </html>
     );
