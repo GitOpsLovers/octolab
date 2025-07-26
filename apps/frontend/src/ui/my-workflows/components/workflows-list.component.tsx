@@ -14,12 +14,17 @@ import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
  * Workflows list component.
  */
 export function WorkflowsList() {
-    const { authUser } = useAuthUser();
+    const { authUser, fetchUser } = useAuthUser();
     const { workflows, loading, error, deleteWorkflow } = useMyWorkflows();
 
-    // const hasReachedLimit = workflows.length >= 3;
     const planLimit = plansLimits[authUser?.plan ?? 'free']?.workflows ?? 0;
     const hasReachedLimit = !!(workflows.length >= planLimit);
+
+    // Delete workflow
+    const handleDeleteWorkflow = async (workflowId: string) => {
+        await deleteWorkflow(workflowId);
+        await fetchUser();
+    };
 
     if (loading) {
         return (
@@ -64,9 +69,7 @@ export function WorkflowsList() {
                                             Edit
                                         </Link>
                                         <button
-                                            onClick={() => {
-                                                deleteWorkflow(workflow.id);
-                                            }}
+                                            onClick={() => handleDeleteWorkflow(workflow.id)}
                                             className="flex items-center gap-1 bg-danger text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-danger/70 transition cursor-pointer"
                                         >
                                             <FaTrash className="w-4 h-4" />

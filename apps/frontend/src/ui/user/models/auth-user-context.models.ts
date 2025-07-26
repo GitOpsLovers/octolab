@@ -10,6 +10,7 @@ export interface AuthUserContextValue {
     isLoading: boolean;
     userLoadError: Error | null;
     setAuthUser: (user: User | null) => void;
+    fetchUser: () => Promise<void>;
 }
 
 /**

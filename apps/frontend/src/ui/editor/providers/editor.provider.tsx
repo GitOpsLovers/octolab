@@ -207,6 +207,7 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
         setWorkflowNameAndDescription,
         isEditingExistingWorkflow,
         availableRunners,
+        setIsEditingExistingWorkflow,
     };
 
     return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;

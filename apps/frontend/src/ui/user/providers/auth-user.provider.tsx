@@ -28,61 +28,64 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
         isLoading: true,
     });
 
+    // Set the authenticated user in the context
     const setAuthUser = (user: User | null) => {
         setState((prev) => ({ ...prev, authUser: user }));
     };
 
-    /**
-     * Check if the user is authenticated and fetch the current user data.
-     */
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const token = await getAccessToken();
+    // Fetch the authenticated user
+    const fetchUser = async () => {
+        try {
+            const token = await getAccessToken();
 
-                if (!token) {
-                    setState((prev) => ({ ...prev, isLoading: false }));
-                    return;
-                }
+            if (!token) {
+                setState((prev) => ({ ...prev, isLoading: false }));
+                return;
+            }
 
-                const currentUserRepository = usersApiRepository(token);
-                const fetchedUser = await getCurrentUserUseCase(currentUserRepository);
+            const currentUserRepository = usersApiRepository(token);
+            const fetchedUser = await getCurrentUserUseCase(currentUserRepository);
 
-                setState({
-                    authUser: fetchedUser,
-                    authToken: token,
-                    userLoadError: null,
-                    isLoading: false,
-                });
-            } catch (error) {
-                if (error instanceof Error && error.message.includes('The user does not have an active session.')) {
-                    setState({
-                        authUser: null,
-                        authToken: null,
-                        userLoadError: null,
-                        isLoading: false,
-                    });
-                    return;
-                }
-
-                if (error instanceof Error && error.message.includes('The access token has expired')) {
-                    window.location.href = '/auth/logout';
-                    return;
-                }
-
-                console.error('Error fetching current user:', error);
-
+            setState({
+                authUser: fetchedUser,
+                authToken: token,
+                userLoadError: null,
+                isLoading: false,
+            });
+        } catch (error) {
+            // mismo error handling que ya tienes
+            if (error instanceof Error && error.message.includes('The user does not have an active session.')) {
                 setState({
                     authUser: null,
                     authToken: null,
-                    userLoadError: error as Error,
+                    userLoadError: null,
                     isLoading: false,
                 });
+                return;
             }
-        };
 
+            if (error instanceof Error && error.message.includes('The access token has expired')) {
+                window.location.href = '/auth/logout';
+                return;
+            }
+
+            console.error('Error fetching current user:', error);
+
+            setState({
+                authUser: null,
+                authToken: null,
+                userLoadError: error as Error,
+                isLoading: false,
+            });
+        }
+    };
+
+    /**
+     * Effect to fetch th authenticated user
+     */
+    useEffect(() => {
         fetchUser();
     }, [router]);
 
-    return <AuthUserContext.Provider value={{ ...state, setAuthUser }}>{children}</AuthUserContext.Provider>;
+    return <AuthUserContext.Provider value={{ ...state, setAuthUser, fetchUser }}>{children}</AuthUserContext.Provider>;
 }

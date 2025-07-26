@@ -1,22 +1,23 @@
-import { headers } from 'next/headers';
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 
-import { auth0Client } from '@features/authentication/infrastructure/auth0/client.auth0';
+import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 
 /**
  * Header component
  */
-export async function Header(): Promise<ReactNode> {
-    const session = await auth0Client.getSession();
-    const headerList = await headers();
-    const pathname = headerList.get('x-current-path');
+export function Header(): ReactNode {
+    const { authUser } = useAuthUser();
+    const pathname = usePathname();
 
     return (
         <header className="w-full bg-surface px-6 py-4 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-1 relative group">
-                <Image src="/header-logo-sm.png" alt="OctoLab logo" width={32} height={32} className="inline-block" />
+                <Image src="/header-logo-sm.png" alt="OctoLab logo" width={400} height={284} className="inline-block" style={{ width: 'auto', height: '32px' }} />
                 <div className="flex items-center relative">
                     <span className="text-2xl font-bold text-primary ml-1">OctoLab</span>
                     <span className="absolute -top-1 -right-9 bg-secondary text-surface text-[8px] md:text-xs font-semibold px-1 py-0.2 rounded-full shadow-md">Beta</span>
@@ -27,7 +28,7 @@ export async function Header(): Promise<ReactNode> {
                 <Link href="/templates" className="text-muted hover:text-primary transition font-medium">
                     Templates
                 </Link>
-                {!session && (
+                {!authUser && (
                     <a
                         href={`/auth/login?returnTo=${pathname}`}
                         className="px-4 py-2 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-surface transition"
@@ -35,12 +36,12 @@ export async function Header(): Promise<ReactNode> {
                         Sign in
                     </a>
                 )}
-                {session && (
+                {authUser && (
                     <Link href="/my-workflows" className="text-muted hover:text-primary transition font-medium">
                         My Workflows
                     </Link>
                 )}
-                {session && (
+                {authUser && (
                     <a href="/auth/logout" className="text-muted hover:text-primary transition font-medium">
                         Logout
                     </a>
