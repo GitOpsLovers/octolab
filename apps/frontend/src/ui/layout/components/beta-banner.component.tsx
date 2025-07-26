@@ -32,7 +32,12 @@ export function BetaBanner() {
                 <HiOutlineBeaker className="text-white w-5 h-5" />
                 <span>OctoLab is currently in beta phase for product validation. New features coming soon!</span>
             </div>
-            <button onClick={handleClose} className="text-background hover:text-background/70 transition cursor-pointer" aria-label="Close banner">
+            <button
+                onClick={handleClose}
+                className="text-background hover:text-background/70 transition cursor-pointer"
+                aria-label="Close banner"
+                data-umami-event="[Beta Banner] Close button"
+            >
                 <IoClose size={18} />
             </button>
         </div>

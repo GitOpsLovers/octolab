@@ -306,6 +306,7 @@ export function TemplateWorkflowForm(): ReactNode {
                     resetEditingWorkflow();
                     setErrors({});
                 }}
+                data-umami-event="[Workflow Template] Reset values"
                 className="mt-2 border border-secondary font-semibold text-secondary px-4 py-2 rounded-md cursor-pointer hover:bg-secondary/80 transition self-start"
             >
                 Reset Values

@@ -32,7 +32,11 @@ export default async function Home() {
                 </p>
 
                 <div className="flex gap-4 flex-wrap justify-center">
-                    <Link href="/templates" className="bg-primary text-white px-6 py-3 rounded-md text-lg font-semibold text-center hover:bg-primary-hover transition">
+                    <Link
+                        href="/templates"
+                        className="bg-primary text-white px-6 py-3 rounded-md text-lg font-semibold text-center hover:bg-primary-hover transition"
+                        data-umami-event="[Home] Create template click"
+                    >
                         Create Workflow
                     </Link>
                     {session?.user && (
