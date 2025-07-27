@@ -4,11 +4,15 @@ import { CustomWorkflowConfig, Job, Step, WorkflowYaml } from '@octolab/domain';
  * Generate "on" section based on workflow config
  */
 function generateOnConfig(config: CustomWorkflowConfig): Record<string, any> {
-    if (config.on === 'push' || config.on === 'pull_request') {
+    if (config.on === 'push') {
         return {
             [config.on]: {
                 branches: config.branch ? [config.branch] : ['main'],
             },
+        };
+    } else if (config.on === 'pull_request') {
+        return {
+            pull_request: {},
         };
     } else if (config.on === 'workflow_dispatch') {
         return { workflow_dispatch: {} };

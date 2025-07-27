@@ -16,6 +16,7 @@ export interface Action {
         hideInForm: boolean;
         options?: Array<{ label: string; value: string }>;
         defaultValue?: string | number | boolean;
+        info: string;
     }>;
     templates?: Record<string, string>;
 }

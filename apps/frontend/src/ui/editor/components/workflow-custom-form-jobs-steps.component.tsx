@@ -4,12 +4,14 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-ki
 import { Action, CustomWorkflowConfig, Step } from '@octolab/domain';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { FaAngleDown, FaAngleUp, FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { FaAngleDown, FaAngleUp, FaInfoCircle, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CustomWorkflowFormSchema } from '../models/custom-workflow-form.models';
 
 import { SortableStep } from './workflow-custom-form-sortable-step.component';
+
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/shared/components/tooltip';
 
 interface CustomWorkflowFormJobsStepsProps {
     collapsedJobs: Record<string, boolean>;
@@ -122,7 +124,31 @@ export function CustomWorkflowFormJobsSteps({
                 return (
                     <div key={jobIndex} className="border border-border p-4 rounded mb-4 bg-muted">
                         <div className="flex justify-between items-center">
-                            <h3 className="text-md font-bold">Job: {job.name}</h3>
+                            {/* Job name  */}
+                            <div className="flex items-center">
+                                <h3 className="text-md font-bold">Job: {job.name}</h3>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <FaInfoCircle size={14} className="ml-2 text-text-muted hover:text-text transition cursor-pointer" />
+                                    </TooltipTrigger>
+                                    <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg max-w-sm">
+                                        <div className="text-sm text-center">
+                                            A <span className="text-primary font-semibold">job</span> is a group of steps that run on the same runner. Jobs run independently by
+                                            default but can be sequenced using <span className="text-primary font-semibold">needs</span>.{' '}
+                                            <a
+                                                href="https://docs.github.com/en/actions/using-jobs/using-jobs-in-a-workflow"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="underline text-primary hover:text-primary-hover"
+                                            >
+                                                Learn more.
+                                            </a>
+                                        </div>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </div>
+
+                            {/* Collapse button */}
                             <button
                                 type="button"
                                 onClick={() => {
@@ -162,7 +188,29 @@ export function CustomWorkflowFormJobsSteps({
 
                                 {/* Runner */}
                                 <div className="mb-2">
-                                    <label className="block text-sm font-medium text-text mb-1">Runner</label>
+                                    <div className="flex items-center mb-1">
+                                        <label className="block text-sm font-medium text-text">Runner</label>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <FaInfoCircle size={14} className="ml-1 text-text-muted hover:text-text transition cursor-pointer" />
+                                            </TooltipTrigger>
+                                            <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg max-w-sm">
+                                                <div className="text-sm text-center">
+                                                    A <span className="text-primary font-semibold">runner</span> is the environment where your job runs. You can choose from
+                                                    GitHub-hosted runners or your own self-hosted machines.{' '}
+                                                    <a
+                                                        href="https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="underline text-primary hover:text-primary-hover"
+                                                    >
+                                                        Learn more.
+                                                    </a>
+                                                </div>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
+
                                     <select
                                         {...register(`jobs.${jobIndex}.runner`)}
                                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -179,7 +227,27 @@ export function CustomWorkflowFormJobsSteps({
                                 <div className="mb-2">
                                     {hasJobCondition ? (
                                         <div>
-                                            <label className="block text-sm font-medium text-text mb-1">Condition</label>
+                                            <div className="flex items-center mb-1">
+                                                <label className="block text-sm font-medium text-text">Condition</label>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <FaInfoCircle size={14} className="ml-1 text-text-muted hover:text-text transition cursor-pointer" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg max-w-sm">
+                                                        <div className="text-sm text-center">
+                                                            A <span className="text-primary font-semibold">condition</span> lets you control whether a job or step runs.{' '}
+                                                            <a
+                                                                href="https://docs.github.com/en/actions/learn-github-actions/expressions#about-expressions"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="underline text-primary hover:text-primary-hover"
+                                                            >
+                                                                Learn more.
+                                                            </a>
+                                                        </div>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </div>
 
                                             <input
                                                 type="text"
@@ -212,7 +280,29 @@ export function CustomWorkflowFormJobsSteps({
                                 </div>
 
                                 {/* Steps */}
-                                {job.steps.length > 0 && <h4 className="text-md font-semibold mt-4 mb-2">Steps</h4>}
+                                <div className="flex items-center mt-4 mb-2">
+                                    {job.steps.length > 0 && <h4 className="text-md font-semibold">Steps</h4>}
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <FaInfoCircle size={14} className="ml-2 text-text-muted hover:text-text transition cursor-pointer" />
+                                        </TooltipTrigger>
+                                        <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg max-w-sm">
+                                            <div className="text-sm text-center">
+                                                A <span className="text-primary font-semibold">step</span> is a single task within a job. Steps can either{' '}
+                                                <span className="text-primary font-semibold">run a command</span> or{' '}
+                                                <span className="text-primary font-semibold">use an action</span>. They execute sequentially in the order listed.{' '}
+                                                <a
+                                                    href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idsteps"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="underline text-primary hover:text-primary-hover"
+                                                >
+                                                    Learn more.
+                                                </a>
+                                            </div>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
 
                                 <DndContext
                                     sensors={sensors}
@@ -250,7 +340,7 @@ export function CustomWorkflowFormJobsSteps({
                                     onClick={() => {
                                         handleAddStep(jobIndex);
                                     }}
-                                    className="mt-2 bg-secondary text-surface font-semibold px-2 py-1 rounded hover:bg-secondary-hover text-sm cursor-pointer"
+                                    className="mt-2 bg-secondary text-surface font-semibold px-2 py-1 rounded-md hover:bg-secondary-hover text-sm cursor-pointer"
                                 >
                                     Add Step
                                 </button>
@@ -260,7 +350,7 @@ export function CustomWorkflowFormJobsSteps({
                                     onClick={() => {
                                         handleRemoveJob(jobIndex);
                                     }}
-                                    className="ml-2 mt-4 border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white text-sm cursor-pointer"
+                                    className="ml-2 mt-4 border border-red-500 text-red-500 px-2 py-1 rounded-md hover:bg-red-500 hover:text-white text-sm cursor-pointer"
                                 >
                                     Remove Job
                                 </button>
