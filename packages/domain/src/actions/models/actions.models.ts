@@ -8,6 +8,6 @@ export interface Action {
         label: string;
         placeholder?: string;
         required?: boolean;
-        type?: 'string' | 'number' | 'boolean';
+        type?: 'string' | 'number' | 'boolean' | 'password';
     }>;
 }
