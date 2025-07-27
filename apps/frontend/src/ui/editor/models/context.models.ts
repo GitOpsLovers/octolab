@@ -1,4 +1,4 @@
-import { Action, Runner, Template, WorkflowConfig, WorkflowYaml } from '@octolab/domain';
+import { Action, CustomWorkflowConfig, Runner, Template, WorkflowConfig, WorkflowYaml } from '@octolab/domain';
 
 /**
  * Editor template context provider model
@@ -23,8 +23,8 @@ export interface EditorTemplateContextType {
  */
 export interface EditorCustomContextType {
     template: Template | null;
-    editingWorkflow: WorkflowConfig | null;
-    setEditingWorkflow: (workflow: WorkflowConfig) => void;
+    editingWorkflow: CustomWorkflowConfig | null;
+    setEditingWorkflow: (workflow: CustomWorkflowConfig) => void;
     errors: Record<string, string | null>;
     setErrors: React.Dispatch<React.SetStateAction<Record<string, string | null>>>;
     editingWorkflowYaml: WorkflowYaml | null;

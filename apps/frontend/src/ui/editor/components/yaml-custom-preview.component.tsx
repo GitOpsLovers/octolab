@@ -87,6 +87,7 @@ export function YamlCustomPreview(): ReactNode {
             toast.success(response.message);
 
             await fetchUser();
+
             setIsEditingExistingWorkflow(true);
 
             if (authUser.workflows === 0 && cookies.get('octolab_hide_first_workflow_modal') !== 'true') {

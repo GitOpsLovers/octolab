@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/named
 import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Action, CustomWorkflowConfig, Step, WorkflowConfig } from '@octolab/domain';
+import { Action, CustomWorkflowConfig, Step } from '@octolab/domain';
 import { useFormContext } from 'react-hook-form';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,7 +15,7 @@ interface CustomWorkflowFormJobsStepsProps {
     collapsedSteps: Record<string, boolean>;
     toggleCollapseJob: (id: string) => void;
     toggleCollapseStep: (id: string) => void;
-    setEditingWorkflow: (workflow: WorkflowConfig) => void;
+    setEditingWorkflow: (workflow: CustomWorkflowConfig) => void;
     editingWorkflow: CustomWorkflowConfig;
     availableRunners: string[];
     availableActions: Action[];

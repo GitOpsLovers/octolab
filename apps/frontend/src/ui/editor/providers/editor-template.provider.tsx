@@ -5,7 +5,7 @@ import { ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { EditorTemplateContext } from '../contexts/editor.context';
 
-import { generateEditingWorkflowFromConfigUseCase } from '@features/editor/application/generate-editing-workflow-from-config.use-case';
+import { generateWorkflowYamlForTemplatesUseCase } from '@features/editor/application/generate-workflow-yaml-for-templates.use-case';
 import { getOneWorkflowUseCase } from '@features/editor/application/get-one-workflow.use-case';
 import { getRunnersUseCase } from '@features/editor/application/get-runners.use-case';
 import { getWorkflowConfigUseCase } from '@features/editor/application/get-workflow-config.use-case';
@@ -136,9 +136,11 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
         }
     }, [isLoading, authToken, templateId, workflowId]);
 
+    // Set the workflow YAML based on the editing workflow
     const editingWorkflowYaml = useMemo(() => {
         if (!editingWorkflow) return null;
-        return generateEditingWorkflowFromConfigUseCase(editingWorkflow);
+
+        return generateWorkflowYamlForTemplatesUseCase(editingWorkflow);
     }, [editingWorkflow]);
 
     const resetEditingWorkflow = () => {

@@ -131,23 +131,45 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                             </div>
 
                             {/* Inputs */}
-                            {selectedAction?.inputs.map((input) => {
-                                const type = input.type ?? 'string';
-                                const inputError = errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.with?.[input.key];
+                            {selectedAction?.inputs
+                                .filter((input) => !input.hideInForm)
+                                .map((input) => {
+                                    const type = input.type ?? 'string';
+                                    const inputError = errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.with?.[input.key];
+                                    const fieldName = `jobs.${jobIndex}.steps.${stepIndex}.with.${input.key}` as const;
 
-                                return (
-                                    <div key={input.key} className="mb-2">
-                                        <label className="block text-sm font-medium text-text mb-1">{input.label}</label>
-                                        <input
-                                            {...register(`jobs.${jobIndex}.steps.${stepIndex}.with.${input.key}`)}
-                                            type={type === 'number' ? 'number' : 'text'}
-                                            placeholder={input.placeholder}
-                                            className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                                        />
-                                        {inputError && <p className="text-red-500 text-sm mt-1">{inputError.message}</p>}
-                                    </div>
-                                );
-                            })}
+                                    return (
+                                        <div key={input.key} className="mb-2">
+                                            <label className="block text-sm font-medium text-text mb-1">{input.label}</label>
+
+                                            {type === 'select' && Array.isArray(input.options) ? (
+                                                <select
+                                                    {...register(fieldName)}
+                                                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                                    defaultValue=""
+                                                >
+                                                    <option value="" disabled>
+                                                        {input.placeholder ?? 'Select an option'}
+                                                    </option>
+                                                    {input.options.map((option) => (
+                                                        <option key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            ) : (
+                                                <input
+                                                    {...register(fieldName)}
+                                                    type={type === 'number' ? 'number' : 'text'}
+                                                    placeholder={input.placeholder}
+                                                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                                />
+                                            )}
+
+                                            {inputError && <p className="text-red-500 text-sm mt-1">{inputError.message}</p>}
+                                        </div>
+                                    );
+                                })}
                         </>
                     )}
 

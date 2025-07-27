@@ -8,7 +8,14 @@ export interface Action {
         label: string;
         placeholder?: string;
         required: boolean;
-        type: 'string' | 'number' | 'boolean';
+        type: 'string' | 'number' | 'boolean' | 'select';
         isSecret: boolean;
+        isEnvironmentVariable: boolean;
+        isStepEnvironmentVariable: boolean;
+        hideInYaml: boolean;
+        hideInForm: boolean;
+        options?: Array<{ label: string; value: string }>;
+        defaultValue?: string | number | boolean;
     }>;
+    templates?: Record<string, string>;
 }

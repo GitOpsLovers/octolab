@@ -1,10 +1,10 @@
+import { Action } from '../../actions/models/actions.models';
 import { Trigger } from '../../triggers/models/triggers.models';
 
 /**
  * Workflow configuration model
  */
 export type WorkflowConfig =
-    | CustomWorkflowConfig
     | NpmPublishWorkflowConfig
     | NodePrVerifyWorkflowConfig
     | VercelProDeploymentWorkflowConfig
@@ -191,4 +191,9 @@ export interface Step {
     with?: Record<string, string | number | boolean>;
     env?: Record<string, string>;
     secretInputs?: string[];
+    environmentVariables?: string[];
+    stepEnvironmentVariables?: string[];
+    templates?: Record<string, string>;
+    hiddenInputs?: string[];
+    stepActionInputs?: Action['inputs'];
 }
