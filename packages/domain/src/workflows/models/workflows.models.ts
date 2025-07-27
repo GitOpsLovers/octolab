@@ -190,4 +190,5 @@ export interface Step {
     uses?: string;
     with?: Record<string, string | number | boolean>;
     env?: Record<string, string>;
+    secretInputs?: string[];
 }

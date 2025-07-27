@@ -1,12 +1,13 @@
 'use client';
 
-import { Template, WorkflowConfig } from '@octolab/domain';
+import { Action, Template, WorkflowConfig } from '@octolab/domain';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { EditorContext } from '../contexts/editor.context';
 
 import { generateEditingWorkflowFromConfigUseCase } from '@features/editor/application/generate-editing-workflow-from-config.use-case';
+import { getActionsUseCase } from '@features/editor/application/get-actions.use-case';
 import { getOneWorkflowUseCase } from '@features/editor/application/get-one-workflow.use-case';
 import { getRunnersUseCase } from '@features/editor/application/get-runners.use-case';
 import { getWorkflowConfigUseCase } from '@features/editor/application/get-workflow-config.use-case';
@@ -60,6 +61,7 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
     const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<WorkflowConfig | null>(null);
     const [isEditingExistingWorkflow, setIsEditingExistingWorkflow] = useState<boolean>(false);
     const [availableRunners, setAvailableRunners] = useState<string[]>([]);
+    const [availableActions, setAvailableActions] = useState<Action[]>([]);
 
     useEffect(() => {
         const init = async () => {
@@ -173,6 +175,23 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
         fetchRunners();
     }, []);
 
+    /**
+     * Get actions
+     */
+    useEffect(() => {
+        const fetchActions = async () => {
+            try {
+                const repository = editorApiRepository();
+                const actions = await getActionsUseCase(repository);
+                setAvailableActions(actions);
+            } catch (err) {
+                console.error('Error fetching actions:', err);
+            }
+        };
+
+        fetchActions();
+    }, []);
+
     const editingWorkflowYaml = useMemo(() => {
         if (!editingWorkflow) return null;
         return generateEditingWorkflowFromConfigUseCase(editingWorkflow);
@@ -208,6 +227,7 @@ export function EditorProvider({ children, templateId, workflowId }: EditorProvi
         isEditingExistingWorkflow,
         availableRunners,
         setIsEditingExistingWorkflow,
+        availableActions,
     };
 
     return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;
