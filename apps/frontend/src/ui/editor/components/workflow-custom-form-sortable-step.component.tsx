@@ -3,10 +3,12 @@ import { CSS } from '@dnd-kit/utilities';
 import { Action, Step } from '@octolab/domain';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { FaAngleDown, FaAngleUp, FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { FaAngleDown, FaAngleUp, FaInfoCircle, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { MdDragIndicator } from 'react-icons/md';
 
 import { CustomWorkflowFormSchema } from '../models/custom-workflow-form.models';
+
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/shared/components/tooltip';
 
 interface SortableStepProps {
     step: Step;
@@ -150,7 +152,17 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
 
                                     return (
                                         <div key={input.key} className="mb-2">
-                                            <label className="block text-sm font-medium text-text mb-1">{input.label}</label>
+                                            <div className="flex items-center mb-1">
+                                                <label className="block text-sm font-medium text-text mb-1">{input.label}</label>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <FaInfoCircle size={14} className="ml-1 text-text-muted hover:text-text transition cursor-pointer" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg max-w-sm">
+                                                        <div className="text-sm text-center">{input.info}</div>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </div>
 
                                             {type === 'select' && Array.isArray(input.options) ? (
                                                 <select
@@ -230,7 +242,7 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                         onClick={() => {
                             onRemove(stepIndex);
                         }}
-                        className="border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white text-sm mt-2 cursor-pointer"
+                        className="border border-red-500 text-red-500 px-2 py-1 rounded-md hover:bg-red-500 hover:text-white text-sm mt-2 cursor-pointer"
                     >
                         Remove Step
                     </button>

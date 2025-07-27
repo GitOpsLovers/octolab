@@ -18,6 +18,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'Fetch depth of the git repository. 0 means full history.',
             },
         ],
     },
@@ -35,6 +36,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'Node.js version to use. Can be a specific version or a range (e.g., 18.x).',
             },
         ],
     },
@@ -52,6 +54,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'The secret name for the NPM token used for authentication.',
             },
         ],
     },
@@ -69,6 +72,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'The secret name for the AWS account ID to assume the role in.',
             },
             {
                 key: 'aws-region',
@@ -81,6 +85,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'The environment variable name for the AWS region to use.',
             },
             {
                 key: 'aws-region-env-value',
@@ -93,6 +98,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: true,
                 hideInForm: false,
+                info: 'The value for the AWS region environment variable.',
             },
             {
                 key: 'aws-rolename',
@@ -105,6 +111,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: true,
                 hideInForm: false,
+                info: 'The environment variable name for the AWS role name to assume.',
             },
             {
                 key: 'aws-rolename-env-value',
@@ -117,6 +124,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: true,
                 hideInForm: false,
+                info: 'The value for the AWS role name environment variable.',
             },
         ],
         templates: {
@@ -142,6 +150,7 @@ export const workflowsActions: Action[] = [
                     { label: 'Medium', value: 'medium' },
                     { label: 'High', value: 'high' },
                 ],
+                info: 'The severity threshold for the Snyk scan. Choose from Low, Medium, or High.',
             },
             {
                 key: 'snyk-token',
@@ -154,6 +163,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: true,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'The secret name for the Snyk token used for authentication.',
             },
         ],
         templates: {
@@ -174,6 +184,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'Your Docker Hub username for authentication.',
             },
             {
                 key: 'password',
@@ -186,6 +197,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'The secret name for your Docker Hub password used for authentication.',
             },
         ],
     },
@@ -211,6 +223,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'The context for the Docker build. Typically the root of your repository.',
             },
             {
                 key: 'file',
@@ -223,6 +236,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'The path to the Dockerfile to use for the build.',
             },
             {
                 key: 'push',
@@ -236,6 +250,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: true,
                 defaultValue: true,
+                info: 'Whether to push the built image to the Docker registry.',
             },
             {
                 key: 'tags',
@@ -248,6 +263,7 @@ export const workflowsActions: Action[] = [
                 isStepEnvironmentVariable: false,
                 hideInYaml: false,
                 hideInForm: false,
+                info: 'Comma-separated list of tags for the Docker image. For example: "latest,1.0.0".',
             },
         ],
     },

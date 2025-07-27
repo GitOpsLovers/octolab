@@ -2,8 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CustomWorkflowConfig, Trigger } from '@octolab/domain';
+import Link from 'next/link';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { FaInfoCircle } from 'react-icons/fa';
 
 import { useEditorCustom } from '../hooks/editor-custom.hooks';
 import { CustomWorkflowFormSchema, customWorkflowSchema } from '../models/custom-workflow-form.models';
@@ -12,6 +14,7 @@ import { CustomWorkflowFormJobsSteps } from './workflow-custom-form-jobs-steps.c
 
 import { getTriggersUseCase } from '@features/editor/application/get-triggers.use-case';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/shared/components/tooltip';
 
 /**
  * Custom workflow form component
@@ -93,7 +96,6 @@ export function CustomWorkflowForm(): ReactNode {
                                 if (currentValue !== undefined) {
                                     cleanedWith[key] = currentValue;
                                 } else if (input.hideInForm && input.defaultValue !== undefined) {
-                                    // 👇 Incluimos valores por defecto si está oculto en el form y no se ha seteado
                                     cleanedWith[key] = input.defaultValue;
                                 }
                             }
@@ -231,7 +233,28 @@ export function CustomWorkflowForm(): ReactNode {
 
                     {/* Trigger */}
                     <div className="w-1/2">
-                        <label className="block text-sm font-medium text-text mb-1">Trigger</label>
+                        <div className="flex items-center mb-1">
+                            <label className="block text-sm font-medium text-text">Trigger</label>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <FaInfoCircle size={14} className="ml-1 text-text-muted hover:text-text transition cursor-pointer" />
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg">
+                                    <div className="text-sm">
+                                        Triggers are events that cause a workflow to run.{' '}
+                                        <Link
+                                            href="https://docs.github.com/es/actions/using-workflows/triggering-a-workflow"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="underline text-primary hover:text-primary-hover"
+                                        >
+                                            Learn more.
+                                        </Link>
+                                    </div>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
+
                         <select
                             value={customWorkflow.on || 'push'}
                             onChange={(e) => {
@@ -247,10 +270,24 @@ export function CustomWorkflowForm(): ReactNode {
                         </select>
                     </div>
                 </div>
+
                 {/* Branch */}
-                {(customWorkflow.on === 'push' || customWorkflow.on === 'pull_request') && (
+                {customWorkflow.on === 'push' && (
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-text mb-1">Target Branch</label>
+                        <div className="flex items-center mb-1">
+                            <label className="block text-sm font-medium text-text">Target Branch</label>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <FaInfoCircle size={14} className="ml-1 text-text-muted hover:text-text transition cursor-pointer" />
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg">
+                                    <div className="text-sm">
+                                        Workflows triggered by <span className="text-primary font-semibold">push</span> will run when changes are pushed to the target branch.
+                                    </div>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
+
                         <input
                             type="text"
                             {...form.register('branch')}
@@ -259,10 +296,28 @@ export function CustomWorkflowForm(): ReactNode {
                         {form.formState.errors.branch && <p className="text-red-500 text-sm mt-1">{form.formState.errors.branch.message}</p>}
                     </div>
                 )}
+
                 {/* Schedule */}
                 {customWorkflow.on === 'schedule' && (
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-text mb-1">Cron Schedule</label>
+                        <div className="flex items-center mb-1">
+                            <label className="block text-sm font-medium text-text">Cron Schedule</label>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <FaInfoCircle size={14} className="ml-1 text-text-muted hover:text-text transition cursor-pointer" />
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg max-w-sm">
+                                    <div className="text-sm text-center">
+                                        Workflows triggered by <span className="text-primary font-semibold">schedule</span> use a{' '}
+                                        <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" className="underline text-primary hover:text-primary-hover">
+                                            cron expression
+                                        </a>{' '}
+                                        to define the time and frequency they should run.
+                                    </div>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
+
                         <input
                             type="text"
                             {...form.register('schedule')}
@@ -271,6 +326,7 @@ export function CustomWorkflowForm(): ReactNode {
                         {form.formState.errors.schedule && <p className="text-red-500 text-sm mt-1">{form.formState.errors.schedule.message}</p>}
                     </div>
                 )}
+
                 {/* Jobs and steps */}
                 {availableRunners && (
                     <CustomWorkflowFormJobsSteps
@@ -288,6 +344,7 @@ export function CustomWorkflowForm(): ReactNode {
                         availableActions={availableActions}
                     />
                 )}
+
                 {/* Add new job */}
                 <div className="flex gap-2 mt-4">
                     <button
