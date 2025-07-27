@@ -26,6 +26,8 @@ export function TemplateWorkflowForm(): ReactNode {
 
     if (!editingWorkflow) return null;
 
+    console.log('Editing workflow:', editingWorkflow);
+
     const fieldsConfig = [
         {
             key: 'workflowName',
@@ -302,7 +304,7 @@ export function TemplateWorkflowForm(): ReactNode {
                     resetEditingWorkflow();
                     setErrors({});
                 }}
-                data-umami-event="[Workflow Template] Reset values"
+                data-umami-event={`[Workflow template editor] Reset values on ${editingWorkflow.id} click`}
                 className="mt-2 border border-secondary font-semibold text-secondary px-4 py-2 rounded-md cursor-pointer hover:bg-secondary/80 transition self-start"
             >
                 Reset Values

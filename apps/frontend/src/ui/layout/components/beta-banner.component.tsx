@@ -36,7 +36,7 @@ export function BetaBanner() {
                 onClick={handleClose}
                 className="text-background hover:text-background/70 transition cursor-pointer"
                 aria-label="Close banner"
-                data-umami-event="[Beta Banner] Close button"
+                data-umami-event="[Beta Banner] Close button click"
             >
                 <IoClose size={18} />
             </button>

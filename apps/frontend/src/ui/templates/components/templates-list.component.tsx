@@ -140,7 +140,7 @@ export function TemplatesList() {
                             onClick={(e) => {
                                 handleSelectCustom(e);
                             }}
-                            data-umami-event="[Templates] Create custom workflow"
+                            data-umami-event="[Templates] Create custom workflow click"
                             className="bg-primary text-white font-semibold px-4 py-2 rounded-md hover:bg-primary-hover transition w-full cursor-pointer"
                         >
                             Create workflow
@@ -184,7 +184,7 @@ export function TemplatesList() {
 
                                 <div className="mt-auto flex flex-col">
                                     <button
-                                        data-umami-event="[Templates] Use template"
+                                        data-umami-event={`[Templates] Use template ${template.id} click`}
                                         onClick={(e) => {
                                             handleSelectTemplate(e, template.id);
                                         }}
@@ -201,7 +201,7 @@ export function TemplatesList() {
                 <Link
                     className="bg-surface rounded-lg border border-dashed border-border flex flex-col p-4 items-center justify-center text-center hover:shadow-lg transition cursor-pointer"
                     href={'/propose-template'}
-                    data-umami-event="[Templates] Request new template"
+                    data-umami-event="[Templates] Request new template click"
                 >
                     <Io5Icons.IoAddCircleOutline className="w-10 h-10 text-primary mb-2" />
                     <h2 className="text-lg font-bold text-text mb-1">Request new template</h2>

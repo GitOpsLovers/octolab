@@ -147,7 +147,7 @@ export function YamlTemplatePreview(): ReactNode {
                     {/* Copy code */}
                     <button
                         onClick={handleCopy}
-                        data-umami-event="[Workflow editor] Copy YAML"
+                        data-umami-event={`[Workflow template editor] Copy YAML on ${editingWorkflow.id} click`}
                         disabled={hasErrors}
                         className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition 
                         ${hasErrors ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
@@ -159,7 +159,7 @@ export function YamlTemplatePreview(): ReactNode {
                     <button
                         onClick={handleDownload}
                         disabled={hasErrors}
-                        data-umami-event="[Workflow editor] Download YAML"
+                        data-umami-event={`[Workflow template editor] Download YAML on ${editingWorkflow.id} click`}
                         className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition 
                         ${hasErrors ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
                     >
@@ -169,7 +169,7 @@ export function YamlTemplatePreview(): ReactNode {
                     {/* Save to workspace */}
                     <button
                         onClick={saveToWorkspace}
-                        data-umami-event="[Workflow editor] Save workflow"
+                        data-umami-event={`[Workflow template editor] Save workflow on ${editingWorkflow.id} click`}
                         disabled={!authUser || hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit)}
                         className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition flex items-center justify-center gap-2
                     ${!authUser || hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}

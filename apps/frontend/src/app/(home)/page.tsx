@@ -35,12 +35,16 @@ export default async function Home() {
                     <Link
                         href="/templates"
                         className="bg-primary text-white px-6 py-3 rounded-md text-lg font-semibold text-center hover:bg-primary-hover transition"
-                        data-umami-event="[Home] Create template click"
+                        data-umami-event="[Home] Create workflow click"
                     >
                         Create Workflow
                     </Link>
                     {session?.user && (
-                        <Link href="/my-workflows" className="bg-secondary text-surface px-6 py-3 rounded-md text-lg font-semibold text-center hover:bg-secondary-hover transition">
+                        <Link
+                            href="/my-workflows"
+                            className="bg-secondary text-surface px-6 py-3 rounded-md text-lg font-semibold text-center hover:bg-secondary-hover transition"
+                            data-umami-event="[Home] Go to My Workflows click"
+                        >
                             Go to My Workflows
                         </Link>
                     )}

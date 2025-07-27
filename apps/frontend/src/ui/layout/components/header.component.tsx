@@ -31,7 +31,7 @@ export function Header(): ReactNode {
                 {!authUser && (
                     <a
                         href={`/auth/login?returnTo=${pathname}`}
-                        data-umami-event="[Header] Sign in"
+                        data-umami-event="[Header] Sign in click"
                         className="px-4 py-2 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-surface transition"
                     >
                         Sign in

@@ -148,7 +148,7 @@ export function YamlCustomPreview(): ReactNode {
                     {/* Copy code */}
                     <button
                         onClick={handleCopy}
-                        data-umami-event="[Workflow editor] Copy YAML"
+                        data-umami-event="[Custom workflow editor] Copy YAML click"
                         disabled={hasErrors}
                         className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition 
                         ${hasErrors ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
@@ -160,7 +160,7 @@ export function YamlCustomPreview(): ReactNode {
                     <button
                         onClick={handleDownload}
                         disabled={hasErrors}
-                        data-umami-event="[Workflow editor] Download YAML"
+                        data-umami-event="[Custom workflow editor] Download YAML click"
                         className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition 
                         ${hasErrors ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
                     >
@@ -170,7 +170,7 @@ export function YamlCustomPreview(): ReactNode {
                     {/* Save to workspace */}
                     <button
                         onClick={saveToWorkspace}
-                        data-umami-event="[Workflow editor] Save workflow"
+                        data-umami-event="[Custom workflow editor] Save workflow click"
                         disabled={!authUser || hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit)}
                         className={`bg-primary text-white px-4 py-2 font-semibold text-center rounded-md transition flex items-center justify-center gap-2
                     ${!authUser || hasErrors || saving || (!isEditingExistingWorkflow && reachedWorkflowLimit) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-hover cursor-pointer'}`}
