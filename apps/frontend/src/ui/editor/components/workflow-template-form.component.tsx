@@ -2,13 +2,13 @@
 
 import { ReactNode } from 'react';
 
-import { useEditor } from '../hooks/editor.hooks';
+import { useEditorTemplate } from '../hooks/editor-template.hooks';
 
 /**
  * Template workflow form component
  */
 export function TemplateWorkflowForm(): ReactNode {
-    const { editingWorkflow, availableRunners, errors, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditor();
+    const { editingWorkflow, availableRunners, errors, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditorTemplate();
 
     const validateField = (field: string, value: string) => {
         if (!value.trim()) {

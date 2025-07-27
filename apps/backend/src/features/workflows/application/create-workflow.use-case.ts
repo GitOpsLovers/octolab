@@ -16,5 +16,6 @@ export function createWorkflowUseCase(repository: WorkflowsDatabaseRepository, r
         ...requestData,
         userId,
     };
+
     return repository.createWorkflow(createDto);
 }

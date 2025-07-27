@@ -6,6 +6,7 @@ export interface DatabaseWorkflow {
     userId: string;
     name: string;
     description: string;
+    type: string;
     yaml: string;
     data: string;
     createdAt: string;
@@ -19,6 +20,7 @@ export interface UserWorkflow {
     id: string;
     name: string;
     description: string;
+    type: string;
     templateId: string;
     yaml: string;
     data: string;

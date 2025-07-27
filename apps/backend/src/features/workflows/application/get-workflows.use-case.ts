@@ -22,6 +22,7 @@ export async function getWorkflowsUseCase(repository: WorkflowsDatabaseRepositor
             id: workflow.id,
             name: workflow.name,
             description: workflow.description,
+            type: workflow.type,
             templateId,
             yaml: workflow.yaml,
             data: workflow.data,

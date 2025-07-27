@@ -45,6 +45,7 @@ export function WorkflowsList() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {workflows.map((workflow) => {
                     const workflowData = JSON.parse(workflow.data);
+                    const editionUrl = workflow.type === 'template' ? `/editor/templates/${workflow.templateId}/${workflow.id}` : `/editor/custom/${workflow.id}`;
 
                     return (
                         <div key={workflow.id} className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col">
@@ -62,7 +63,7 @@ export function WorkflowsList() {
 
                                     <div className="flex gap-2">
                                         <Link
-                                            href={`/editor/${workflow.templateId}/${workflow.id}`}
+                                            href={editionUrl}
                                             className="flex items-center gap-1 bg-primary text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition cursor-pointer"
                                         >
                                             <FaEdit className="w-4 h-4" />

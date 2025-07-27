@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { FaPencilAlt, FaCheck, FaTimes } from 'react-icons/fa';
 
-import { useEditor } from '../hooks/editor.hooks';
+import { useEditorTemplate } from '../hooks/editor-template.hooks';
 
 /**
- * Editor title component.
+ * Editor template title component.
  */
-export function EditorTitle() {
-    const { editingWorkflow, setWorkflowNameAndDescription } = useEditor();
+export function EditorTemplateTitle() {
+    const { editingWorkflow, setWorkflowNameAndDescription } = useEditorTemplate();
 
     const [editingField, setEditingField] = useState<'name' | 'description' | null>(null);
     const [tempValue, setTempValue] = useState('');

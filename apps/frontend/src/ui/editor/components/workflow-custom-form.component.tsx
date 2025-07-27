@@ -5,7 +5,7 @@ import { Trigger, WorkflowConfig } from '@octolab/domain';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { useEditor } from '../hooks/editor.hooks';
+import { useEditorCustom } from '../hooks/editor-custom.hooks';
 import { CustomWorkflowFormSchema, customWorkflowSchema } from '../models/custom-workflow-form.models';
 
 import { CustomWorkflowFormJobsSteps } from './workflow-custom-form-jobs-steps.component';
@@ -17,7 +17,7 @@ import { editorApiRepository } from '@features/editor/infrastructure/editor-api.
  * Custom workflow form component
  */
 export function CustomWorkflowForm(): ReactNode {
-    const { editingWorkflow, availableRunners, availableActions, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditor();
+    const { editingWorkflow, availableRunners, availableActions, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditorCustom();
     const [availableTriggers, setAvailableTriggers] = useState<string[]>([]);
     const [collapsedJobs, setCollapsedJobs] = useState<Record<string, boolean>>({});
     const [collapsedSteps, setCollapsedSteps] = useState<Record<string, boolean>>({});

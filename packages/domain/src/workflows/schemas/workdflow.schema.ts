@@ -8,6 +8,7 @@ export const workflowSchema = z.object({
     templateId: z.string(),
     name: z.string().min(1, 'Name is required'),
     description: z.string().optional(),
+    type: z.enum(['template', 'custom']),
     yaml: z.unknown(),
     data: z.unknown(),
 });

@@ -3,13 +3,13 @@
 import { ReactNode } from 'react';
 import { FaSpinner } from 'react-icons/fa';
 
-import { useEditor } from '../hooks/editor.hooks';
+import { useEditorTemplate } from '../hooks/editor-template.hooks';
 
 /**
- * Loading editor component.
+ * Editor template loading component.
  */
-export function LoadingEditor(): ReactNode {
-    const { loading } = useEditor();
+export function EditorTemplateLoading(): ReactNode {
+    const { loading } = useEditorTemplate();
 
     if (loading) {
         return (

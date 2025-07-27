@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 
-import { EditorContextType } from '../models/context.models';
+import { EditorCustomContextType, EditorTemplateContextType } from '../models/context.models';
 
-export const EditorContext = createContext<EditorContextType | undefined>(undefined);
+export const EditorTemplateContext = createContext<EditorTemplateContextType | undefined>(undefined);
+export const EditorCustomContext = createContext<EditorCustomContextType | undefined>(undefined);
