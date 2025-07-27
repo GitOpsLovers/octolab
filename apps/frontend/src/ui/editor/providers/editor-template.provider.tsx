@@ -79,8 +79,6 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
                             name: existingWorkflow.name,
                             description: existingWorkflow.description,
                             branch: existingWorkflowData.branch,
-                            jobs: existingWorkflowData.jobs,
-                            on: existingWorkflowData.on,
                         };
 
                         setEditingWorkflow(structuredClone(workflow));

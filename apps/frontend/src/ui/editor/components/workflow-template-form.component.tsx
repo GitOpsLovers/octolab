@@ -55,11 +55,7 @@ export function TemplateWorkflowForm(): ReactNode {
         {
             key: 'nodeVersion',
             label: 'Node version',
-            show:
-                editingWorkflow.id !== 'vercel-pro-deployment' &&
-                editingWorkflow.id !== 'security-scan-snyk' &&
-                editingWorkflow.id !== 'docker-image-publish' &&
-                editingWorkflow.id !== 'custom',
+            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk' && editingWorkflow.id !== 'docker-image-publish',
             type: 'select',
             options: ['16', '18', '20', '22'],
         },
@@ -67,11 +63,7 @@ export function TemplateWorkflowForm(): ReactNode {
             key: 'installCommand',
             label: 'Installation command',
             placeholder: 'npm install',
-            show:
-                editingWorkflow.id !== 'vercel-pro-deployment' &&
-                editingWorkflow.id !== 'security-scan-snyk' &&
-                editingWorkflow.id !== 'docker-image-publish' &&
-                editingWorkflow.id !== 'custom',
+            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk' && editingWorkflow.id !== 'docker-image-publish',
             type: 'input',
         },
         {
@@ -92,11 +84,7 @@ export function TemplateWorkflowForm(): ReactNode {
             key: 'buildCommand',
             label: 'Build command',
             placeholder: 'npm run build',
-            show:
-                editingWorkflow.id !== 'vercel-pro-deployment' &&
-                editingWorkflow.id !== 'security-scan-snyk' &&
-                editingWorkflow.id !== 'docker-image-publish' &&
-                editingWorkflow.id !== 'custom',
+            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk' && editingWorkflow.id !== 'docker-image-publish',
             type: 'input',
         },
         {

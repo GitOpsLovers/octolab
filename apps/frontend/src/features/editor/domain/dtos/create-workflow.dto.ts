@@ -1,4 +1,4 @@
-import { WorkflowConfig, WorkflowYaml } from '@octolab/domain';
+import { CustomWorkflowConfig, WorkflowConfig, WorkflowYaml } from '@octolab/domain';
 
 /**
  * Create workflow DTO
@@ -10,5 +10,5 @@ export interface CreateWorkflowDto {
     description: string;
     type: string;
     yaml: WorkflowYaml;
-    data: WorkflowConfig;
+    data: WorkflowConfig | CustomWorkflowConfig;
 }
