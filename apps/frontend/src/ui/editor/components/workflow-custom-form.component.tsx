@@ -133,6 +133,21 @@ export function CustomWorkflowForm(): ReactNode {
                         return step;
                     });
 
+                    // Sync and clean `needs`
+                    const currentJobId = job?.id;
+                    const otherJobs = values.jobs?.filter((_, i) => i !== jobIndex) ?? [];
+                    const validJobIds = new Set(otherJobs.map((j) => j?.id));
+
+                    const currentNeeds = job?.needs ?? [];
+                    const cleanedNeeds = currentNeeds.filter((id) => id !== currentJobId && validJobIds.has(id)).filter((id): id is string => typeof id === 'string');
+
+                    if (JSON.stringify(cleanedNeeds) !== JSON.stringify(currentNeeds)) {
+                        form.setValue(`jobs.${jobIndex}.needs`, cleanedNeeds, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                        });
+                    }
+
                     return {
                         ...job,
                         steps: updatedSteps,

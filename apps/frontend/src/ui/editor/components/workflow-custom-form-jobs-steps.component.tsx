@@ -48,6 +48,7 @@ export function CustomWorkflowFormJobsSteps({
     const jobs = watch('jobs');
 
     const [jobConditions, setJobConditions] = useState<Record<string, boolean>>(Object.fromEntries(editingWorkflow.jobs.map((job) => [job.id, !!job.if?.trim()])));
+    const [jobDependencies, setJobDependencies] = useState<Record<string, boolean>>(Object.fromEntries(editingWorkflow.jobs.map((job) => [job.id, !!job.needs?.length])));
 
     // On add new step
     const handleAddStep = (jobIndex: number) => {
@@ -108,6 +109,7 @@ export function CustomWorkflowFormJobsSteps({
             {jobs?.map((job, jobIndex) => {
                 const isCollapsed = collapsedJobs[job.id] ?? false;
                 const hasJobCondition = jobConditions[job.id] ?? false;
+                const hasJobDependency = jobDependencies[job.id] ?? false;
 
                 const handleAddJobCondition = () => {
                     const fieldName = `jobs.${jobIndex}.if` as const;
@@ -119,6 +121,18 @@ export function CustomWorkflowFormJobsSteps({
                     const fieldName = `jobs.${jobIndex}.if` as const;
                     setValue(fieldName, undefined);
                     setJobConditions((prev) => ({ ...prev, [job.id]: false }));
+                };
+
+                const handleAddJobDependency = () => {
+                    const fieldName = `jobs.${jobIndex}.needs` as const;
+                    setValue(fieldName, []);
+                    setJobDependencies((prev) => ({ ...prev, [job.id]: true }));
+                };
+
+                const handleRemoveJobDependency = () => {
+                    const fieldName = `jobs.${jobIndex}.needs` as const;
+                    setValue(fieldName, undefined);
+                    setJobDependencies((prev) => ({ ...prev, [job.id]: false }));
                 };
 
                 return (
@@ -279,30 +293,97 @@ export function CustomWorkflowFormJobsSteps({
                                     )}
                                 </div>
 
-                                {/* Steps */}
-                                <div className="flex items-center mt-4 mb-2">
-                                    {job.steps.length > 0 && <h4 className="text-md font-semibold">Steps</h4>}
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <FaInfoCircle size={14} className="ml-2 text-text-muted hover:text-text transition cursor-pointer" />
-                                        </TooltipTrigger>
-                                        <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg max-w-sm">
-                                            <div className="text-sm text-center">
-                                                A <span className="text-primary font-semibold">step</span> is a single task within a job. Steps can either{' '}
-                                                <span className="text-primary font-semibold">run a command</span> or{' '}
-                                                <span className="text-primary font-semibold">use an action</span>. They execute sequentially in the order listed.{' '}
-                                                <a
-                                                    href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idsteps"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="underline text-primary hover:text-primary-hover"
-                                                >
-                                                    Learn more.
-                                                </a>
+                                {/* Job dependencies */}
+                                <div className="mb-2">
+                                    {hasJobDependency && editingWorkflow.jobs.filter((_, i) => i !== jobIndex).length > 0 ? (
+                                        <div>
+                                            <div className="flex items-center mb-1">
+                                                <label className="block text-sm font-medium text-text">Needs</label>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <FaInfoCircle size={14} className="ml-1 text-text-muted hover:text-text transition cursor-pointer" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg max-w-sm">
+                                                        <div className="text-sm text-center">
+                                                            Use <span className="text-primary font-semibold">needs</span> to specify which jobs must complete before this one
+                                                            starts.
+                                                            <a
+                                                                href="https://docs.github.com/en/actions/using-jobs/using-jobs-in-a-workflow#using-needs-to-control-execution-order"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="underline text-primary hover:text-primary-hover ml-1"
+                                                            >
+                                                                Learn more.
+                                                            </a>
+                                                        </div>
+                                                    </TooltipContent>
+                                                </Tooltip>
                                             </div>
-                                        </TooltipContent>
-                                    </Tooltip>
+
+                                            <select
+                                                multiple
+                                                {...register(`jobs.${jobIndex}.needs`)}
+                                                className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                            >
+                                                {editingWorkflow.jobs
+                                                    .filter((_, i) => i !== jobIndex)
+                                                    .map((otherJob) => (
+                                                        <option key={otherJob.id} value={otherJob.id}>
+                                                            {otherJob.name || otherJob.id}
+                                                        </option>
+                                                    ))}
+                                            </select>
+
+                                            {errors.jobs?.[jobIndex]?.needs && <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.needs?.message}</p>}
+
+                                            <button
+                                                type="button"
+                                                onClick={handleRemoveJobDependency}
+                                                className="mt-2 inline-flex items-center gap-1 text-sm text-white hover:text-red-500 transition cursor-pointer"
+                                            >
+                                                <FaTrashAlt size={12} /> Remove dependency
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        editingWorkflow.jobs.length > 1 &&
+                                        jobIndex > 0 && (
+                                            <button
+                                                type="button"
+                                                onClick={handleAddJobDependency}
+                                                className="inline-flex items-center gap-1 text-sm text-white hover:text-primary transition mt-1 cursor-pointer"
+                                            >
+                                                <FaPlus size={12} /> Add dependency
+                                            </button>
+                                        )
+                                    )}
                                 </div>
+
+                                {/* Steps */}
+                                {job.steps.length > 0 && (
+                                    <div className="flex items-center mt-4 mb-2">
+                                        <h4 className="text-md font-semibold">Steps</h4>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <FaInfoCircle size={14} className="ml-2 text-text-muted hover:text-text transition cursor-pointer" />
+                                            </TooltipTrigger>
+                                            <TooltipContent className="bg-foreground text-text p-3 rounded-md shadow-lg max-w-sm">
+                                                <div className="text-sm text-center">
+                                                    A <span className="text-primary font-semibold">step</span> is a single task within a job. Steps can either{' '}
+                                                    <span className="text-primary font-semibold">run a command</span> or{' '}
+                                                    <span className="text-primary font-semibold">use an action</span>. They execute sequentially in the order listed.{' '}
+                                                    <a
+                                                        href="https://docs.github.com/en/actions/using-jobs/using-jobs-in-a-workflow#defining-steps"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="underline text-primary hover:text-primary-hover"
+                                                    >
+                                                        Learn more.
+                                                    </a>
+                                                </div>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
+                                )}
 
                                 <DndContext
                                     sensors={sensors}
@@ -335,6 +416,7 @@ export function CustomWorkflowFormJobsSteps({
                                     </SortableContext>
                                 </DndContext>
 
+                                {/* Add step */}
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -345,6 +427,7 @@ export function CustomWorkflowFormJobsSteps({
                                     Add Step
                                 </button>
 
+                                {/* Remove job */}
                                 <button
                                     type="button"
                                     onClick={() => {

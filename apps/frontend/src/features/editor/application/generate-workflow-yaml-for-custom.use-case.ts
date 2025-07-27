@@ -1,4 +1,5 @@
 import { CustomWorkflowConfig, Job, Step, WorkflowYaml } from '@octolab/domain';
+import { YAMLSeq } from 'yaml';
 
 /**
  * Generate "on" section based on workflow config
@@ -67,6 +68,7 @@ function generateJobs(config: CustomWorkflowConfig): Record<string, Job> {
     for (const customJob of config.jobs) {
         jobs[customJob.id] = {
             id: customJob.id,
+            ...(customJob.needs && { needs: customJob.needs }),
             name: customJob.name,
             runner: customJob.runner,
             steps: customJob.steps,
@@ -154,12 +156,22 @@ function generateYamlJobsFromJobs(jobs: Record<string, Job>): Record<string, any
     const jobsYaml: Record<string, any> = {};
 
     for (const [, job] of Object.entries(jobs)) {
-        const jobEntry: Record<string, any> = {
-            name: job.name,
-            ...(job.if?.trim() && { if: job.if.trim() }),
-            'runs-on': job.runner,
-            steps: generateYamlStepsFromSteps(job.steps),
-        };
+        const jobEntry: Record<string, any> = { name: job.name };
+
+        // ✅ needs justo después de name
+        if (Array.isArray(job.needs) && job.needs.length > 0) {
+            const needsSeq = new YAMLSeq();
+            needsSeq.flow = true;
+            needsSeq.items = job.needs;
+            jobEntry.needs = needsSeq;
+        }
+
+        if (job.if?.trim()) {
+            jobEntry.if = job.if.trim();
+        }
+
+        jobEntry['runs-on'] = job.runner;
+        jobEntry.steps = generateYamlStepsFromSteps(job.steps);
 
         jobsYaml[job.id] = jobEntry;
     }
