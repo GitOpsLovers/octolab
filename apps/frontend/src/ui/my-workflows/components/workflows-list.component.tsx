@@ -65,6 +65,7 @@ export function WorkflowsList() {
                                         <Link
                                             href={editionUrl}
                                             className="flex items-center gap-1 bg-primary text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-hover transition cursor-pointer"
+                                            data-umami-event="[My Workflows] Edit workflow click"
                                         >
                                             <FaEdit className="w-4 h-4" />
                                             Edit
@@ -72,6 +73,7 @@ export function WorkflowsList() {
                                         <button
                                             onClick={() => handleDeleteWorkflow(workflow.id)}
                                             className="flex items-center gap-1 bg-danger text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-danger/70 transition cursor-pointer"
+                                            data-umami-event="[My Workflows] Delete workflow click"
                                         >
                                             <FaTrash className="w-4 h-4" />
                                             Delete
@@ -93,10 +95,11 @@ export function WorkflowsList() {
                     <Link
                         href="/templates"
                         className="bg-surface rounded-lg border border-dashed border-border flex flex-col p-4 items-center justify-center text-center hover:shadow-lg transition cursor-pointer"
+                        data-umami-event="[My Workflows] Create workflow click"
                     >
                         <IoAddCircleOutline className="w-10 h-10 text-primary mb-2" />
                         <h2 className="text-lg font-bold text-text mb-1">Create new workflow</h2>
-                        <p className="text-sm text-text-mutedtext-sm text-text-mutedtext-sm text-text-muted">Start from a new template</p>
+                        <p className="text-sm text-text-muted">Start from a new template</p>
                     </Link>
                 )}
             </div>
