@@ -66,6 +66,7 @@ function generateJobs(config: CustomWorkflowConfig): Record<string, Job> {
             name: customJob.name,
             runner: customJob.runner,
             steps: customJob.steps,
+            ...(customJob.if && { if: customJob.if }),
         };
     }
 
@@ -80,6 +81,7 @@ function generateYamlStepsFromSteps(steps: Step[]): any[] {
         const commonFields = {
             id: step.id,
             name: step.name,
+            ...(step.if?.trim() && { if: step.if.trim() }),
         };
 
         if (step.type === 'run') {
@@ -148,11 +150,14 @@ function generateYamlJobsFromJobs(jobs: Record<string, Job>): Record<string, any
     const jobsYaml: Record<string, any> = {};
 
     for (const [, job] of Object.entries(jobs)) {
-        jobsYaml[job.id] = {
+        const jobEntry: Record<string, any> = {
             name: job.name,
+            ...(job.if?.trim() && { if: job.if.trim() }),
             'runs-on': job.runner,
             steps: generateYamlStepsFromSteps(job.steps),
         };
+
+        jobsYaml[job.id] = jobEntry;
     }
 
     return jobsYaml;

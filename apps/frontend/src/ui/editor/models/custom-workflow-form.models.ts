@@ -22,6 +22,7 @@ export const customWorkflowSchema = z
                     id: z.string().min(1, 'Job ID is required').regex(kebabCaseRegex, 'Job ID must be kebab-case (e.g., build-api)'),
                     name: z.string().min(1, 'Job name is required'),
                     runner: z.string(),
+                    if: z.string().optional(),
                     steps: z.array(
                         z
                             .object({
@@ -32,8 +33,8 @@ export const customWorkflowSchema = z
                                 run: z.string().optional(),
                                 uses: z.string().optional(),
                                 with: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
+                                if: z.string().optional(),
                             })
-                            // eslint-disable-next-line @typescript-eslint/no-deprecated
                             .superRefine((step, ctx) => {
                                 if (step.type === 'run' && (!step.run || step.run.trim() === '')) {
                                     ctx.addIssue({

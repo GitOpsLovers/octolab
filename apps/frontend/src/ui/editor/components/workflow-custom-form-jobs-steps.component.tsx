@@ -2,8 +2,9 @@
 import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Action, CustomWorkflowConfig, Step } from '@octolab/domain';
+import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { FaAngleDown, FaAngleUp, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CustomWorkflowFormSchema } from '../models/custom-workflow-form.models';
@@ -43,6 +44,8 @@ export function CustomWorkflowFormJobsSteps({
     } = useFormContext<CustomWorkflowFormSchema>();
 
     const jobs = watch('jobs');
+
+    const [jobConditions, setJobConditions] = useState<Record<string, boolean>>(Object.fromEntries(editingWorkflow.jobs.map((job) => [job.id, !!job.if?.trim()])));
 
     // On add new step
     const handleAddStep = (jobIndex: number) => {
@@ -102,6 +105,19 @@ export function CustomWorkflowFormJobsSteps({
         <>
             {jobs?.map((job, jobIndex) => {
                 const isCollapsed = collapsedJobs[job.id] ?? false;
+                const hasJobCondition = jobConditions[job.id] ?? false;
+
+                const handleAddJobCondition = () => {
+                    const fieldName = `jobs.${jobIndex}.if` as const;
+                    setValue(fieldName, '');
+                    setJobConditions((prev) => ({ ...prev, [job.id]: true }));
+                };
+
+                const handleRemoveJobCondition = () => {
+                    const fieldName = `jobs.${jobIndex}.if` as const;
+                    setValue(fieldName, undefined);
+                    setJobConditions((prev) => ({ ...prev, [job.id]: false }));
+                };
 
                 return (
                     <div key={jobIndex} className="border border-border p-4 rounded mb-4 bg-muted">
@@ -159,6 +175,42 @@ export function CustomWorkflowFormJobsSteps({
                                     </select>
                                 </div>
 
+                                {/* Job condition */}
+                                <div className="mb-2">
+                                    {hasJobCondition ? (
+                                        <div>
+                                            <label className="block text-sm font-medium text-text mb-1">Condition</label>
+
+                                            <input
+                                                type="text"
+                                                {...register(`jobs.${jobIndex}.if`)}
+                                                placeholder="e.g. success()"
+                                                className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                            />
+
+                                            {errors.jobs?.[jobIndex]?.if && <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.if?.message}</p>}
+
+                                            <button
+                                                type="button"
+                                                onClick={handleRemoveJobCondition}
+                                                className="mt-2 inline-flex items-center gap-1 text-sm text-white hover:text-red-500 transition cursor-pointer"
+                                            >
+                                                <FaTrashAlt size={12} />
+                                                Remove condition
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={handleAddJobCondition}
+                                            className="inline-flex items-center gap-1 text-sm text-white hover:text-primary transition mt-1 cursor-pointer"
+                                        >
+                                            <FaPlus size={12} />
+                                            Add condition
+                                        </button>
+                                    )}
+                                </div>
+
                                 {/* Steps */}
                                 {job.steps.length > 0 && <h4 className="text-md font-semibold mt-4 mb-2">Steps</h4>}
 
@@ -198,7 +250,7 @@ export function CustomWorkflowFormJobsSteps({
                                     onClick={() => {
                                         handleAddStep(jobIndex);
                                     }}
-                                    className="mt-2 bg-secondary text-surface font-semibold px-2 py-1 rounded hover:bg-secondary-hover text-sm"
+                                    className="mt-2 bg-secondary text-surface font-semibold px-2 py-1 rounded hover:bg-secondary-hover text-sm cursor-pointer"
                                 >
                                     Add Step
                                 </button>
@@ -208,7 +260,7 @@ export function CustomWorkflowFormJobsSteps({
                                     onClick={() => {
                                         handleRemoveJob(jobIndex);
                                     }}
-                                    className="ml-2 mt-4 border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white text-sm"
+                                    className="ml-2 mt-4 border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white text-sm cursor-pointer"
                                 >
                                     Remove Job
                                 </button>

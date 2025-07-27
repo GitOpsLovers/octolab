@@ -302,7 +302,7 @@ export function CustomWorkflowForm(): ReactNode {
                     <button
                         type="button"
                         onClick={handleResetValues}
-                        className="border border-secondary font-semibold text-secondary px-4 py-2 rounded-md hover:bg-secondary/80 transition cursor-pointer"
+                        className="border border-secondary font-semibold text-secondary px-4 py-2 rounded-md hover:bg-secondary/80 hover:text-white transition cursor-pointer"
                     >
                         Reset Values
                     </button>
