@@ -74,7 +74,7 @@ export function TemplatesList() {
         const draftId = uuidv4();
 
         if (authUser || skipRegisterModal) {
-            router.push(`/editor/${id}/${draftId}`);
+            router.push(`/editor/templates/${id}/${draftId}`);
         } else {
             setModalOpen(true);
         }

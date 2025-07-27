@@ -11,7 +11,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import yaml from 'yaml';
 
-import { useEditor } from '../hooks/editor.hooks';
+import { useEditorTemplate } from '../hooks/editor-template.hooks';
 
 import { createWorkflowUseCase } from '@features/editor/application/save-workflow.use-case';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
@@ -19,14 +19,14 @@ import { Modal } from '@ui/layout/components/modal.component';
 import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 
 /**
- * Yaml preview component.
+ * Yaml template preview component.
  */
-export function YamlPreview(): ReactNode {
+export function YamlTemplatePreview(): ReactNode {
     const cookies = useCookies();
     const { authToken } = useAuthUser();
     const { uuid } = useParams();
     const { authUser, fetchUser } = useAuthUser();
-    const { editingWorkflow, editingWorkflowYaml, errors, template, isEditingExistingWorkflow, setIsEditingExistingWorkflow } = useEditor();
+    const { editingWorkflow, editingWorkflowYaml, errors, template, isEditingExistingWorkflow, setIsEditingExistingWorkflow } = useEditorTemplate();
     const [saving, setSaving] = useState(false);
     const [showFirstWorkflowModal, setShowFirstWorkflowModal] = useState(false);
 
@@ -79,6 +79,7 @@ export function YamlPreview(): ReactNode {
                 templateId: editingWorkflow.id,
                 name: editingWorkflow.name ?? template?.name,
                 description: editingWorkflow.description ?? template?.description,
+                type: 'template',
                 yaml: yaml.parse(workflowContent),
                 data: editingWorkflow,
             });

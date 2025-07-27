@@ -8,6 +8,7 @@ export interface CreateWorkflowDto {
     templateId: string;
     name: string;
     description: string;
+    type: string;
     yaml: WorkflowYaml;
     data: WorkflowConfig;
 }
