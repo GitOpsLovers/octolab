@@ -346,26 +346,6 @@ function generateSteps(config: WorkflowConfig): Step[] {
  * Generate "on" section based on workflow config
  */
 function generateOnConfig(config: WorkflowConfig): Record<string, any> {
-    if (config.id === 'custom') {
-        if (config.on === 'push' || config.on === 'pull_request') {
-            return {
-                [config.on]: {
-                    branches: config.branch ? [config.branch] : ['main'],
-                },
-            };
-        } else if (config.on === 'workflow_dispatch') {
-            return { workflow_dispatch: {} };
-        } else if (config.on === 'schedule') {
-            return {
-                schedule: [
-                    {
-                        cron: config.schedule?.trim() || '0 0 * * *',
-                    },
-                ],
-            };
-        }
-    }
-
     if (config.id === 'node-pr-verify' || config.id === 'nx-pr-verify') {
         return { pull_request: {} };
     }
@@ -392,21 +372,6 @@ function generateEnvConfig(config: WorkflowConfig): Record<string, string> | und
  * Generate "jobs" section based on workflow config
  */
 function generateJobs(config: WorkflowConfig): Record<string, Job> {
-    if (config.id === 'custom') {
-        const jobs: Record<string, Job> = {};
-
-        for (const customJob of config.jobs) {
-            jobs[customJob.id] = {
-                id: customJob.id,
-                name: customJob.name,
-                runner: customJob.runner,
-                steps: customJob.steps,
-            };
-        }
-
-        return jobs;
-    }
-
     // 👇 lógica para workflows no custom
     const steps = generateSteps(config);
 
@@ -477,9 +442,13 @@ function generateYamlJobsFromJobs(jobs: Record<string, Job>): Record<string, any
 }
 
 /**
- * Generate a workflow from a workflow config
+ * Generate workflow YAML for templates use case
+ *
+ * @param workflowConfig Workflow configuration
+ *
+ * @return Workflow YAML object
  */
-export function generateEditingWorkflowFromConfigUseCase(workflowConfig: WorkflowConfig): WorkflowYaml {
+export function generateWorkflowYamlForTemplatesUseCase(workflowConfig: WorkflowConfig): WorkflowYaml {
     const on = generateOnConfig(workflowConfig);
     const env = generateEnvConfig(workflowConfig);
     const jobsInternal = generateJobs(workflowConfig);

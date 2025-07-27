@@ -1,12 +1,12 @@
 'use client';
 
-import { Action, Template, WorkflowConfig } from '@octolab/domain';
+import { Action, CustomWorkflowConfig, Template } from '@octolab/domain';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { EditorCustomContext } from '../contexts/editor.context';
 
-import { generateEditingWorkflowFromConfigUseCase } from '@features/editor/application/generate-editing-workflow-from-config.use-case';
+import { generateWorkflowYamlForCustomUseCase } from '@features/editor/application/generate-workflow-yaml-for-custom.use-case';
 import { getActionsUseCase } from '@features/editor/application/get-actions.use-case';
 import { getOneWorkflowUseCase } from '@features/editor/application/get-one-workflow.use-case';
 import { getRunnersUseCase } from '@features/editor/application/get-runners.use-case';
@@ -18,7 +18,7 @@ interface EditorProviderProps {
     workflowId: string;
 }
 
-const createBaseCustomWorkflow = (): WorkflowConfig => ({
+const createBaseCustomWorkflow = (): CustomWorkflowConfig => ({
     id: 'custom',
     name: 'Workflow name',
     description: 'Workflow description',
@@ -53,8 +53,8 @@ export function EditorCustomProvider({ children, workflowId }: EditorProviderPro
     const [errors, setErrors] = useState<Record<string, string | null>>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [template] = useState<Template | null>(null);
-    const [editingWorkflow, setEditingWorkflow] = useState<WorkflowConfig | null>(null);
-    const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<WorkflowConfig | null>(null);
+    const [editingWorkflow, setEditingWorkflow] = useState<CustomWorkflowConfig | null>(null);
+    const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<CustomWorkflowConfig | null>(null);
     const [isEditingExistingWorkflow, setIsEditingExistingWorkflow] = useState<boolean>(false);
     const [availableRunners, setAvailableRunners] = useState<string[]>([]);
     const [availableActions, setAvailableActions] = useState<Action[]>([]);
@@ -71,18 +71,9 @@ export function EditorCustomProvider({ children, workflowId }: EditorProviderPro
                     if (existingWorkflow) {
                         const existingWorkflowData = JSON.parse(existingWorkflow.data);
 
-                        const workflow: WorkflowConfig = {
+                        const workflow: CustomWorkflowConfig = {
                             id: existingWorkflowData.id,
-                            runner: existingWorkflowData.runner,
-                            nodeVersion: existingWorkflowData.nodeVersion,
-                            installCommand: existingWorkflowData.installCommand,
-                            testCommand: existingWorkflowData.testCommand,
-                            lintCommand: existingWorkflowData.lintCommand,
-                            buildCommand: existingWorkflowData.buildCommand,
                             workflowName: existingWorkflowData.workflowName,
-                            jobName: existingWorkflowData.jobName,
-                            npmTokenSecret: existingWorkflowData.npmTokenSecret,
-                            vercelTokenSecret: existingWorkflowData.vercelTokenSecret,
                             filename: existingWorkflowData.filename ?? 'custom-workflow.yml',
                             name: existingWorkflow.name,
                             description: existingWorkflow.description,
@@ -150,9 +141,11 @@ export function EditorCustomProvider({ children, workflowId }: EditorProviderPro
         fetchActions();
     }, []);
 
+    // Set the workflow YAML based on the editing workflow
     const editingWorkflowYaml = useMemo(() => {
         if (!editingWorkflow) return null;
-        return generateEditingWorkflowFromConfigUseCase(editingWorkflow);
+
+        return generateWorkflowYamlForCustomUseCase(editingWorkflow);
     }, [editingWorkflow]);
 
     const resetEditingWorkflow = () => {
