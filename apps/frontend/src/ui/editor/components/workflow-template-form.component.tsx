@@ -25,6 +25,8 @@ export function TemplateWorkflowForm(): ReactNode {
 
     if (!editingWorkflow) return null;
 
+    console.log('Editing workflow:', editingWorkflow);
+
     const fieldsConfig = [
         {
             key: 'workflowName',
@@ -85,6 +87,13 @@ export function TemplateWorkflowForm(): ReactNode {
             label: 'Build command',
             placeholder: 'npm run build',
             show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk' && editingWorkflow.id !== 'docker-image-publish',
+            type: 'input',
+        },
+        {
+            key: 'releaseCommand',
+            label: 'Release command',
+            placeholder: 'npx semantic-release',
+            show: editingWorkflow.id === 'semantic-release',
             type: 'input',
         },
         {

@@ -145,7 +145,7 @@ function semanticReleaseStep(config: SemanticReleaseWorkflowConfig): Step {
         internalId: uuidv4(),
         id: 'semantic-release-step',
         name: 'Release with Semantic Release',
-        type: 'uses',
+        type: 'run',
         run: config.releaseCommand,
         env: {
             GITHUB_TOKEN: `\${{ secrets.${config.githubTokenSecret} }}`,
