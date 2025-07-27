@@ -10,6 +10,7 @@ import { useEditorTemplate } from '../hooks/editor-template.hooks';
 export function TemplateWorkflowForm(): ReactNode {
     const { editingWorkflow, availableRunners, errors, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditorTemplate();
 
+    // Validate field input
     const validateField = (field: string, value: string) => {
         if (!value.trim()) {
             setErrors((prev) => ({ ...prev, [field]: 'This field cannot be empty' }));
@@ -24,8 +25,6 @@ export function TemplateWorkflowForm(): ReactNode {
     };
 
     if (!editingWorkflow) return null;
-
-    console.log('Editing workflow:', editingWorkflow);
 
     const fieldsConfig = [
         {

@@ -1,8 +1,9 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Action, Step } from '@octolab/domain';
+import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { FaAngleDown, FaAngleUp, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { MdDragIndicator } from 'react-icons/md';
 
 import { CustomWorkflowFormSchema } from '../models/custom-workflow-form.models';
@@ -22,15 +23,24 @@ interface SortableStepProps {
  * Sortable step for the workflow custom form component.
  */
 export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableActions, selectedAction, onToggleCollapse, onRemove }: SortableStepProps) {
+    const [hasCondition, setHasCondition] = useState(!!step.if?.trim());
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: step.internalId });
     const {
         register,
+        setValue,
         formState: { errors },
     } = useFormContext<CustomWorkflowFormSchema>();
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
+    };
+
+    // On add condition to step
+    const handleAddStepCondition = () => {
+        const fieldName = `jobs.${jobIndex}.steps.${stepIndex}.if` as const;
+        setValue(fieldName, '');
+        setHasCondition(true);
     };
 
     return (
@@ -173,12 +183,54 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                         </>
                     )}
 
+                    {/* Step conditions */}
+                    <div className="mb-2">
+                        {hasCondition ? (
+                            <div>
+                                <label className="block text-sm font-medium text-text mb-1">Condition</label>
+
+                                <input
+                                    type="text"
+                                    {...register(`jobs.${jobIndex}.steps.${stepIndex}.if`)}
+                                    placeholder="e.g. github.ref == 'refs/heads/main'"
+                                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                />
+
+                                {errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.if && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.steps?.[stepIndex]?.if?.message}</p>
+                                )}
+
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const fieldName = `jobs.${jobIndex}.steps.${stepIndex}.if` as const;
+                                        setValue(fieldName, undefined);
+                                        setHasCondition(false);
+                                    }}
+                                    className="mt-2 inline-flex items-center gap-1 text-sm text-white hover:text-red-500 transition cursor-pointer"
+                                >
+                                    <FaTrashAlt size={12} />
+                                    Remove condition
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={handleAddStepCondition}
+                                className="inline-flex items-center gap-1 text-sm text-white hover:text-primary transition mt-1 cursor-pointer"
+                            >
+                                <FaPlus size={12} />
+                                Add condition
+                            </button>
+                        )}
+                    </div>
+
                     <button
                         type="button"
                         onClick={() => {
                             onRemove(stepIndex);
                         }}
-                        className="border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white text-sm mt-2"
+                        className="border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white text-sm mt-2 cursor-pointer"
                     >
                         Remove Step
                     </button>

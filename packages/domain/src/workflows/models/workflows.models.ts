@@ -173,6 +173,7 @@ export interface WorkflowYaml {
  */
 export interface Job {
     id: string;
+    if?: string;
     name: string;
     runner: string;
     steps: Step[];
@@ -184,6 +185,7 @@ export interface Job {
 export interface Step {
     internalId: string;
     id: string;
+    if?: string;
     name: string;
     type: 'run' | 'uses';
     run?: string;
