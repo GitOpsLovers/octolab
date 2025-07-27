@@ -23,6 +23,7 @@ export const customWorkflowSchema = z
                     name: z.string().min(1, 'Job name is required'),
                     runner: z.string(),
                     if: z.string().optional(),
+                    needs: z.array(z.string()).optional(),
                     steps: z.array(
                         z
                             .object({
