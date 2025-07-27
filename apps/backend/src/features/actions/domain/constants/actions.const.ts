@@ -23,7 +23,19 @@ export const workflowsActions: Action[] = [
                 key: 'node-version',
                 label: 'Node version',
                 placeholder: '18',
-                required: false,
+                required: true,
+                type: 'string',
+            },
+        ],
+    },
+    {
+        id: 'JS-DevTools/npm-publish@v3',
+        inputs: [
+            {
+                key: 'token',
+                label: 'NPM Token Secret Name',
+                placeholder: 'NPM_TOKEN',
+                required: true,
                 type: 'string',
             },
         ],

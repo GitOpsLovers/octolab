@@ -45,14 +45,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(configureCorsMiddleware(allowedOrigins));
 
-// Routing
-app.use('/api', usersRoutes);
-app.use('/api', templatesRoutes);
-app.use('/api', workflowsRoutes);
-app.use('/api', contactRoutes);
-app.use('/api', runnersRoutes);
-app.use('/api', triggersRoutes);
-app.use('/api', actionsRoutes);
+// Routing - API v1
+app.use('/api/v1', usersRoutes);
+app.use('/api/v1', templatesRoutes);
+app.use('/api/v1', workflowsRoutes);
+app.use('/api/v1', contactRoutes);
+app.use('/api/v1', runnersRoutes);
+app.use('/api/v1', triggersRoutes);
+app.use('/api/v1', actionsRoutes);
 
 const PORT = process.env.BACKEND_PORT || 4000;
 
