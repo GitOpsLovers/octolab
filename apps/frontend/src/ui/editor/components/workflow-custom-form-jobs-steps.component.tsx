@@ -2,7 +2,6 @@
 import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Action, CustomWorkflowConfig, Step, WorkflowConfig } from '@octolab/domain';
-import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,9 +9,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { CustomWorkflowFormSchema } from '../models/custom-workflow-form.models';
 
 import { SortableStep } from './workflow-custom-form-sortable-step.component';
-
-import { getActionsUseCase } from '@features/editor/application/get-actions.use-case';
-import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
 
 interface CustomWorkflowFormJobsStepsProps {
     collapsedJobs: Record<string, boolean>;
@@ -22,6 +18,7 @@ interface CustomWorkflowFormJobsStepsProps {
     setEditingWorkflow: (workflow: WorkflowConfig) => void;
     editingWorkflow: CustomWorkflowConfig;
     availableRunners: string[];
+    availableActions: Action[];
 }
 
 /**
@@ -35,31 +32,19 @@ export function CustomWorkflowFormJobsSteps({
     setEditingWorkflow,
     editingWorkflow,
     availableRunners,
+    availableActions,
 }: CustomWorkflowFormJobsStepsProps) {
-    const [availableActions, setAvailableActions] = useState<Action[]>([]);
     const sensors = useSensors(useSensor(PointerSensor));
     const {
         register,
         watch,
+        setValue,
         formState: { errors },
     } = useFormContext<CustomWorkflowFormSchema>();
 
     const jobs = watch('jobs');
 
-    useEffect(() => {
-        const fetchActions = async () => {
-            try {
-                const repository = editorApiRepository();
-                const actions = await getActionsUseCase(repository);
-                setAvailableActions(actions);
-            } catch (err) {
-                console.error('Error fetching actions:', err);
-            }
-        };
-
-        fetchActions();
-    }, []);
-
+    // On add new step
     const handleAddStep = (jobIndex: number) => {
         const newJobs = [...editingWorkflow.jobs];
         const newStep: Step = {
@@ -70,22 +55,31 @@ export function CustomWorkflowFormJobsSteps({
             run: 'echo "Hello World"',
         };
         newJobs[jobIndex].steps.push(newStep);
+
         setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
+        setValue('jobs', newJobs, { shouldDirty: true, shouldValidate: true });
     };
 
+    // On remove step
     const handleRemoveStep = (jobIndex: number, stepIndex: number) => {
         const newJobs = [...editingWorkflow.jobs];
         newJobs[jobIndex].steps.splice(stepIndex, 1);
+
         setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
+        setValue('jobs', newJobs, { shouldDirty: true, shouldValidate: true });
     };
 
+    // On remove job
     const handleRemoveJob = (jobIndex: number) => {
         const newJobs = [...editingWorkflow.jobs];
         newJobs.splice(jobIndex, 1);
+
         setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
+        setValue('jobs', newJobs, { shouldDirty: true, shouldValidate: true });
     };
 
-    const handleDragEnd = (jobIndex: number, event: DragEndEvent) => {
+    // On drag step
+    const handleStepDrag = (jobIndex: number, event: DragEndEvent) => {
         const { active, over } = event;
         if (!over || active.id === over.id) return;
 
@@ -97,7 +91,9 @@ export function CustomWorkflowFormJobsSteps({
         const newJobs = [...editingWorkflow.jobs];
         const reorderedSteps = arrayMove(currentSteps, oldIndex, newIndex);
         newJobs[jobIndex].steps = reorderedSteps;
+
         setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
+        setValue('jobs', newJobs, { shouldDirty: true, shouldValidate: true });
     };
 
     const findAction = (id: string): Action | undefined => availableActions.find((action) => action.id === id);
@@ -170,7 +166,7 @@ export function CustomWorkflowFormJobsSteps({
                                     sensors={sensors}
                                     collisionDetection={closestCenter}
                                     onDragEnd={(event) => {
-                                        handleDragEnd(jobIndex, event);
+                                        handleStepDrag(jobIndex, event);
                                     }}
                                 >
                                     <SortableContext items={job.steps.map((step) => step.internalId)} strategy={verticalListSortingStrategy}>

@@ -7,7 +7,8 @@ export interface Action {
         key: string;
         label: string;
         placeholder?: string;
-        required?: boolean;
-        type?: 'string' | 'number' | 'boolean' | 'password';
+        required: boolean;
+        type: 'string' | 'number' | 'boolean';
+        isSecret: boolean;
     }>;
 }

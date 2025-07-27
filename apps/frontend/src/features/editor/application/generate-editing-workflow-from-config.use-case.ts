@@ -436,12 +436,22 @@ function generateYamlStepsFromSteps(steps: Step[]): any[] {
                 ...commonFields,
                 run: step.run,
             };
-        } else if (step.type === 'uses') {
-            const stepWith = step.with && Object.keys(step.with).length > 0 ? { with: step.with } : {};
+        }
+
+        if (step.type === 'uses') {
+            const withSection: Record<string, string | number | boolean> = {};
+
+            if (step.with) {
+                for (const [key, value] of Object.entries(step.with)) {
+                    const isSecret = Boolean(step.secretInputs?.includes(key));
+                    withSection[key] = isSecret ? `\${{ secrets.${value} }}` : value;
+                }
+            }
+
             return {
                 ...commonFields,
                 uses: step.uses,
-                ...stepWith,
+                ...(Object.keys(withSection).length > 0 && { with: withSection }),
             };
         }
 

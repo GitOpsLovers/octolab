@@ -17,10 +17,12 @@ import { editorApiRepository } from '@features/editor/infrastructure/editor-api.
  * Custom workflow form component
  */
 export function CustomWorkflowForm(): ReactNode {
-    const { editingWorkflow, availableRunners, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditor();
+    const { editingWorkflow, availableRunners, availableActions, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditor();
     const [availableTriggers, setAvailableTriggers] = useState<string[]>([]);
     const [collapsedJobs, setCollapsedJobs] = useState<Record<string, boolean>>({});
     const [collapsedSteps, setCollapsedSteps] = useState<Record<string, boolean>>({});
+
+    const initialFormValues = useRef<CustomWorkflowFormSchema | null>(null);
 
     const isCustomWorkflow = editingWorkflow?.id === 'custom';
     const customWorkflow = isCustomWorkflow ? editingWorkflow : undefined;
@@ -35,13 +37,21 @@ export function CustomWorkflowForm(): ReactNode {
             jobs: customWorkflow?.jobs,
         },
     });
-    const initialFormValues = useRef({
-        workflowName: customWorkflow?.workflowName,
-        on: customWorkflow?.on,
-        branch: customWorkflow?.branch,
-        schedule: customWorkflow?.schedule,
-        jobs: customWorkflow?.jobs,
-    });
+
+    /**
+     * Set initial form values when editing a custom workflow
+     */
+    useEffect(() => {
+        if (isCustomWorkflow && editingWorkflow && !initialFormValues.current) {
+            initialFormValues.current = {
+                workflowName: editingWorkflow.workflowName,
+                on: editingWorkflow.on,
+                branch: editingWorkflow.branch,
+                schedule: editingWorkflow.schedule,
+                jobs: editingWorkflow.jobs,
+            };
+        }
+    }, [editingWorkflow, isCustomWorkflow]);
 
     /**
      * Get triggers
@@ -61,12 +71,36 @@ export function CustomWorkflowForm(): ReactNode {
         fetchTriggers();
     }, []);
 
+    /**
+     * On every form change, update the editing workflow on provider to reflect changes on form and YAML preview
+     */
     useEffect(() => {
         const subscription = form.watch((values) => {
             if (isCustomWorkflow && editingWorkflow) {
+                const updatedJobs = values.jobs?.map((job) => {
+                    return {
+                        ...job,
+                        steps: job?.steps?.map((step) => {
+                            if (step?.type === 'uses' && step.uses) {
+                                const action = availableActions.find((a) => a.id === step.uses);
+                                if (!action) return step;
+
+                                const secretKeys = action.inputs.filter((input) => input.isSecret).map((input) => input.key);
+
+                                return {
+                                    ...step,
+                                    secretInputs: secretKeys,
+                                };
+                            }
+                            return step;
+                        }),
+                    };
+                });
+
                 setEditingWorkflow({
                     ...editingWorkflow,
                     ...values,
+                    jobs: updatedJobs,
                 } as WorkflowConfig);
             }
         });
@@ -74,7 +108,7 @@ export function CustomWorkflowForm(): ReactNode {
         return () => {
             subscription.unsubscribe();
         };
-    }, [form, isCustomWorkflow, setEditingWorkflow, editingWorkflow]);
+    }, [form, isCustomWorkflow, setEditingWorkflow, editingWorkflow, availableActions]);
 
     if (!customWorkflow) return null;
 
@@ -133,7 +167,9 @@ export function CustomWorkflowForm(): ReactNode {
         setCollapsedJobs({});
         setCollapsedSteps({});
 
-        form.reset(initialFormValues.current);
+        if (initialFormValues.current) {
+            form.reset(initialFormValues.current);
+        }
     };
 
     return (
@@ -209,6 +245,7 @@ export function CustomWorkflowForm(): ReactNode {
                         setEditingWorkflow={setEditingWorkflow}
                         editingWorkflow={customWorkflow}
                         availableRunners={availableRunners}
+                        availableActions={availableActions}
                     />
                 )}
                 {/* Add new job */}

@@ -1,4 +1,4 @@
-import { Runner, Template, WorkflowConfig, WorkflowYaml } from '@octolab/domain';
+import { Action, Runner, Template, WorkflowConfig, WorkflowYaml } from '@octolab/domain';
 
 /**
  * Editor context provider model
@@ -16,4 +16,5 @@ export interface EditorContextType {
     isEditingExistingWorkflow: boolean;
     availableRunners: Runner[] | null;
     setIsEditingExistingWorkflow: (isEditing: boolean) => void;
+    availableActions: Action[];
 }
