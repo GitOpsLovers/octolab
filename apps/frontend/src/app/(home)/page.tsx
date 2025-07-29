@@ -1,6 +1,7 @@
 import { auth0Client } from '@features/authentication/infrastructure/auth0/client.auth0';
 import { Cta } from '@ui/home/components/cta.component';
 import { Features } from '@ui/home/components/features.component';
+import { Footer } from '@ui/home/components/footer.component';
 import { Hero } from '@ui/home/components/hero.component';
 import { HowWorks } from '@ui/home/components/how-works.component';
 
@@ -23,6 +24,9 @@ export default async function Home() {
 
             {/* Final CTA */}
             <Cta />
+
+            {/* Footer */}
+            <Footer />
         </main>
     );
 }
