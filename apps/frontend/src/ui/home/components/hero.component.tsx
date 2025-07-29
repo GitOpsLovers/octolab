@@ -44,15 +44,18 @@ export function Hero({ session }: HeroProps): ReactNode {
                 />
 
                 <motion.div
-                    className="relative flex items-end gap-3"
+                    className="relative flex flex-col sm:flex-row items-center sm:items-end gap-2 sm:gap-3 text-center sm:text-left"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                    <Image src="/img/logo/header-logo-sm.png" alt="OctoLab logo" width={260} height={36} priority />
+                    <Image src="/img/logo/header-logo-sm.png" alt="OctoLab logo" width={260} height={36} priority className="w-[180px] sm:w-[260px] h-auto" />
+
                     <span className="text-6xl md:text-7xl font-bold text-primary relative">
                         OctoLab
-                        <span className="absolute -top-3 -right-10 bg-secondary text-surface text-sm font-bold px-3 py-1 rounded-full shadow-md">Beta</span>
+                        <span className="absolute -top-2 -right-8 bg-secondary text-surface text-xs sm:text-sm font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md">
+                            Beta
+                        </span>
                     </span>
                 </motion.div>
 
@@ -63,8 +66,12 @@ export function Hero({ session }: HeroProps): ReactNode {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: 0.3 }}
                 >
-                    The easiest way to build <br />
-                    GitHub workflows.
+                    <span className="block sm:hidden">The easiest way to build GitHub workflows.</span>
+
+                    <span className="hidden sm:inline">
+                        The easiest way to build <br />
+                        GitHub workflows.
+                    </span>
                 </motion.h1>
 
                 <motion.p className="text-lg text-text-muted max-w-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4 }}>
@@ -72,22 +79,23 @@ export function Hero({ session }: HeroProps): ReactNode {
                 </motion.p>
 
                 <motion.div
-                    className="flex gap-4 mt-4 flex-wrap justify-center"
+                    className="flex gap-4 mt-2 md:mt-4 flex-wrap justify-center"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: 0.5 }}
                 >
                     <Link
                         href="/templates"
-                        className="bg-primary text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-primary-hover transition"
+                        className="bg-primary text-white px-8 py-3 md:px-12 md:py-4 rounded-md text-lg md:text-xl font-semibold hover:bg-primary-hover transition"
                         data-umami-event={session ? '[Home] Continue building click' : '[Home] Start building click'}
                     >
                         {session ? 'Continue building' : 'Start building now'}
                     </Link>
+
                     {session && (
                         <Link
                             href="/my-workflows"
-                            className="bg-secondary text-surface px-8 py-3 rounded-md text-lg font-semibold hover:bg-secondary-hover transition"
+                            className="bg-secondary text-surface px-8 py-3 md:px-12 md:py-4 rounded-md text-lg md:text-xl font-semibold hover:bg-secondary-hover transition"
                             data-umami-event="[Home] View my workflows click"
                         >
                             View my workflows

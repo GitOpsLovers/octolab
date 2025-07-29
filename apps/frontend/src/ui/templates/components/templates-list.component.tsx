@@ -111,13 +111,14 @@ export function TemplatesList() {
         <>
             <h1 className="text-3xl font-bold mb-12 mt-4 text-center">Choose a template to get started</h1>
 
+            {/* Filter by type dropdown */}
             <div className="flex justify-end mb-4">
                 <select
                     value={selectedType}
                     onChange={(e) => {
                         setSelectedType(e.target.value);
                     }}
-                    className="bg-background border border-border text-text px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
+                    className="w-full sm:w-auto bg-background border border-border text-text px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
                 >
                     {types.map((t) => (
                         <option key={t.value} value={t.value}>

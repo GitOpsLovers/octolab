@@ -31,8 +31,8 @@ export function HowWorks(): ReactNode {
     const headingId = 'how-works-heading';
 
     return (
-        <section className="w-full px-4 py-32 bg-background border-t border-border" aria-labelledby={headingId}>
-            <div className="max-w-5xl mx-auto text-center mb-20">
+        <section className="w-full px-4 py-8 md:py-32 bg-background border-t border-border" aria-labelledby={headingId}>
+            <div className="max-w-5xl mx-auto text-center mb-10 md:mb-20">
                 <h2 id={headingId} className="text-4xl md:text-5xl font-extrabold text-text tracking-tight">
                     Go from zero to deployed in minutes
                 </h2>
@@ -42,7 +42,7 @@ export function HowWorks(): ReactNode {
             </div>
 
             <div className="relative max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-stretch gap-12">
-                <div className="absolute left-8 top-[4.5rem] bottom-0 w-1 md:left-[calc(16.66%-1rem)] md:top-1/2 md:bottom-auto md:h-1 md:w-[calc(100%-4rem)] bg-border z-0">
+                <div className="hidden md:block absolute left-8 top-[4.5rem] bottom-0 w-1 md:left-[calc(16.66%-1rem)] md:top-1/2 md:bottom-auto md:h-1 md:w-[calc(100%-4rem)] bg-border z-0 ">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.5, rotate: -30 }}
                         whileInView={{

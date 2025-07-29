@@ -8,7 +8,7 @@ import { TemplatesProvider } from '@ui/templates/providers/templates.provider';
  */
 export default function TemplatesPage() {
     return (
-        <main className="p-8">
+        <main className="p-4 md:p-8">
             <TemplatesProvider>
                 <TemplatesList />
             </TemplatesProvider>

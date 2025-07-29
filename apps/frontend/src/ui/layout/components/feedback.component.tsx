@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { FaCommentDots } from 'react-icons/fa';
 
 /**
- * Feedback component
+ * Feedback button component
  */
 export function Feedback(): ReactNode {
     return (
@@ -12,10 +12,10 @@ export function Feedback(): ReactNode {
             href="https://octolab.featurebase.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="fixed bottom-4 right-4 bg-primary text-white px-4 py-2 font-semibold rounded-full flex items-center gap-2 shadow-lg hover:bg-primary-hover transition cursor-pointer"
+            className="fixed bottom-4 right-4 bg-primary text-white font-semibold rounded-full shadow-lg hover:bg-primary-hover transition cursor-pointer flex items-center w-12 h-12 justify-center md:w-auto md:h-auto md:px-4 md:py-2 md:gap-2 md:justify-start"
         >
             <FaCommentDots className="w-5 h-5" />
-            Feedback
+            <span className="hidden md:inline">Feedback</span>{' '}
         </a>
     );
 }

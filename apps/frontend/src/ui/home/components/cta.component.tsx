@@ -23,7 +23,7 @@ export function Cta() {
     const headingId = 'cta-heading';
 
     return (
-        <section ref={ref} className="relative w-full px-4 py-32 bg-surface overflow-hidden" aria-labelledby={headingId}>
+        <section ref={ref} className="relative w-full px-4 py-8 md:py-32 bg-surface overflow-hidden" aria-labelledby={headingId}>
             <motion.div style={{ y }} className="absolute inset-0 z-0 pointer-events-none">
                 <div className="w-full h-full bg-gradient-to-tr from-primary/10 via-transparent to-secondary/10 blur-2xl opacity-60" />
             </motion.div>
@@ -37,7 +37,7 @@ export function Cta() {
                     Start using OctoLab today. It&apos;s free, fast, and made for builders.
                 </FadeInUp>
 
-                <FadeInUp delay={0.3} className="mt-8">
+                <FadeInUp delay={0.3} className="mt-8 mb-10 sm:mb-0">
                     <Link href="/templates" className="bg-primary text-white px-10 py-4 rounded-md text-lg font-semibold hover:bg-primary-hover transition">
                         Get Started Free
                     </Link>

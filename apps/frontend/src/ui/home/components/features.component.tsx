@@ -31,8 +31,8 @@ const features = [
  */
 export function Features(): ReactNode {
     return (
-        <section aria-labelledby="features-title" className="w-full px-4 py-32 bg-surface">
-            <div className="max-w-6xl mx-auto text-center mb-20">
+        <section aria-labelledby="features-title" className="w-full px-4 py-8 md:py-32 bg-surface">
+            <div className="max-w-6xl mx-auto text-center mb-10 md:mb-20">
                 <FadeInUp as="h2" id="features-title" className="text-4xl font-bold text-text">
                     What you can do
                 </FadeInUp>
