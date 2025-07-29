@@ -35,6 +35,7 @@ export function TemplatesList() {
         deployment: 'Deployment',
         releasing: 'Releasing',
         security: 'Security',
+        versioning: 'Versioning',
     };
 
     const types = [

@@ -1,4 +1,5 @@
 import {
+    AutoTagVersionWorkflowConfig,
     AwsS3CloudFrontWorkflowConfig,
     DockerImagePublishWorkflowConfig,
     Job,
@@ -298,6 +299,24 @@ function dockerPublishSteps(config: DockerImagePublishWorkflowConfig): Step[] {
 }
 
 /**
+ * Auto tag steps
+ */
+function autoTagSteps(config: AutoTagVersionWorkflowConfig): Step[] {
+    return [
+        {
+            internalId: uuidv4(),
+            id: 'auto-tag-step',
+            name: 'Auto Tag Version',
+            type: 'uses',
+            uses: 'salsify/action-detect-and-tag-new-version@v23',
+            with: {
+                'version-command': config.autoTagVersionCommand,
+            },
+        },
+    ];
+}
+
+/**
  * Generate steps based on workflow config
  */
 function generateSteps(config: WorkflowConfig): Step[] {
@@ -337,6 +356,8 @@ function generateSteps(config: WorkflowConfig): Step[] {
         steps.push(snykSteps(config));
     } else if (config.id === 'docker-image-publish') {
         steps.push(...dockerPublishSteps(config));
+    } else if (config.id === 'auto-tag-version') {
+        steps.push(...autoTagSteps(config));
     }
 
     return steps;

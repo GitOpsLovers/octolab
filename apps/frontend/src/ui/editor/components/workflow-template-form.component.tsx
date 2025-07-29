@@ -26,8 +26,6 @@ export function TemplateWorkflowForm(): ReactNode {
 
     if (!editingWorkflow) return null;
 
-    console.log('Editing workflow:', editingWorkflow);
-
     const fieldsConfig = [
         {
             key: 'workflowName',
@@ -58,7 +56,11 @@ export function TemplateWorkflowForm(): ReactNode {
         {
             key: 'nodeVersion',
             label: 'Node version',
-            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk' && editingWorkflow.id !== 'docker-image-publish',
+            show:
+                editingWorkflow.id !== 'vercel-pro-deployment' &&
+                editingWorkflow.id !== 'security-scan-snyk' &&
+                editingWorkflow.id !== 'docker-image-publish' &&
+                editingWorkflow.id !== 'auto-tag-version',
             type: 'select',
             options: ['16', '18', '20', '22'],
         },
@@ -66,7 +68,11 @@ export function TemplateWorkflowForm(): ReactNode {
             key: 'installCommand',
             label: 'Installation command',
             placeholder: 'npm install',
-            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk' && editingWorkflow.id !== 'docker-image-publish',
+            show:
+                editingWorkflow.id !== 'vercel-pro-deployment' &&
+                editingWorkflow.id !== 'security-scan-snyk' &&
+                editingWorkflow.id !== 'docker-image-publish' &&
+                editingWorkflow.id !== 'auto-tag-version',
             type: 'input',
         },
         {
@@ -87,7 +93,11 @@ export function TemplateWorkflowForm(): ReactNode {
             key: 'buildCommand',
             label: 'Build command',
             placeholder: 'npm run build',
-            show: editingWorkflow.id !== 'vercel-pro-deployment' && editingWorkflow.id !== 'security-scan-snyk' && editingWorkflow.id !== 'docker-image-publish',
+            show:
+                editingWorkflow.id !== 'vercel-pro-deployment' &&
+                editingWorkflow.id !== 'security-scan-snyk' &&
+                editingWorkflow.id !== 'docker-image-publish' &&
+                editingWorkflow.id !== 'auto-tag-version',
             type: 'input',
         },
         {
@@ -251,6 +261,13 @@ export function TemplateWorkflowForm(): ReactNode {
             label: 'Docker image tags (comma separated)',
             placeholder: 'Ej: latest',
             show: editingWorkflow.id === 'docker-image-publish',
+            type: 'input',
+        },
+        {
+            key: 'autoTagVersionCommand',
+            label: 'Version command',
+            placeholder: 'cat current-version.txt',
+            show: editingWorkflow.id === 'auto-tag-version',
             type: 'input',
         },
     ];

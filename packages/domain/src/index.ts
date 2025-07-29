@@ -11,6 +11,7 @@ export type {
     AwsS3CloudFrontWorkflowConfig,
     SnykSecurityScanWorkflowConfig,
     DockerImagePublishWorkflowConfig,
+    AutoTagVersionWorkflowConfig,
     WorkflowYaml,
     Step,
     Job,

@@ -126,4 +126,15 @@ export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
         description: 'Workflow to build and publish a Docker image to a container registry.',
         filename: 'docker-image-publish.yml',
     },
+    'auto-tag-version': {
+        id: 'auto-tag-version',
+        runner: 'ubuntu-latest',
+        branch: 'main',
+        autoTagVersionCommand: 'cat current-version.txt',
+        workflowName: 'Auto Tag Version',
+        jobName: 'auto-tag',
+        name: 'Auto Tag Version',
+        description: 'Automatically tag the version based on version file.',
+        filename: 'auto-tag-version.yml',
+    },
 };

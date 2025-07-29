@@ -84,4 +84,19 @@ export const availableTemplates: Template[] = [
         features: ['Configurable runners', 'Target branch configuration', 'Support for multiple registries', 'Custom tagging and versioning'],
         type: 'distribution',
     },
+    {
+        id: 'auto-tag-version',
+        name: 'Auto tag on version change',
+        description: 'Detects version changes and creates a Git tag automatically based on your version file.',
+        icon: 'FaTag',
+        iconColor: '#f59e0b',
+        iconLibrary: 'fa',
+        features: [
+            'Detects changes in package.json or custom version files',
+            'Automatically creates a tag (e.g. v1.2.3)',
+            'Customizable tag templates',
+            'Useful for manual versioning flows without full release tooling',
+        ],
+        type: 'versioning',
+    },
 ];

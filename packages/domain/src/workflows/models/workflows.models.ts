@@ -12,7 +12,8 @@ export type WorkflowConfig =
     | AwsS3CloudFrontWorkflowConfig
     | NxPrVerifyWorkflowConfig
     | SnykSecurityScanWorkflowConfig
-    | DockerImagePublishWorkflowConfig;
+    | DockerImagePublishWorkflowConfig
+    | AutoTagVersionWorkflowConfig;
 
 /**
  * Base workflow configuration model
@@ -156,6 +157,17 @@ export interface DockerImagePublishWorkflowConfig extends BaseWorkflowConfig {
     dockerBuildContext: string;
     dockerDockerfile: string;
     dockerImageTags: string;
+}
+
+/**
+ * Template configuration for Auto Tag Version workflow
+ */
+export interface AutoTagVersionWorkflowConfig extends BaseWorkflowConfig {
+    id: 'auto-tag-version';
+    runner: string;
+    jobName: string;
+    branch: string;
+    autoTagVersionCommand: string;
 }
 
 /**
