@@ -22,7 +22,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
     title: 'OctoLab',
-    description: 'Create your GitHub Actions Workflow in seconds',
+    description: 'The easiest way to build GitHub workflows',
 };
 
 /**
