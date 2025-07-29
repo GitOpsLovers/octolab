@@ -19,8 +19,10 @@ export function Header(): ReactNode {
             <Link href="/" className="flex items-center gap-1 relative group">
                 <Image src="/img/logo/header-logo-sm.png" alt="OctoLab logo" width={400} height={284} className="inline-block" style={{ width: 'auto', height: '32px' }} />
                 <div className="flex items-center relative">
-                    <span className="text-2xl font-bold text-primary ml-1">OctoLab</span>
-                    <span className="absolute -top-1 -right-9 bg-secondary text-surface text-[8px] md:text-xs font-semibold px-1 py-0.2 rounded-full shadow-md">Beta</span>
+                    <span className="text-2xl font-bold text-primary ml-1 hidden md:block">OctoLab</span>
+                    <span className="absolute -top-1 -right-9 bg-secondary text-surface text-[8px] md:text-xs font-semibold px-1 py-0.2 rounded-full shadow-md hidden md:block">
+                        Beta
+                    </span>
                 </div>
             </Link>
 

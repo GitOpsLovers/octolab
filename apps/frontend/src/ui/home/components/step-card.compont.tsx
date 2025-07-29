@@ -26,9 +26,9 @@ export function StepCard({ number, title, description, delay = 0 }: StepCardProp
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
             transition={{ duration: 0.5, delay, ease: 'easeOut' }}
             aria-labelledby={headingId}
-            className="relative z-10 flex-1 bg-surface border border-border rounded-2xl p-8 shadow-md"
+            className="relative z-10 flex-1 bg-surface border border-border rounded-2xl py-8 px-4 md:py-8 md:px-8 shadow-md"
         >
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 mb-4 text-center sm:text-left">
                 <div className="text-white bg-primary w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-lg" aria-hidden="true">
                     {number}
                 </div>
@@ -36,7 +36,8 @@ export function StepCard({ number, title, description, delay = 0 }: StepCardProp
                     {title}
                 </h3>
             </div>
-            <p className="text-text-muted text-base pl-16">{description}</p>
+
+            <p className="text-text-muted text-base md:pl-16 text-center sm:text-left">{description}</p>
         </motion.article>
     );
 }

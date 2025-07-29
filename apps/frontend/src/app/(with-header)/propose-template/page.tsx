@@ -5,7 +5,7 @@ import { ProposeTemplateForm } from '@ui/propose-template/components/propose-for
  */
 export default function ProposeTemplatesPage() {
     return (
-        <main className="p-8">
+        <main className="p-4 md:p-8">
             <ProposeTemplateForm />
         </main>
     );
