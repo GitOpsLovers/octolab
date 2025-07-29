@@ -53,7 +53,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
 
     useEffect(() => {
         const init = async () => {
-            // Si hay workflowId, buscamos en DB (incluyendo los custom)
+            // Si hay workflowId, lo buscamos en la base de datos
             if (workflowId) {
                 try {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -79,12 +79,14 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
                             name: existingWorkflow.name,
                             description: existingWorkflow.description,
                             branch: existingWorkflowData.branch,
+                            autoTagVersionCommand: existingWorkflowData.autoTagVersionCommand,
                         };
 
                         setEditingWorkflow(structuredClone(workflow));
                         setInitialEditingWorkflowData(structuredClone(workflow));
                         setIsEditingExistingWorkflow(true);
                         setLoading(false);
+
                         return;
                     }
                 } catch (err) {

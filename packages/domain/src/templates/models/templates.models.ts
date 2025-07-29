@@ -15,4 +15,4 @@ export interface Template {
 /**
  * Templates types
  */
-export type TemplateType = 'verification' | 'distribution' | 'deployment' | 'releasing' | 'security';
+export type TemplateType = 'verification' | 'distribution' | 'deployment' | 'releasing' | 'security' | 'versioning';
