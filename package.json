@@ -7,6 +7,7 @@
     "dev": "turbo run dev",
     "dev:frontend": "turbo run dev --filter=@octolab/frontend",
     "dev:backend": "turbo run dev --filter=@octolab/backend",
+    "dev:transactional": "turbo run dev --filter=@octolab/transactional",
     "build": "turbo run build",
     "build:frontend": "turbo run build --filter=@octolab/frontend",
     "build:backend": "turbo run build --filter=@octolab/backend",
@@ -39,6 +40,7 @@
     "typescript-eslint": "8.38.0"
   },
   "dependencies": {
+    "dotenv": "17.2.0",
     "uuid": "^11.1.0",
     "zod": "4.0.8"
   },

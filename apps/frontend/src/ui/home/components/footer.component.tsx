@@ -16,7 +16,7 @@ export function Footer(): ReactNode {
 
                 <nav className="flex gap-4 flex-wrap justify-center sm:justify-end">
                     <Link href="/about" className="hover:text-text transition">
-                        About
+                        About us
                     </Link>
                     <Link href="/how-to" className="hover:text-text transition">
                         How it works

@@ -9,6 +9,7 @@ import { initSupabaseClient } from '@core/infrastructure/database/supabase.clien
 import { configureCorsMiddleware } from '@core/infrastructure/express/cors-config.express';
 import { checkRequiredEnvVariables } from '@core/infrastructure/express/env-config.express';
 import { actionsRoutes } from '@features/actions/ui/routes/actions.routes';
+import { authRoutes } from '@features/authentication/ui/routes/authentication.routes';
 import { contactRoutes } from '@features/contact/ui/routes/contact.routes';
 import { runnersRoutes } from '@features/runners/ui/routes/runners.routes';
 import { templatesRoutes } from '@features/templates/ui/routes/templates.routes';
@@ -53,6 +54,7 @@ app.use('/api/v1', contactRoutes);
 app.use('/api/v1', runnersRoutes);
 app.use('/api/v1', triggersRoutes);
 app.use('/api/v1', actionsRoutes);
+app.use('/api/v1', authRoutes);
 
 const PORT = process.env.BACKEND_PORT || 4000;
 
