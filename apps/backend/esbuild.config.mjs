@@ -1,5 +1,6 @@
 import { build } from "esbuild";
 import { resolve } from "path";
+import { sentryEsbuildPlugin } from "@sentry/esbuild-plugin";
 
 const projectRoot = resolve(process.cwd(), "src");
 
@@ -17,4 +18,11 @@ build({
     "@core": resolve(projectRoot, "core"),
     "@features": resolve(projectRoot, "features"),
   },
+  plugins: [
+    sentryEsbuildPlugin({
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      org: "octolabdev",
+      project: "backend",
+    }),
+  ]
 }).catch(() => process.exit(1));

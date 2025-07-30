@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@octolab/domain": "0.1.0",
+    "@sentry/esbuild-plugin": "^4.0.2",
+    "@sentry/node": "^9.43.0",
     "@supabase/supabase-js": "2.52.1",
     "auth0": "^4.27.0",
     "body-parser": "^2.2.0",
