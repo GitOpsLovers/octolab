@@ -62,7 +62,7 @@ export const WelcomeEmail = () => {
                         </ul>
 
                         <Section className="text-center">
-                            <Button className="rounded-lg bg-brand px-[18px] py-3 text-white font-bold" href="https://octolab.app/dashboard">
+                            <Button className="rounded-lg bg-brand px-[18px] py-3 text-white font-bold" href="https://octolab.app">
                                 Start building now
                             </Button>
                         </Section>
