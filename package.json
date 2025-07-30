@@ -12,6 +12,7 @@
     "build:frontend": "turbo run build --filter=@octolab/frontend",
     "build:backend": "turbo run build --filter=@octolab/backend",
     "build:domain": "turbo run build --filter=@octolab/domain",
+    "export:transactional": "turbo run export --filter=@octolab/transactional",
     "lint": "turbo run lint",
     "lint:frontend": "turbo run lint --filter=@octolab/frontend",
     "lint:backend": "turbo run lint --filter=@octolab/backend",
