@@ -1,6 +1,9 @@
 // eslint-disable-next-line import/no-unassigned-import
 import 'dotenv/config';
+// eslint-disable-next-line import/no-unassigned-import
+import '@core/infrastructure/sentry/instrument';
 
+import * as Sentry from '@sentry/node';
 import bodyParser from 'body-parser';
 import express from 'express';
 import helmet from 'helmet';
@@ -29,6 +32,7 @@ const requiredEnvVars = [
     'AUTH0_AUDIENCE',
     'CONTACT_EMAIL',
     'RESEND_API_KEY',
+    'SENTRY_DSN',
 ];
 const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(',') ?? [];
 
@@ -55,6 +59,8 @@ app.use('/api/v1', runnersRoutes);
 app.use('/api/v1', triggersRoutes);
 app.use('/api/v1', actionsRoutes);
 app.use('/api/v1', authRoutes);
+
+Sentry.setupExpressErrorHandler(app);
 
 const PORT = process.env.BACKEND_PORT || 4000;
 
