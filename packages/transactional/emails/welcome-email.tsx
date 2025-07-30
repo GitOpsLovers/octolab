@@ -41,13 +41,14 @@ export const WelcomeEmail = () => {
                     <Img src={`${baseUrl}/img/logo/emails-logo.jpg`} width="120" alt="OctoLab" className="mx-auto my-20 rounded-full object-cover" />
                     <Container className="bg-white px-45">
                         <Heading className="my-0 text-center leading-8 text-black font-heading">
-                            Welcome to <span className="text-brand">OctoLab</span> 🐙
+                            Welcome to <span className="text-brand">OctoLab</span>! 🐙
                         </Heading>
 
                         <Section>
                             <Row>
                                 <Text className="text-base text-gray-800 font-sans">
-                                    You’re now part of a community rethinking GitHub Actions. OctoLab lets you build, edit, and deploy workflows visually — without writing YAML.
+                                    You are now part of the community that is rewriting the history of Github Actions! OctoLab allows you to create, edit and deploy workflows
+                                    visually and easily.
                                 </Text>
                                 <Text className="text-base text-gray-800 font-sans">Here’s how to get started:</Text>
                             </Row>
