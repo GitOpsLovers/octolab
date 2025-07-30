@@ -14,6 +14,7 @@ import { EmailClient } from '@core/domain/interfaces/email-client.interface';
  */
 export async function sendWelcomeEmailUseCase(emailClient: EmailClient, welcomeData: WelcomeEmailDto): Promise<void> {
     const templatePath = path.resolve(__dirname, `${process.env.EMAIL_TEMPLATES_PATH}/welcome-email.html`);
+    console.log('dirname', __dirname);
     console.log(templatePath);
 
     let htmlContent2: string;
