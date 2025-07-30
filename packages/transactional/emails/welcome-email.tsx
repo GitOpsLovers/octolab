@@ -1,16 +1,12 @@
 /* eslint-disable pii/no-email */
-// eslint-disable-next-line import/no-unassigned-import
-import 'dotenv/config';
-
 import { Body, Button, Column, Container, Head, Heading, Html, Img, Link, Preview, Row, Section, Tailwind, Text } from '@react-email/components';
-import { ReactNode } from 'react';
 
-const baseUrl = process.env.FRONTEND_BASE_URL;
+const baseUrl = 'https://octolab.app';
 
 /**
  * Welcome email template component.
  */
-function WelcomeEmail(): ReactNode {
+export const WelcomeEmail = () => {
     return (
         <Html>
             <Head />
@@ -35,7 +31,7 @@ function WelcomeEmail(): ReactNode {
 
                 <Body className="bg-offwhite font-sans text-base">
                     <Img src={`${baseUrl}/img/logo/emails-logo.jpg`} width="120" alt="OctoLab" className="mx-auto my-20 rounded-full object-cover" />
-                    <Container className="bg-white p-45">
+                    <Container className="bg-white px-45">
                         <Heading className="my-0 text-center leading-8 text-black">
                             Welcome to <span className="text-brand">OctoLab</span> 🐙
                         </Heading>
@@ -43,27 +39,30 @@ function WelcomeEmail(): ReactNode {
                         <Section>
                             <Row>
                                 <Text className="text-base text-gray-800">
-                                    You&apos;re now part of a growing community simplifying GitHub Actions. OctoLab helps you create, edit and deploy workflows visually — no YAML
-                                    required.
+                                    You’re now part of a community rethinking GitHub Actions. OctoLab lets you build, edit, and deploy workflows visually — without writing YAML.
                                 </Text>
                                 <Text className="text-base text-gray-800">Here’s how to get started:</Text>
                             </Row>
                         </Section>
 
                         <ul>
-                            <li className="mb-20" key={'start-workflow'}>
-                                <strong>Start your first workflow.</strong> <Link href="https://octolab.app/workflows/new">Choose a template</Link> or build one from scratch.
+                            <li className="mb-20" key="select-template">
+                                <strong>Choose a starting point.</strong>{' '}
+                                <Link href="https://octolab.app/templates" className="text-brand font-bold">
+                                    Select a template
+                                </Link>{' '}
+                                or create a workflow from scratch.
                             </li>
-                            <li className="mb-20" key={'connect-repositories'}>
-                                <strong>Connect your repositories.</strong> Link OctoLab with your GitHub account to edit and sync workflows directly.
+                            <li className="mb-20" key="configure-fields">
+                                <strong>Configure your workflow.</strong> Fill in required fields, customize inputs, and add your own jobs and steps visually.
                             </li>
-                            <li className="mb-20" key={'visualize-yaml'}>
-                                <strong>Visualize and test your YAML.</strong> See a live YAML preview and export it anytime.
+                            <li className="mb-20" key="export-workflow">
+                                <strong>Export or deploy.</strong> Download your workflow, copy the YAML, or commit it directly to your GitHub repository.
                             </li>
                         </ul>
 
                         <Section className="text-center">
-                            <Button className="rounded-lg bg-brand px-[18px] py-3 text-white" href="https://octolab.app/dashboard">
+                            <Button className="rounded-lg bg-brand px-[18px] py-3 text-white font-bold" href="https://octolab.app/dashboard">
                                 Start building now
                             </Button>
                         </Section>
@@ -71,7 +70,7 @@ function WelcomeEmail(): ReactNode {
                         <Section className="mt-45">
                             <Row>
                                 <Column key="documentation" className="text-center">
-                                    <Link className="font-bold text-black underline" href={`${baseUrl}/how-to`}>
+                                    <Link className="font-bold text-black underline" href={`${baseUrl}/about`}>
                                         About us
                                     </Link>{' '}
                                     <span className="text-brand">→</span>
@@ -93,12 +92,12 @@ function WelcomeEmail(): ReactNode {
                     </Container>
 
                     <Container className="mt-20">
-                        <Text className="mb-45 text-center text-gray-400 text-xs">OctoLab · GitHub Automation made visual</Text>
+                        <Text className="mb-45 text-center text-gray-400 text-xs">OctoLab · The easiest way to build GitHub workflows</Text>
                     </Container>
                 </Body>
             </Tailwind>
         </Html>
     );
-}
+};
 
 export default WelcomeEmail;

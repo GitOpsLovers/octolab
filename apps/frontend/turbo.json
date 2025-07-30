@@ -2,6 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
+      "dependsOn": ["^build", "@octolab/transactional#export"],
       "outputs": [".next/**", "!.next/cache/**"],
       "env": [
         "AUTH0_DOMAIN",
