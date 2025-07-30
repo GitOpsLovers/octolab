@@ -15,16 +15,12 @@ export default async function Home() {
         <main>
             {/* Hero */}
             <Hero session={session} />
-
             {/* Features */}
             <Features />
-
             {/* How it Works */}
             <HowWorks />
-
             {/* Final CTA */}
             <Cta />
-
             {/* Footer */}
             <Footer />
         </main>
