@@ -1,8 +1,8 @@
 export type { Template, TemplateType } from './templates/models/templates.models';
 export type { User } from './users/models/users.models';
+export type { CustomWorkflowConfig } from './workflows/models/custom-workflows.models';
 export type {
-    WorkflowConfig,
-    CustomWorkflowConfig,
+    WorkflowTemplateConfig,
     NpmPublishWorkflowConfig,
     NodePrVerifyWorkflowConfig,
     NxPrVerifyWorkflowConfig,
@@ -12,10 +12,9 @@ export type {
     SnykSecurityScanWorkflowConfig,
     DockerImagePublishWorkflowConfig,
     AutoTagVersionWorkflowConfig,
-    WorkflowYaml,
-    Step,
-    Job,
-} from './workflows/models/workflows.models';
+    LaravelForgeDeployWorkflowConfig,
+} from './workflows/models/workflow-templates.models';
+export type { WorkflowYaml, Step, Job } from './workflows/models/workflows.models';
 export type { Runner } from './runners/models/runners.models';
 export type { Trigger } from './triggers/models/triggers.models';
 export type { Action } from './actions/models/actions.models';

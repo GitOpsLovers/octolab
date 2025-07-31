@@ -13,7 +13,7 @@ export interface Action {
         isEnvironmentVariable: boolean;
         isStepEnvironmentVariable: boolean;
         hideInYaml: boolean;
-        hideInForm: boolean;
+        hideInForm?: boolean;
         options?: Array<{ label: string; value: string }>;
         defaultValue?: string | number | boolean;
         info: string;

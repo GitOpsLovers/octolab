@@ -1,4 +1,4 @@
-import { WorkflowConfig } from '@octolab/domain';
+import { WorkflowTemplateConfig } from '@octolab/domain';
 
 import { workflowsDefaultConfigs } from '../domain/constants/workflows-dafault-configs.const';
 
@@ -9,7 +9,7 @@ import { workflowsDefaultConfigs } from '../domain/constants/workflows-dafault-c
  *
  * @returns Workflow configuration.
  */
-export async function getWorkflowConfigUseCase(template: string): Promise<WorkflowConfig> {
+export async function getWorkflowConfigUseCase(template: string): Promise<WorkflowTemplateConfig> {
     const config = workflowsDefaultConfigs[template];
 
     if (!config) {
