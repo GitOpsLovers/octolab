@@ -13,4 +13,13 @@ export interface UsersDatabaseRepository {
      * @returns Created user
      */
     create: (createDto: CreateUserDto) => Promise<DatabaseUser>;
+
+    /**
+     * Find a user by Auth0 ID.
+     *
+     * @param auth0Id Auth0 ID of the user
+     *
+     * @returns User if found, otherwise null
+     */
+    findByAuth0Id: (auth0Id: string) => Promise<DatabaseUser | null>;
 }

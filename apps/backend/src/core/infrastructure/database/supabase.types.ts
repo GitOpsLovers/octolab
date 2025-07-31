@@ -7,16 +7,19 @@ export interface Database {
         Tables: {
             users: {
                 Row: {
+                    id: string;
                     auth0_id: string;
                     provider: string;
                     email: string;
                 };
                 Insert: {
+                    id: string;
                     auth0_id: string;
                     provider: string;
                     email: string;
                 };
                 Update: {
+                    id: string;
                     auth0_id: string;
                     provider: string;
                     email: string;
