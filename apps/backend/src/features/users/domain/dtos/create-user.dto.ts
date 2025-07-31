@@ -4,4 +4,5 @@
 export interface CreateUserDto {
     auth0Id: string;
     provider: string;
+    email: string;
 }

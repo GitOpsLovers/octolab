@@ -21,6 +21,7 @@ export const usersSupabaseDatabaseRepository: UsersDatabaseRepository = {
                     {
                         auth0_id: createDto.auth0Id,
                         provider: createDto.provider,
+                        email: createDto.email,
                     },
                 ])
                 .select()
@@ -31,6 +32,7 @@ export const usersSupabaseDatabaseRepository: UsersDatabaseRepository = {
             return {
                 auth0Id: data.auth0_id,
                 provider: data.provider,
+                email: data.email,
             };
         } catch (error: unknown) {
             throw new DatabaseError(`Failed to save user: ${(error as Error).message}`, DatabaseErrorType.DATABASE_CONNECTION_ERROR);

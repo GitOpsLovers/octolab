@@ -14,6 +14,7 @@ export async function createUserUseCase(repository: UsersDatabaseRepository, dat
     const createDto: CreateUserDto = {
         auth0Id: data.userId,
         provider: data.provider,
+        email: data.email,
     };
 
     return repository.create(createDto);
