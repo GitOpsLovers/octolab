@@ -19,6 +19,7 @@ export function RegisterModalForTemplatesList({ isOpen, onClose, templateId, onS
     if (!templateId) return null;
 
     const draftId = uuidv4();
+    const editorUrl = templateId === 'custom' ? `/editor/custom/${templateId}/${draftId}` : `/editor/templates/${templateId}/${draftId}`;
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -26,13 +27,13 @@ export function RegisterModalForTemplatesList({ isOpen, onClose, templateId, onS
             <p className="text-text-muted mb-6 text-center">Create a free account to save and manage your workflows anytime.</p>
             <div className="flex flex-col gap-4">
                 <a
-                    href={`/auth/login?connection=github&returnTo=/editor/${templateId}/${draftId}`}
+                    href={`/auth/login?connection=github&returnTo=${editorUrl}`}
                     className="border border-primary text-primary font-semibold px-4 py-2 rounded-md hover:bg-primary hover:text-white transition text-center"
                 >
                     Continue with GitHub
                 </a>
                 <a
-                    href={`/auth/login?connection=google-oauth2&returnTo=/editor/${templateId}/${draftId}`}
+                    href={`/auth/login?connection=google-oauth2&returnTo=${editorUrl}`}
                     className="border border-primary text-primary font-semibold px-4 py-2 rounded-md hover:bg-primary hover:text-white transition text-center"
                 >
                     Continue with Google
@@ -41,7 +42,7 @@ export function RegisterModalForTemplatesList({ isOpen, onClose, templateId, onS
             <p className="text-xs text-text-muted mt-4 text-center">
                 Prefer to explore first?{' '}
                 <Link
-                    href={`/editor/${templateId}/${draftId}`}
+                    href={editorUrl}
                     onClick={() => {
                         onSkip();
                         onClose();

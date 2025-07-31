@@ -124,7 +124,7 @@ export default [
       '@typescript-eslint/prefer-string-starts-ends-with': 'error',
       '@typescript-eslint/prefer-ts-expect-error': 'error',
       '@typescript-eslint/promise-function-async': 'off',
-      '@stylistic/ts/quotes': ['error', 'single', { allowTemplateLiterals: true, avoidEscape: true }],
+      '@stylistic/ts/quotes': ['error', 'single', { allowTemplateLiterals: "always", avoidEscape: true }],
       '@typescript-eslint/require-array-sort-compare': 'error',
       '@typescript-eslint/require-await': 'error',
       '@typescript-eslint/restrict-plus-operands': 'error',
