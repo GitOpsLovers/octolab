@@ -24,4 +24,5 @@ export interface UserIdp {
 export interface DatabaseUser {
     auth0Id: string;
     provider: string;
+    email: string;
 }

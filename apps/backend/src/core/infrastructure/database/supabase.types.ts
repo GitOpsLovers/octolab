@@ -9,14 +9,17 @@ export interface Database {
                 Row: {
                     auth0_id: string;
                     provider: string;
+                    email: string;
                 };
                 Insert: {
                     auth0_id: string;
                     provider: string;
+                    email: string;
                 };
                 Update: {
                     auth0_id: string;
                     provider: string;
+                    email: string;
                 };
                 Relationships: [];
             };
