@@ -3,6 +3,7 @@ import {
     AwsS3CloudFrontWorkflowConfig,
     DockerImagePublishWorkflowConfig,
     Job,
+    LaravelForgeDeployWorkflowConfig,
     NodePrVerifyWorkflowConfig,
     NpmPublishWorkflowConfig,
     NxPrVerifyWorkflowConfig,
@@ -10,7 +11,7 @@ import {
     SnykSecurityScanWorkflowConfig,
     Step,
     VercelProDeploymentWorkflowConfig,
-    WorkflowConfig,
+    WorkflowTemplateConfig,
     WorkflowYaml,
 } from '@octolab/domain';
 import { v4 as uuidv4 } from 'uuid';
@@ -317,9 +318,37 @@ function autoTagSteps(config: AutoTagVersionWorkflowConfig): Step[] {
 }
 
 /**
+ * Deploy to Laravel Forge steps
+ */
+function laravelForgeDeploymentSteps(config: LaravelForgeDeployWorkflowConfig): Step[] {
+    const baseStep: Step = {
+        internalId: uuidv4(),
+        id: 'laravel-forge-deploy-step',
+        name: 'Deploy to Laravel Forge',
+        type: 'uses',
+        uses: 'jbrooksuk/laravel-forge-action@v1.0.2',
+        with: {},
+    };
+
+    if (config.deployMode === 'webhook') {
+        baseStep.with = {
+            'trigger-url': `\${{ secrets.${config.laravelForgeDeployTriggerUrlSecretName} }}`,
+        };
+    } else if (config.deployMode === 'api') {
+        baseStep.with = {
+            api_key: `\${{ secrets.${config.laravelForgeDeployApiKeySecretName} }}`,
+            server_id: `\${{ secrets.${config.laravelForgeDeployServerIdSecretName} }}`,
+            site_id: `\${{ secrets.${config.laravelForgeDeploySiteIdSecretName} }}`,
+        };
+    }
+
+    return [baseStep];
+}
+
+/**
  * Generate steps based on workflow config
  */
-function generateSteps(config: WorkflowConfig): Step[] {
+function generateSteps(config: WorkflowTemplateConfig): Step[] {
     const steps = config.id !== 'docker-image-publish' ? checkoutStep() : [];
 
     if (config.id === 'node-pr-verify') {
@@ -358,6 +387,8 @@ function generateSteps(config: WorkflowConfig): Step[] {
         steps.push(...dockerPublishSteps(config));
     } else if (config.id === 'auto-tag-version') {
         steps.push(...autoTagSteps(config));
+    } else if (config.id === 'laravel-forge-deploy') {
+        steps.push(...laravelForgeDeploymentSteps(config));
     }
 
     return steps;
@@ -366,7 +397,7 @@ function generateSteps(config: WorkflowConfig): Step[] {
 /**
  * Generate "on" section based on workflow config
  */
-function generateOnConfig(config: WorkflowConfig): Record<string, any> {
+function generateOnConfig(config: WorkflowTemplateConfig): Record<string, any> {
     if (config.id === 'node-pr-verify' || config.id === 'nx-pr-verify') {
         return { pull_request: {} };
     }
@@ -377,7 +408,7 @@ function generateOnConfig(config: WorkflowConfig): Record<string, any> {
 /**
  * Generate "env" section based on workflow config
  */
-function generateEnvConfig(config: WorkflowConfig): Record<string, string> | undefined {
+function generateEnvConfig(config: WorkflowTemplateConfig): Record<string, string> | undefined {
     if (config.id === 'aws-s3-cloudfront-deploy') {
         return {
             [config.awsRegionEnvironmentVariable]: config.awsRegionEnvironmentVariableValue,
@@ -392,7 +423,7 @@ function generateEnvConfig(config: WorkflowConfig): Record<string, string> | und
 /**
  * Generate "jobs" section based on workflow config
  */
-function generateJobs(config: WorkflowConfig): Record<string, Job> {
+function generateJobs(config: WorkflowTemplateConfig): Record<string, Job> {
     // 👇 lógica para workflows no custom
     const steps = generateSteps(config);
 
@@ -469,7 +500,7 @@ function generateYamlJobsFromJobs(jobs: Record<string, Job>): Record<string, any
  *
  * @return Workflow YAML object
  */
-export function generateWorkflowYamlForTemplatesUseCase(workflowConfig: WorkflowConfig): WorkflowYaml {
+export function generateWorkflowYamlForTemplatesUseCase(workflowConfig: WorkflowTemplateConfig): WorkflowYaml {
     const on = generateOnConfig(workflowConfig);
     const env = generateEnvConfig(workflowConfig);
     const jobsInternal = generateJobs(workflowConfig);

@@ -1,9 +1,9 @@
-import { WorkflowConfig } from '@octolab/domain';
+import { WorkflowTemplateConfig } from '@octolab/domain';
 
 /**
  * Default configurations for each workflow.
  */
-export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
+export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
     'npm-publish': {
         id: 'npm-publish',
         runner: 'ubuntu-latest',
@@ -136,5 +136,20 @@ export const workflowsDefaultConfigs: Record<string, WorkflowConfig> = {
         name: 'Auto Tag Version',
         description: 'Automatically tag the version based on version file.',
         filename: 'auto-tag-version.yml',
+    },
+    'laravel-forge-deploy': {
+        id: 'laravel-forge-deploy',
+        runner: 'ubuntu-latest',
+        branch: 'main',
+        workflowName: 'Laravel Forge Deployment',
+        jobName: 'auto-tag',
+        name: 'Laravel Forge deployment',
+        description: 'Deploy a Laravel application to a Laravel Forge-managed server on push events.',
+        filename: 'laravel-forge-deploy.yml',
+        deployMode: 'webhook',
+        laravelForgeDeployTriggerUrlSecretName: 'LARAVEL_FORGE_TRIGGER_URL',
+        laravelForgeDeployApiKeySecretName: 'LARAVEL_FORGE_API_KEY',
+        laravelForgeDeployServerIdSecretName: 'LARAVEL_FORGE_SERVER_ID',
+        laravelForgeDeploySiteIdSecretName: 'LARAVEL_FORGE_SITE_ID',
     },
 };

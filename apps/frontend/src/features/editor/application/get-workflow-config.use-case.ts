@@ -1,4 +1,4 @@
-import { WorkflowConfig } from '@octolab/domain';
+import { WorkflowTemplateConfig } from '@octolab/domain';
 
 import { EditorRepository } from '../domain/repositories/editor.repository';
 
@@ -10,6 +10,6 @@ import { EditorRepository } from '../domain/repositories/editor.repository';
  *
  * @returns Workflow configuration.
  */
-export function getWorkflowConfigUseCase(repository: EditorRepository, id: string): Promise<WorkflowConfig> {
+export function getWorkflowConfigUseCase(repository: EditorRepository, id: string): Promise<WorkflowTemplateConfig> {
     return repository.getWorkflowConfig(id);
 }

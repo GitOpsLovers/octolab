@@ -1,6 +1,6 @@
 'use client';
 
-import { Template, WorkflowConfig } from '@octolab/domain';
+import { Template, WorkflowTemplateConfig } from '@octolab/domain';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { EditorTemplateContext } from '../contexts/editor.context';
@@ -29,8 +29,8 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
     const [loading, setLoading] = useState<boolean>(true);
     const [template, setTemplate] = useState<Template | null>(null);
     const [availableRunners, setAvailableRunners] = useState<string[]>([]);
-    const [editingWorkflow, setEditingWorkflow] = useState<WorkflowConfig | null>(null);
-    const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<WorkflowConfig | null>(null);
+    const [editingWorkflow, setEditingWorkflow] = useState<WorkflowTemplateConfig | null>(null);
+    const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<WorkflowTemplateConfig | null>(null);
     const [isEditingExistingWorkflow, setIsEditingExistingWorkflow] = useState<boolean>(false);
 
     /**
@@ -63,7 +63,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
                     if (existingWorkflow) {
                         const existingWorkflowData = JSON.parse(existingWorkflow.data);
 
-                        const workflow: WorkflowConfig = {
+                        const workflow: WorkflowTemplateConfig = {
                             id: existingWorkflowData.id,
                             runner: existingWorkflowData.runner,
                             nodeVersion: existingWorkflowData.nodeVersion,
@@ -111,7 +111,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
                     const repository = editorApiRepository();
                     const workflowConfigFromApi = await getWorkflowConfigUseCase(repository, templateId);
 
-                    const initialWorkflow: WorkflowConfig = {
+                    const initialWorkflow: WorkflowTemplateConfig = {
                         ...workflowConfigFromApi,
                         name: templateOverride?.name ?? '',
                         description: templateOverride?.description ?? '',

@@ -1,4 +1,4 @@
-import { Action, Runner, Trigger, WorkflowConfig } from '@octolab/domain';
+import { Action, Runner, Trigger, WorkflowTemplateConfig } from '@octolab/domain';
 
 import { EditorRepository } from '../domain/repositories/editor.repository';
 
@@ -21,7 +21,7 @@ export const editorApiRepository = (token?: string): EditorRepository => ({
 
         return response.json();
     },
-    getWorkflowConfig: async (id: string): Promise<WorkflowConfig> => {
+    getWorkflowConfig: async (id: string): Promise<WorkflowTemplateConfig> => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/workflows/${id}/config`, {
             method: 'GET',
             headers: {

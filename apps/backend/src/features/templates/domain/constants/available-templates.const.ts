@@ -99,4 +99,14 @@ export const availableTemplates: Template[] = [
         ],
         type: 'versioning',
     },
+    {
+        id: 'laravel-forge-deploy',
+        name: 'Laravel Forge deployment',
+        description: 'Deploy a Laravel application to a Laravel Forge-managed server on push events.',
+        icon: 'FaLaravel',
+        iconColor: '#ff2d20',
+        iconLibrary: 'fa',
+        features: ['Deploy via Forge trigger Url or API', 'Configurable runners', 'Target branch configuration', 'Supports zero-downtime Laravel deployments'],
+        type: 'deployment',
+    },
 ];

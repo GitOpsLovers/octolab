@@ -60,7 +60,8 @@ export function TemplateWorkflowForm(): ReactNode {
                 editingWorkflow.id !== 'vercel-pro-deployment' &&
                 editingWorkflow.id !== 'security-scan-snyk' &&
                 editingWorkflow.id !== 'docker-image-publish' &&
-                editingWorkflow.id !== 'auto-tag-version',
+                editingWorkflow.id !== 'auto-tag-version' &&
+                editingWorkflow.id !== 'laravel-forge-deploy',
             type: 'select',
             options: ['16', '18', '20', '22'],
         },
@@ -72,7 +73,8 @@ export function TemplateWorkflowForm(): ReactNode {
                 editingWorkflow.id !== 'vercel-pro-deployment' &&
                 editingWorkflow.id !== 'security-scan-snyk' &&
                 editingWorkflow.id !== 'docker-image-publish' &&
-                editingWorkflow.id !== 'auto-tag-version',
+                editingWorkflow.id !== 'auto-tag-version' &&
+                editingWorkflow.id !== 'laravel-forge-deploy',
             type: 'input',
         },
         {
@@ -97,7 +99,8 @@ export function TemplateWorkflowForm(): ReactNode {
                 editingWorkflow.id !== 'vercel-pro-deployment' &&
                 editingWorkflow.id !== 'security-scan-snyk' &&
                 editingWorkflow.id !== 'docker-image-publish' &&
-                editingWorkflow.id !== 'auto-tag-version',
+                editingWorkflow.id !== 'auto-tag-version' &&
+                editingWorkflow.id !== 'laravel-forge-deploy',
             type: 'input',
         },
         {
@@ -268,6 +271,41 @@ export function TemplateWorkflowForm(): ReactNode {
             label: 'Version command',
             placeholder: 'cat current-version.txt',
             show: editingWorkflow.id === 'auto-tag-version',
+            type: 'input',
+        },
+        {
+            key: 'deployMode',
+            label: 'Deployment mode',
+            show: editingWorkflow.id === 'laravel-forge-deploy',
+            type: 'select',
+            options: ['webhook', 'api'],
+        },
+        {
+            key: 'laravelForgeDeployTriggerUrlSecretName',
+            label: 'Trigger URL secret name',
+            placeholder: 'LARAVEL_FORGE_TRIGGER_URL',
+            show: editingWorkflow.id === 'laravel-forge-deploy' && editingWorkflow.deployMode === 'webhook',
+            type: 'input',
+        },
+        {
+            key: 'laravelForgeDeployApiKeySecretName',
+            label: 'API Key secret name',
+            placeholder: 'Ej: LARAVEL_FORGE_API_KEY',
+            show: editingWorkflow.id === 'laravel-forge-deploy' && editingWorkflow.deployMode === 'api',
+            type: 'input',
+        },
+        {
+            key: 'laravelForgeDeployServerIdSecretName',
+            label: 'Server ID secret name',
+            placeholder: 'Ej: LARAVEL_FORGE_SERVER_ID',
+            show: editingWorkflow.id === 'laravel-forge-deploy' && editingWorkflow.deployMode === 'api',
+            type: 'input',
+        },
+        {
+            key: 'laravelForgeDeploySiteIdSecretName',
+            label: 'Site ID secret name',
+            placeholder: 'Ej: LARAVEL_FORGE_SITE_ID',
+            show: editingWorkflow.id === 'laravel-forge-deploy' && editingWorkflow.deployMode === 'api',
             type: 'input',
         },
     ];
