@@ -10,7 +10,7 @@ import { appLogger } from '@core/infrastructure/loggers/winston.logger';
  * Get workflows controller.
  */
 export async function getWorkflowsController(req: Request, res: Response): Promise<void> {
-    const userId = req.user.identities?.[0].user_id;
+    const userId = req.user.id;
 
     try {
         const workflows = await getWorkflowsUseCase(workflowsSupabaseDatabaseRepository, userId);
