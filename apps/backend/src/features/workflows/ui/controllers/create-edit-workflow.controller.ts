@@ -13,7 +13,7 @@ import { updateWorkflowUseCase } from '@features/workflows/application/update-wo
  */
 export async function createOrEditWorkflowController(req: Request, res: Response): Promise<void> {
     const rquestData = req.body;
-    const userId = req.user.identities?.[0].user_id;
+    const userId = req.user.id;
 
     try {
         const existingWorkflow = await getWorkflowByIdUseCase(workflowsSupabaseDatabaseRepository, rquestData.id);

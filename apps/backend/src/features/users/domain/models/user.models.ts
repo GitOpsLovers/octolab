@@ -22,6 +22,7 @@ export interface UserIdp {
  * User from database
  */
 export interface DatabaseUser {
+    id: string;
     auth0Id: string;
     provider: string;
     email: string;

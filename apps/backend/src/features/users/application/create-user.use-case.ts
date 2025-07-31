@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { CreateUserDto } from '../domain/dtos/create-user.dto';
 import { DatabaseUser } from '../domain/models/user.models';
 import { UsersDatabaseRepository } from '../domain/repositories/users-db.repository';
@@ -12,6 +14,7 @@ import { UsersDatabaseRepository } from '../domain/repositories/users-db.reposit
  */
 export async function createUserUseCase(repository: UsersDatabaseRepository, data: any): Promise<DatabaseUser> {
     const createDto: CreateUserDto = {
+        id: uuidv4(),
         auth0Id: data.userId,
         provider: data.provider,
         email: data.email,
