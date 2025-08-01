@@ -14,9 +14,11 @@ export const getTemplateByIdController: RequestHandler = async (req, res) => {
         const templateId = req.params.templateId;
         const template = await getTemplateByIdUseCase(templateId);
 
+        console.log(template)
+
         res.status(StatusCodes.OK).json(template);
     } catch (error: unknown) {
-        appLogger.error(`Error: ${(error as Error).message}`, 'Template proposal');
+        appLogger.error(`Error: ${(error as Error).message}`, 'Get template by Id controller');
         handleError(error as Error, res);
     }
 };

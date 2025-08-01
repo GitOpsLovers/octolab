@@ -1,4 +1,4 @@
-import { Template } from '@octolab/domain';
+import { Template, TemplateForListing } from '@octolab/domain';
 
 import { TemplatesRepository } from '../domain/repositories/templates.repository';
 
@@ -6,7 +6,7 @@ import { TemplatesRepository } from '../domain/repositories/templates.repository
  * Templates Api Repository
  */
 export const templatesApiRepository = (): TemplatesRepository => ({
-    getAll: async (): Promise<Template[]> => {
+    getAll: async (): Promise<TemplateForListing[]> => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/templates`, {
             method: 'GET',
             headers: {

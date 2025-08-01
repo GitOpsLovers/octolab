@@ -1,4 +1,4 @@
-export type { Template, TemplateType } from './templates/models/templates.models';
+export type { Template, TemplateType, TemplateForListing, TemplateField, StepCompletionRule } from './templates/models/templates.models';
 export type { User } from './users/models/users.models';
 export type { CustomWorkflowConfig } from './workflows/models/custom-workflows.models';
 export type {

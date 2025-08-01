@@ -625,6 +625,10 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'LARAVEL_FORGE_TRIGGER_URL',
                 required: true,
                 value: 'LARAVEL_FORGE_TRIGGER_URL',
+                condition: {
+                    field: 'deployMode',
+                    equals: 'webhook',
+                },
             },
             {
                 key: 'laravelForgeDeployApiKeySecretName',
@@ -633,6 +637,10 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'LARAVEL_FORGE_API_KEY',
                 required: true,
                 value: 'LARAVEL_FORGE_API_KEY',
+                condition: {
+                    field: 'deployMode',
+                    equals: 'api',
+                },
             },
             {
                 key: 'laravelForgeDeployServerIdSecretName',
@@ -641,6 +649,10 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'LARAVEL_FORGE_SERVER_ID',
                 required: true,
                 value: 'LARAVEL_FORGE_SERVER_ID',
+                condition: {
+                    field: 'deployMode',
+                    equals: 'api',
+                },
             },
             {
                 key: 'laravelForgeDeploySiteIdSecretName',
@@ -649,6 +661,10 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'LARAVEL_FORGE_SITE_ID',
                 required: true,
                 value: 'LARAVEL_FORGE_SITE_ID',
+                condition: {
+                    field: 'deployMode',
+                    equals: 'api',
+                },
             },
         ],
     },

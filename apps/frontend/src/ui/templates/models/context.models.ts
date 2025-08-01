@@ -1,11 +1,11 @@
-import { Template } from '@octolab/domain';
+import { TemplateForListing } from '@octolab/domain';
 
 /**
  * Templates context provider model
  */
 export interface TemplatesContextType {
-    templates: Template[];
-    setTemplates: (templates: Template[]) => void;
+    templates: TemplateForListing[];
+    setTemplates: (templates: TemplateForListing[]) => void;
     loading: boolean;
     error: string | null;
 }

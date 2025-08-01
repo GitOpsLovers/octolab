@@ -1,3 +1,5 @@
+import { TemplateField } from '../../templates/models/templates.models';
+
 /**
  * Workflow template configuration model
  */
@@ -112,19 +114,4 @@ export interface LaravelForgeDeployWorkflowConfig extends BaseWorkflowTemplateCo
     id: 'laravel-forge-deploy';
     runner: string;
     jobName: string;
-}
-
-export interface TemplateField {
-    key: string;
-    label: string;
-    type: 'input' | 'select';
-    placeholder?: string;
-    options?: string[];
-    required?: boolean;
-    default?: string;
-    condition?: {
-        field: string;
-        equals: string;
-    };
-    value?: string;
 }
