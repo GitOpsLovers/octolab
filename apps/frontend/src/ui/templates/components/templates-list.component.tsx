@@ -27,7 +27,7 @@ export function TemplatesList() {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
     const [skipRegisterModal, setSkipRegisterModal] = useState(false);
-    const [selectedType, setSelectedType] = useState<string>('all');
+    const [selectedTemplateType, setSelectedTemplateType] = useState<string>('all');
 
     const templateTypeLabels: Record<TemplateType, string> = {
         verification: 'Verification',
@@ -56,7 +56,9 @@ export function TemplatesList() {
         }
     }, [cookies]);
 
-    // Set the skip register modal cookie and state.
+    /**
+     * Set the skip register modal cookie and state.
+     */
     const setSkipModal = (value: boolean) => {
         if (value) {
             cookies.set('octolab_skip_register_modal', 'true', { expires: 7 });
@@ -67,7 +69,9 @@ export function TemplatesList() {
         }
     };
 
-    // Handle the template selection.
+    /**
+     * On template selection.
+     */
     const handleSelectTemplate = (e: MouseEvent, id: string) => {
         e.preventDefault();
         setSelectedTemplateId(id);
@@ -81,7 +85,9 @@ export function TemplatesList() {
         }
     };
 
-    // Handle the custom workflow selection.
+    /**
+     * On custom workflow selection.
+     */
     const handleSelectCustom = (e: MouseEvent) => {
         e.preventDefault();
         setSelectedTemplateId('custom');
@@ -95,6 +101,9 @@ export function TemplatesList() {
         }
     };
 
+    /**
+     * Show loading state if templates are being fetched
+     */
     if (loading || isLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-text-muted">
@@ -104,6 +113,9 @@ export function TemplatesList() {
         );
     }
 
+    /**
+     * Show error state if there was an error fetching templates
+     */
     if (error) {
         return <p className="text-center text-red-500">Error loading templates: {error}</p>;
     }
@@ -115,9 +127,9 @@ export function TemplatesList() {
             {/* Filter by type dropdown */}
             <div className="flex justify-end mb-4">
                 <select
-                    value={selectedType}
+                    value={selectedTemplateType}
                     onChange={(e) => {
-                        setSelectedType(e.target.value);
+                        setSelectedTemplateType(e.target.value);
                     }}
                     className="w-full sm:w-auto bg-background border border-border text-text px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
                 >
@@ -130,6 +142,7 @@ export function TemplatesList() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+                {/* Custom workflow card */}
                 <div className="bg-surface rounded-lg shadow hover:shadow-lg transition border border-border flex flex-col p-4 text-center">
                     <div className="flex flex-col items-center justify-center flex-1">
                         <Io5Icons.IoBuildOutline className="w-12 h-12 text-primary mb-3" />
@@ -152,7 +165,7 @@ export function TemplatesList() {
                 </div>
 
                 {templates
-                    ?.filter((template) => selectedType === 'all' || template.type === selectedType)
+                    ?.filter((template) => selectedTemplateType === 'all' || template.type === selectedTemplateType)
                     .map((template) => {
                         let Icon;
                         if (template.iconLibrary === 'io5') {
@@ -200,6 +213,7 @@ export function TemplatesList() {
                         );
                     })}
 
+                {/* Request new template card */}
                 <Link
                     className="bg-surface rounded-lg border border-dashed border-border flex flex-col p-4 items-center justify-center text-center hover:shadow-lg transition cursor-pointer"
                     href={'/propose-template'}
@@ -211,6 +225,7 @@ export function TemplatesList() {
                 </Link>
             </div>
 
+            {/* Register modal */}
             <RegisterModalForTemplatesList
                 templateId={selectedTemplateId}
                 isOpen={modalOpen}

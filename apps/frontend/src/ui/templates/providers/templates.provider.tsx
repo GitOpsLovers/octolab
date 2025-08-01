@@ -16,6 +16,9 @@ export function TemplatesProvider({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
+    /**
+     * Fetch templates
+     */
     useEffect(() => {
         const fetchTemplates = async () => {
             try {

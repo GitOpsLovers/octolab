@@ -1,13 +1,22 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import { getTemplateByIdUseCase } from '../../application/get-template-by-id.use-case';
+
+import { appLogger } from '@core/infrastructure/loggers/winston.logger';
+import { handleError } from '@core/ui/handlers/error.handler';
 
 /**
  * Get template by Id controller.
  */
-export async function getTemplateByIdController(req: Request, res: Response): Promise<void> {
-    const templateId = req.params.templateId;
-    const template = await getTemplateByIdUseCase(templateId);
+export const getTemplateByIdController: RequestHandler = async (req, res) => {
+    try {
+        const templateId = req.params.templateId;
+        const template = await getTemplateByIdUseCase(templateId);
 
-    res.json(template);
-}
+        res.status(StatusCodes.OK).json(template);
+    } catch (error: unknown) {
+        appLogger.error(`Error: ${(error as Error).message}`, 'Template proposal');
+        handleError(error as Error, res);
+    }
+};
