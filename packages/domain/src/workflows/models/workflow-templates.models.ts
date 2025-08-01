@@ -21,7 +21,7 @@ export interface BaseWorkflowTemplateConfig {
     name: string;
     description: string;
     filename: string;
-    workflowName: string;
+    fields: TemplateField[];
 }
 
 /**
@@ -31,12 +31,6 @@ export interface NpmPublishWorkflowConfig extends BaseWorkflowTemplateConfig {
     id: 'npm-publish';
     runner: string;
     jobName: string;
-    branch: string;
-    installCommand?: string;
-    testCommand: string;
-    buildCommand?: string;
-    npmTokenSecret: string;
-    nodeVersion?: string;
 }
 
 /**
@@ -46,11 +40,6 @@ export interface NodePrVerifyWorkflowConfig extends BaseWorkflowTemplateConfig {
     id: 'node-pr-verify';
     runner: string;
     jobName: string;
-    installCommand?: string;
-    lintCommand: string;
-    testCommand: string;
-    buildCommand?: string;
-    nodeVersion?: string;
 }
 
 /**
@@ -60,12 +49,6 @@ export interface NxPrVerifyWorkflowConfig extends BaseWorkflowTemplateConfig {
     id: 'nx-pr-verify';
     runner: string;
     jobName: string;
-    baseBranch: string;
-    installCommand?: string;
-    lintCommand: string;
-    testCommand: string;
-    buildCommand?: string;
-    nodeVersion?: string;
 }
 
 /**
@@ -75,8 +58,6 @@ export interface VercelProDeploymentWorkflowConfig extends BaseWorkflowTemplateC
     id: 'vercel-pro-deployment';
     runner: string;
     jobName: string;
-    branch: string;
-    vercelTokenSecret: string;
 }
 
 /**
@@ -86,12 +67,6 @@ export interface SemanticReleaseWorkflowConfig extends BaseWorkflowTemplateConfi
     id: 'semantic-release';
     runner: string;
     jobName: string;
-    branch: string;
-    installCommand?: string;
-    buildCommand?: string;
-    releaseCommand: string;
-    githubTokenSecret: string;
-    nodeVersion?: string;
 }
 
 /**
@@ -101,20 +76,6 @@ export interface AwsS3CloudFrontWorkflowConfig extends BaseWorkflowTemplateConfi
     id: 'aws-s3-cloudfront-deploy';
     runner: string;
     jobName: string;
-    branch: string;
-    installCommand?: string;
-    buildCommand?: string;
-    awsRegionEnvironmentVariable: string;
-    awsRegionEnvironmentVariableValue: string;
-    awsRoleNameEnvironmentVariable: string;
-    awsRoleNameEnvironmentVariableValue: string;
-    awsS3BucketEnvironmentVariable: string;
-    awsS3BucketEnvironmentVariableValue: string;
-    sourceDirEnvironmentVariable: string;
-    sourceDirEnvironmentVariableValue: string;
-    cloudfrontDistributionIdSecret: string;
-    awsAccountIdSecret: string;
-    nodeVersion?: string;
 }
 
 /**
@@ -124,10 +85,6 @@ export interface SnykSecurityScanWorkflowConfig extends BaseWorkflowTemplateConf
     id: 'security-scan-snyk';
     runner: string;
     jobName: string;
-    branch: string;
-    snykCodeStack: string;
-    snykSeverityThreshold: string;
-    snykTokenSecret: string;
 }
 
 /**
@@ -137,13 +94,6 @@ export interface DockerImagePublishWorkflowConfig extends BaseWorkflowTemplateCo
     id: 'docker-image-publish';
     runner: string;
     jobName: string;
-    branch: string;
-    dockerRegistry: string;
-    dockerUsername: string;
-    dockerPasswordSecret: string;
-    dockerBuildContext: string;
-    dockerDockerfile: string;
-    dockerImageTags: string;
 }
 
 /**
@@ -153,8 +103,6 @@ export interface AutoTagVersionWorkflowConfig extends BaseWorkflowTemplateConfig
     id: 'auto-tag-version';
     runner: string;
     jobName: string;
-    branch: string;
-    autoTagVersionCommand: string;
 }
 
 /**
@@ -164,10 +112,19 @@ export interface LaravelForgeDeployWorkflowConfig extends BaseWorkflowTemplateCo
     id: 'laravel-forge-deploy';
     runner: string;
     jobName: string;
-    branch: string;
-    deployMode: 'webhook' | 'api';
-    laravelForgeDeployTriggerUrlSecretName: string;
-    laravelForgeDeployApiKeySecretName: string;
-    laravelForgeDeployServerIdSecretName: string;
-    laravelForgeDeploySiteIdSecretName: string;
+}
+
+export interface TemplateField {
+    key: string;
+    label: string;
+    type: 'input' | 'select';
+    placeholder?: string;
+    options?: string[];
+    required?: boolean;
+    default?: string;
+    condition?: {
+        field: string;
+        equals: string;
+    };
+    value?: string;
 }

@@ -34,7 +34,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
     const [isEditingExistingWorkflow, setIsEditingExistingWorkflow] = useState<boolean>(false);
 
     /**
-     * Get runners
+     * Get available runners
      */
     useEffect(() => {
         const fetchRunners = async () => {
@@ -51,9 +51,12 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
         fetchRunners();
     }, []);
 
+    /**
+     * Get template workflow configuration
+     */
     useEffect(() => {
         const init = async () => {
-            // Si hay workflowId, lo buscamos en la base de datos
+            // Si disponemos de workflow Id, los buscamos en la base de datos (estamos editando)
             if (workflowId) {
                 try {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -65,21 +68,12 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
 
                         const workflow: WorkflowTemplateConfig = {
                             id: existingWorkflowData.id,
-                            runner: existingWorkflowData.runner,
-                            nodeVersion: existingWorkflowData.nodeVersion,
-                            installCommand: existingWorkflowData.installCommand,
-                            testCommand: existingWorkflowData.testCommand,
-                            lintCommand: existingWorkflowData.lintCommand,
-                            buildCommand: existingWorkflowData.buildCommand,
-                            workflowName: existingWorkflowData.workflowName,
-                            jobName: existingWorkflowData.jobName,
-                            npmTokenSecret: existingWorkflowData.npmTokenSecret,
-                            vercelTokenSecret: existingWorkflowData.vercelTokenSecret,
-                            filename: existingWorkflowData.filename ?? 'custom-workflow.yml',
                             name: existingWorkflow.name,
+                            runner: existingWorkflowData.runner,
+                            jobName: existingWorkflowData.jobName,
                             description: existingWorkflow.description,
-                            branch: existingWorkflowData.branch,
-                            autoTagVersionCommand: existingWorkflowData.autoTagVersionCommand,
+                            filename: existingWorkflowData.filename ?? 'custom-workflow.yml',
+                            fields: existingWorkflowData.fields,
                         };
 
                         setEditingWorkflow(structuredClone(workflow));
@@ -94,6 +88,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
                 }
             }
 
+            // Obtenemos los datos del template
             const fetchTemplate = async (): Promise<Template | null> => {
                 try {
                     const repository = templatesApiRepository();
@@ -106,6 +101,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
                 }
             };
 
+            // Obtenemos la configuración del template workflow
             const fetchWorkflowConfig = async (templateOverride?: Template | null) => {
                 try {
                     const repository = editorApiRepository();
@@ -120,7 +116,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
                     setEditingWorkflow(structuredClone(initialWorkflow));
                     setInitialEditingWorkflowData(structuredClone(initialWorkflow));
                 } catch (err) {
-                    console.error('Error fetching workflow config:', err);
+                    console.error('Error fetching template workflow configuration:', err);
                 }
             };
 

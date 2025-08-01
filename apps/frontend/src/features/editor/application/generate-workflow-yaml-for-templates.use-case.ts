@@ -1,19 +1,4 @@
-import {
-    AutoTagVersionWorkflowConfig,
-    AwsS3CloudFrontWorkflowConfig,
-    DockerImagePublishWorkflowConfig,
-    Job,
-    LaravelForgeDeployWorkflowConfig,
-    NodePrVerifyWorkflowConfig,
-    NpmPublishWorkflowConfig,
-    NxPrVerifyWorkflowConfig,
-    SemanticReleaseWorkflowConfig,
-    SnykSecurityScanWorkflowConfig,
-    Step,
-    VercelProDeploymentWorkflowConfig,
-    WorkflowTemplateConfig,
-    WorkflowYaml,
-} from '@octolab/domain';
+import { Job, Step, WorkflowTemplateConfig, WorkflowYaml } from '@octolab/domain';
 import { v4 as uuidv4 } from 'uuid';
 
 import { snykStackActionMap } from '../domain/constants/actions.const';
@@ -36,9 +21,9 @@ function checkoutStep(): Step[] {
 /**
  * Setup Node step
  */
-function setupNodeStep(
-    config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig | NxPrVerifyWorkflowConfig,
-): Step {
+function setupNodeStep(config: WorkflowTemplateConfig): Step {
+    const nodeVersion = config.fields.find((f) => f.key === 'nodeVersion')?.value ?? '18';
+
     return {
         internalId: uuidv4(),
         id: 'setup-node-step',
@@ -46,7 +31,7 @@ function setupNodeStep(
         type: 'uses',
         uses: 'actions/setup-node@v4',
         with: {
-            'node-version': config.nodeVersion ?? '18',
+            'node-version': nodeVersion,
         },
     };
 }
@@ -54,26 +39,29 @@ function setupNodeStep(
 /**
  * Install dependencies step
  */
-function installDependenciesStep(
-    config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig | NxPrVerifyWorkflowConfig,
-): Step {
+function installDependenciesStep(config: WorkflowTemplateConfig): Step {
+    const installCommand = config.fields.find((f) => f.key === 'installCommand')?.value ?? '';
+
     return {
         internalId: uuidv4(),
         id: 'install-dependencies-step',
         name: 'Install dependencies',
         type: 'run',
-        run: config.installCommand,
+        run: installCommand,
     };
 }
 
 /**
  * Lint step
  */
-function lintStep(config: NodePrVerifyWorkflowConfig | NxPrVerifyWorkflowConfig): Step {
-    let runCommand = config.lintCommand;
+function lintStep(config: WorkflowTemplateConfig): Step {
+    const lintCommand = config.fields.find((f) => f.key === 'lintCommand')?.value ?? '';
+    const baseBranch = config.fields.find((f) => f.key === 'baseBranch')?.value;
 
-    if (config.id === 'nx-pr-verify' && config.baseBranch) {
-        runCommand = `${runCommand} --base=origin/${config.baseBranch}`;
+    let runCommand = lintCommand;
+
+    if (config.id === 'nx-pr-verify' && baseBranch) {
+        runCommand = `${runCommand} --base=origin/${baseBranch}`;
     }
 
     return {
@@ -88,11 +76,14 @@ function lintStep(config: NodePrVerifyWorkflowConfig | NxPrVerifyWorkflowConfig)
 /**
  * Test step
  */
-function testStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | NxPrVerifyWorkflowConfig): Step {
-    let runCommand = config.testCommand;
+function testStep(config: WorkflowTemplateConfig): Step {
+    const testCommand = config.fields.find((f) => f.key === 'testCommand')?.value ?? '';
+    const baseBranch = config.fields.find((f) => f.key === 'baseBranch')?.value;
 
-    if (config.id === 'nx-pr-verify' && config.baseBranch) {
-        runCommand = `${runCommand} --base=origin/${config.baseBranch}`;
+    let runCommand = testCommand;
+
+    if (config.id === 'nx-pr-verify' && baseBranch) {
+        runCommand = `${runCommand} --base=origin/${baseBranch}`;
     }
 
     return {
@@ -107,11 +98,14 @@ function testStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig 
 /**
  * Build step
  */
-function buildStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig | SemanticReleaseWorkflowConfig | AwsS3CloudFrontWorkflowConfig | NxPrVerifyWorkflowConfig): Step {
-    let runCommand = config.buildCommand;
+function buildStep(config: WorkflowTemplateConfig): Step {
+    const buildCommand = config.fields.find((f) => f.key === 'buildCommand')?.value ?? '';
+    const baseBranch = config.fields.find((f) => f.key === 'baseBranch')?.value;
 
-    if (config.id === 'nx-pr-verify' && config.baseBranch) {
-        runCommand = `${runCommand} --base=origin/${config.baseBranch}`;
+    let runCommand = buildCommand;
+
+    if (config.id === 'nx-pr-verify' && baseBranch) {
+        runCommand = `${runCommand} --base=origin/${baseBranch}`;
     }
 
     return {
@@ -126,7 +120,9 @@ function buildStep(config: NodePrVerifyWorkflowConfig | NpmPublishWorkflowConfig
 /**
  * Publish to NPM step
  */
-function npmPublishStep(config: NpmPublishWorkflowConfig): Step {
+function npmPublishStep(config: WorkflowTemplateConfig): Step {
+    const npmTokenSecret = config.fields.find((f) => f.key === 'npmTokenSecret')?.value ?? '';
+
     return {
         internalId: uuidv4(),
         id: 'npm-publish-step',
@@ -134,7 +130,7 @@ function npmPublishStep(config: NpmPublishWorkflowConfig): Step {
         type: 'uses',
         uses: 'JS-DevTools/npm-publish@v3',
         with: {
-            token: `\${{ secrets.${config.npmTokenSecret} }}`,
+            token: `\${{ secrets.${npmTokenSecret} }}`,
         },
     };
 }
@@ -142,15 +138,18 @@ function npmPublishStep(config: NpmPublishWorkflowConfig): Step {
 /**
  * Semantic Release step
  */
-function semanticReleaseStep(config: SemanticReleaseWorkflowConfig): Step {
+function semanticReleaseStep(config: WorkflowTemplateConfig): Step {
+    const releaseCommand = config.fields.find((f) => f.key === 'releaseCommand')?.value ?? '';
+    const githubTokenSecret = config.fields.find((f) => f.key === 'githubTokenSecret')?.value ?? '';
+
     return {
         internalId: uuidv4(),
         id: 'semantic-release-step',
         name: 'Release with Semantic Release',
         type: 'run',
-        run: config.releaseCommand,
+        run: releaseCommand,
         env: {
-            GITHUB_TOKEN: `\${{ secrets.${config.githubTokenSecret} }}`,
+            GITHUB_TOKEN: `\${{ secrets.${githubTokenSecret} }}`,
         },
     };
 }
@@ -158,7 +157,17 @@ function semanticReleaseStep(config: SemanticReleaseWorkflowConfig): Step {
 /**
  * AWS S3 and CloudFront deployment steps
  */
-function awsSteps(config: AwsS3CloudFrontWorkflowConfig): Step[] {
+function awsSteps(config: WorkflowTemplateConfig): Step[] {
+    const get = (key: string) => config.fields.find((f) => f.key === key)?.value ?? '';
+
+    const awsAccountIdSecret = get('awsAccountIdSecret');
+    const awsRoleNameEnvVar = get('awsRoleNameEnvironmentVariable');
+    const awsRegionEnvVar = get('awsRegionEnvironmentVariable');
+    const sourceDirEnvVar = get('sourceDirEnvironmentVariable');
+    // eslint-disable-next-line no-secrets/no-secrets
+    const awsS3BucketEnvVar = get('awsS3BucketEnvironmentVariable');
+    const cloudfrontDistributionIdSecret = get('cloudfrontDistributionIdSecret');
+
     return [
         {
             internalId: uuidv4(),
@@ -167,8 +176,8 @@ function awsSteps(config: AwsS3CloudFrontWorkflowConfig): Step[] {
             type: 'uses',
             uses: 'aws-actions/configure-aws-credentials@v4',
             with: {
-                'role-to-assume': `arn:aws:iam::\${{ secrets.${config.awsAccountIdSecret} }}:role/\${{ env.${config.awsRoleNameEnvironmentVariable} }}`,
-                'aws-region': `\${{ env.${config.awsRegionEnvironmentVariable} }}`,
+                'role-to-assume': `arn:aws:iam::\${{ secrets.${awsAccountIdSecret} }}:role/\${{ env.${awsRoleNameEnvVar} }}`,
+                'aws-region': `\${{ env.${awsRegionEnvVar} }}`,
             },
         },
         {
@@ -176,14 +185,14 @@ function awsSteps(config: AwsS3CloudFrontWorkflowConfig): Step[] {
             id: 'sync-files-to-s3-step',
             name: 'Sync files to S3',
             type: 'run',
-            run: `aws s3 sync \${{ env.${config.sourceDirEnvironmentVariable} }} s3://\${{ env.${config.awsS3BucketEnvironmentVariable} }}/ --delete --exclude '.*git*'`,
+            run: `aws s3 sync \${{ env.${sourceDirEnvVar} }} s3://\${{ env.${awsS3BucketEnvVar} }}/ --delete --exclude '.*git*'`,
         },
         {
             internalId: uuidv4(),
             id: 'invalidate-cloudfront-cache-step',
             name: 'Invalidate CloudFront Cache',
             type: 'run',
-            run: `aws cloudfront create-invalidation --distribution-id \${{ secrets.${config.cloudfrontDistributionIdSecret} }} --paths "/*"`,
+            run: `aws cloudfront create-invalidation --distribution-id \${{ secrets.${cloudfrontDistributionIdSecret} }} --paths "/*"`,
         },
     ];
 }
@@ -191,7 +200,9 @@ function awsSteps(config: AwsS3CloudFrontWorkflowConfig): Step[] {
 /**
  * Vercel-specific steps
  */
-function vercelSteps(config: VercelProDeploymentWorkflowConfig): Step[] {
+function vercelSteps(config: WorkflowTemplateConfig): Step[] {
+    const vercelTokenSecret = config.fields.find((f) => f.key === 'vercelTokenSecret')?.value ?? '';
+
     return [
         {
             internalId: uuidv4(),
@@ -205,21 +216,21 @@ function vercelSteps(config: VercelProDeploymentWorkflowConfig): Step[] {
             id: 'pull-vercel-env-info-step',
             name: 'Pull Vercel Environment Information',
             type: 'run',
-            run: `vercel pull --yes --environment=production --token=\${{ secrets.${config.vercelTokenSecret} }}`,
+            run: `vercel pull --yes --environment=production --token=\${{ secrets.${vercelTokenSecret} }}`,
         },
         {
             internalId: uuidv4(),
             id: 'build-vercel-artifacts-step',
             name: 'Build Project Artifacts',
             type: 'run',
-            run: `vercel build --prod --token=\${{ secrets.${config.vercelTokenSecret} }}`,
+            run: `vercel build --prod --token=\${{ secrets.${vercelTokenSecret} }}`,
         },
         {
             internalId: uuidv4(),
             id: 'deploy-vercel-artifacts-step',
             name: 'Deploy Project Artifacts to Vercel',
             type: 'run',
-            run: `vercel deploy --prebuilt --prod --token=\${{ secrets.${config.vercelTokenSecret} }}`,
+            run: `vercel deploy --prebuilt --prod --token=\${{ secrets.${vercelTokenSecret} }}`,
         },
     ];
 }
@@ -227,8 +238,12 @@ function vercelSteps(config: VercelProDeploymentWorkflowConfig): Step[] {
 /**
  * Snyk specific steps
  */
-function snykSteps(config: SnykSecurityScanWorkflowConfig): Step {
-    const actionName = snykStackActionMap[config.snykCodeStack];
+function snykSteps(config: WorkflowTemplateConfig): Step {
+    const snykCodeStack = config.fields.find((f) => f.key === 'snykCodeStack')?.value ?? 'node';
+    const snykTokenSecret = config.fields.find((f) => f.key === 'snykTokenSecret')?.value ?? '';
+    const snykSeverityThreshold = config.fields.find((f) => f.key === 'snykSeverityThreshold')?.value ?? 'low';
+
+    const actionName = snykStackActionMap[snykCodeStack];
 
     return {
         internalId: uuidv4(),
@@ -237,10 +252,10 @@ function snykSteps(config: SnykSecurityScanWorkflowConfig): Step {
         type: 'uses',
         uses: `snyk/actions/${actionName}@master`,
         env: {
-            SNYK_TOKEN: `\${{ secrets.${config.snykTokenSecret} }}`,
+            SNYK_TOKEN: `\${{ secrets.${snykTokenSecret} }}`,
         },
         with: {
-            args: `--severity-threshold=${config.snykSeverityThreshold}`,
+            args: `--severity-threshold=${snykSeverityThreshold}`,
         },
     };
 }
@@ -248,15 +263,20 @@ function snykSteps(config: SnykSecurityScanWorkflowConfig): Step {
 /**
  * Docker publish steps
  */
-function dockerPublishSteps(config: DockerImagePublishWorkflowConfig): Step[] {
-    // Construir el objeto "with" para login dinámicamente
+function dockerPublishSteps(config: WorkflowTemplateConfig): Step[] {
+    const dockerUsername = config.fields.find((f) => f.key === 'dockerUsername')?.value ?? '';
+    const dockerPasswordSecret = config.fields.find((f) => f.key === 'dockerPasswordSecret')?.value ?? '';
+    const dockerRegistry = config.fields.find((f) => f.key === 'dockerRegistry')?.value ?? '';
+    const dockerBuildContext = config.fields.find((f) => f.key === 'dockerBuildContext')?.value ?? '.';
+    const dockerDockerfile = config.fields.find((f) => f.key === 'dockerDockerfile')?.value ?? './Dockerfile';
+    const dockerImageTags = config.fields.find((f) => f.key === 'dockerImageTags')?.value ?? '';
+
     const loginWith: Record<string, string> = {
-        username: config.dockerUsername,
-        password: `\${{ secrets.${config.dockerPasswordSecret} }}`,
+        username: dockerUsername,
+        password: `\${{ secrets.${dockerPasswordSecret} }}`,
     };
 
-    // Si el usuario selecciona GitHub Container Registry, añadir registry
-    if (config.dockerRegistry === 'Github Container Registry') {
+    if (dockerRegistry === 'Github Container Registry') {
         loginWith.registry = 'ghcr.io';
     }
 
@@ -290,10 +310,10 @@ function dockerPublishSteps(config: DockerImagePublishWorkflowConfig): Step[] {
             type: 'uses',
             uses: 'docker/build-push-action@v6',
             with: {
-                context: config.dockerBuildContext,
-                file: config.dockerDockerfile,
+                context: dockerBuildContext,
+                file: dockerDockerfile,
                 push: true,
-                tags: config.dockerImageTags,
+                tags: dockerImageTags,
             },
         },
     ];
@@ -302,7 +322,9 @@ function dockerPublishSteps(config: DockerImagePublishWorkflowConfig): Step[] {
 /**
  * Auto tag steps
  */
-function autoTagSteps(config: AutoTagVersionWorkflowConfig): Step[] {
+function autoTagSteps(config: WorkflowTemplateConfig): Step[] {
+    const autoTagVersionCommand = config.fields.find((f) => f.key === 'autoTagVersionCommand')?.value ?? '';
+
     return [
         {
             internalId: uuidv4(),
@@ -311,7 +333,7 @@ function autoTagSteps(config: AutoTagVersionWorkflowConfig): Step[] {
             type: 'uses',
             uses: 'salsify/action-detect-and-tag-new-version@v23',
             with: {
-                'version-command': config.autoTagVersionCommand,
+                'version-command': autoTagVersionCommand,
             },
         },
     ];
@@ -320,7 +342,11 @@ function autoTagSteps(config: AutoTagVersionWorkflowConfig): Step[] {
 /**
  * Deploy to Laravel Forge steps
  */
-function laravelForgeDeploymentSteps(config: LaravelForgeDeployWorkflowConfig): Step[] {
+function laravelForgeDeploymentSteps(config: WorkflowTemplateConfig): Step[] {
+    const get = (key: string) => config.fields.find((f) => f.key === key)?.value ?? '';
+
+    const deployMode = get('deployMode');
+
     const baseStep: Step = {
         internalId: uuidv4(),
         id: 'laravel-forge-deploy-step',
@@ -330,15 +356,15 @@ function laravelForgeDeploymentSteps(config: LaravelForgeDeployWorkflowConfig): 
         with: {},
     };
 
-    if (config.deployMode === 'webhook') {
+    if (deployMode === 'webhook') {
         baseStep.with = {
-            'trigger-url': `\${{ secrets.${config.laravelForgeDeployTriggerUrlSecretName} }}`,
+            'trigger-url': `\${{ secrets.${get('laravelForgeDeployTriggerUrlSecretName')} }}`,
         };
-    } else if (config.deployMode === 'api') {
+    } else if (deployMode === 'api') {
         baseStep.with = {
-            api_key: `\${{ secrets.${config.laravelForgeDeployApiKeySecretName} }}`,
-            server_id: `\${{ secrets.${config.laravelForgeDeployServerIdSecretName} }}`,
-            site_id: `\${{ secrets.${config.laravelForgeDeploySiteIdSecretName} }}`,
+            api_key: `\${{ secrets.${get('laravelForgeDeployApiKeySecretName')} }}`,
+            server_id: `\${{ secrets.${get('laravelForgeDeployServerIdSecretName')} }}`,
+            site_id: `\${{ secrets.${get('laravelForgeDeploySiteIdSecretName')} }}`,
         };
     }
 
@@ -402,22 +428,43 @@ function generateOnConfig(config: WorkflowTemplateConfig): Record<string, any> {
         return { pull_request: {} };
     }
 
-    return { push: { branches: [config.branch ?? 'main'] } };
+    const branch = config.fields.find((f) => f.key === 'branch')?.value ?? 'main';
+    return { push: { branches: [branch] } };
 }
 
 /**
  * Generate "env" section based on workflow config
  */
 function generateEnvConfig(config: WorkflowTemplateConfig): Record<string, string> | undefined {
-    if (config.id === 'aws-s3-cloudfront-deploy') {
-        return {
-            [config.awsRegionEnvironmentVariable]: config.awsRegionEnvironmentVariableValue,
-            [config.awsRoleNameEnvironmentVariable]: config.awsRoleNameEnvironmentVariableValue,
-            [config.awsS3BucketEnvironmentVariable]: config.awsS3BucketEnvironmentVariableValue,
-            [config.sourceDirEnvironmentVariable]: config.sourceDirEnvironmentVariableValue,
-        };
+    if (config.id !== 'aws-s3-cloudfront-deploy') return undefined;
+
+    const getFieldValue = (key: string): string | undefined => config.fields.find((f) => f.key === key)?.value;
+
+    const regionKey = getFieldValue('awsRegionEnvironmentVariable');
+    const regionValue = getFieldValue('awsRegionEnvironmentVariableValue');
+
+    const roleKey = getFieldValue('awsRoleNameEnvironmentVariable');
+    const roleValue = getFieldValue('awsRoleNameEnvironmentVariableValue');
+
+    // eslint-disable-next-line no-secrets/no-secrets
+    const bucketKey = getFieldValue('awsS3BucketEnvironmentVariable');
+    // eslint-disable-next-line no-secrets/no-secrets
+    const bucketValue = getFieldValue('awsS3BucketEnvironmentVariableValue');
+
+    const sourceKey = getFieldValue('sourceDirEnvironmentVariable');
+    const sourceValue = getFieldValue('sourceDirEnvironmentVariableValue');
+
+    // Validamos que todas las claves estén definidas
+    if (!regionKey || !regionValue || !roleKey || !roleValue || !bucketKey || !bucketValue || !sourceKey || !sourceValue) {
+        return undefined;
     }
-    return undefined;
+
+    return {
+        [regionKey]: regionValue,
+        [roleKey]: roleValue,
+        [bucketKey]: bucketValue,
+        [sourceKey]: sourceValue,
+    };
 }
 
 /**
@@ -507,7 +554,7 @@ export function generateWorkflowYamlForTemplatesUseCase(workflowConfig: Workflow
     const jobsYaml = generateYamlJobsFromJobs(jobsInternal);
 
     return {
-        name: workflowConfig.workflowName,
+        name: workflowConfig.fields.find((f) => f.key === 'workflowName')?.value ?? 'Generated Workflow',
         on,
         env,
         jobs: jobsYaml,
