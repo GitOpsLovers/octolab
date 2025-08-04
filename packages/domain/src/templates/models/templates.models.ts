@@ -22,7 +22,7 @@ export type TemplateType = 'verification' | 'distribution' | 'deployment' | 'rel
 /**
  * Template for listing
  */
-export type TemplateForListing = Omit<Template, 'steps'>;
+export type TemplateForListing = Omit<Template, 'steps' | 'stepCompletionRules'>;
 
 /**
  * Template field model
