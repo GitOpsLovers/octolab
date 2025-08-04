@@ -59,7 +59,7 @@ export function Hero({ session }: HeroProps): ReactNode {
                     animate={isDesktop ? { opacity: 1, scale: 1 } : undefined}
                     transition={isDesktop ? { duration: 0.6, delay: 0.2 } : undefined}
                 >
-                    <Image src="/img/logo/header-logo-sm.png" alt="OctoLab logo" width={260} height={36} priority className="w-[180px] sm:w-[260px] h-auto" />
+                    <Image src="/img/logo/header-logo-sm-2.png" alt="OctoLab logo" width={260} height={36} priority className="w-[180px] sm:w-[260px] h-auto" />
 
                     <span className="text-6xl md:text-7xl font-bold text-primary relative">
                         OctoLab
