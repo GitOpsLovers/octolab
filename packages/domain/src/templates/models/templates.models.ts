@@ -12,6 +12,7 @@ export interface Template {
     steps: string[];
     type: TemplateType;
     stepCompletionRules: StepCompletionRules;
+    guide: Array<{ label: string; description: string }>;
 }
 
 /**
@@ -22,7 +23,7 @@ export type TemplateType = 'verification' | 'distribution' | 'deployment' | 'rel
 /**
  * Template for listing
  */
-export type TemplateForListing = Omit<Template, 'steps' | 'stepCompletionRules'>;
+export type TemplateForListing = Omit<Template, 'steps' | 'stepCompletionRules' | 'guide'>;
 
 /**
  * Template field model

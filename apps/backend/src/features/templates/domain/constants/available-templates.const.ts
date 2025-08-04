@@ -22,6 +22,14 @@ export const availableTemplates: Template[] = [
             Test: { type: 'non-empty-string', key: 'testCommand' },
             Build: { type: 'non-empty-string', key: 'buildCommand' },
         },
+        guide: [
+            { label: 'Checkout', description: 'Download your repository on the runner' },
+            { label: 'Set Node version', description: 'Configure the version of Node.js to be used' },
+            { label: 'Install dependencies', description: 'Install the project dependencies' },
+            { label: 'Lint', description: 'Check the style and format of the code' },
+            { label: 'Tests', description: 'Run tests to validate behavior' },
+            { label: 'Build', description: 'Compile and generate distribution artifacts' },
+        ],
     },
     {
         id: 'nx-pr-verify',
@@ -42,6 +50,15 @@ export const availableTemplates: Template[] = [
             Test: { type: 'non-empty-string', key: 'testCommand' },
             Build: { type: 'non-empty-string', key: 'buildCommand' },
         },
+        guide: [
+            { label: 'Checkout', description: 'Download your repository on the runner' },
+            { label: 'Set base branch', description: 'Configure the base branch for comparison' },
+            { label: 'Set Node version', description: 'Configure the version of Node.js to be used' },
+            { label: 'Install dependencies', description: 'Install the project dependencies' },
+            { label: 'Lint', description: 'Check the style and format of the code' },
+            { label: 'Tests', description: 'Run tests to validate behavior' },
+            { label: 'Build', description: 'Compile and generate distribution artifacts' },
+        ],
     },
     {
         id: 'npm-publish',
@@ -62,6 +79,15 @@ export const availableTemplates: Template[] = [
             Build: { type: 'non-empty-string', key: 'buildCommand' },
             Publish: { type: 'non-empty-string', key: 'npmTokenSecret' },
         },
+        guide: [
+            { label: 'Checkout', description: 'Download your repository on the runner' },
+            { label: 'Set destination branch', description: 'Configures the target branch to push on' },
+            { label: 'Set Node version', description: 'Configure the version of Node.js to be used' },
+            { label: 'Install dependencies', description: 'Install the project dependencies' },
+            { label: 'Tests', description: 'Run tests to validate behavior' },
+            { label: 'Build', description: 'Compile and generate distribution artifacts' },
+            { label: 'Set NPM options', description: 'Configure NPM credentials to publish the artifact' },
+        ],
     },
     {
         id: 'vercel-pro-deployment',
@@ -80,6 +106,14 @@ export const availableTemplates: Template[] = [
             Build: { type: 'non-empty-string', key: 'vercelTokenSecret' },
             Deploy: { type: 'non-empty-string', key: 'vercelTokenSecret' },
         },
+        guide: [
+            { label: 'Checkout', description: 'Download your repository on the runner' },
+            { label: 'Set destination branch', description: 'Configures the target branch to push on' },
+            { label: 'Install Vercel CLI', description: 'Install the Vercel CLI globally in the runner' },
+            { label: 'Pull Vercel environment', description: 'Synchronize your project’s configuration from Vercel' },
+            { label: 'Build', description: 'Build the project locally' },
+            { label: 'Deploy', description: 'Deploy the prebuilt output to Vercel production environment' },
+        ],
     },
     {
         id: 'semantic-release',
@@ -99,6 +133,14 @@ export const availableTemplates: Template[] = [
             Build: { type: 'non-empty-string', key: 'buildCommand' },
             'Launch Semantic Release': { type: 'non-empty-string', keys: ['releaseCommand', 'githubTokenSecret'] },
         },
+        guide: [
+            { label: 'Checkout', description: 'Download your repository on the runner' },
+            { label: 'Set destination branch', description: 'Configure the target branch to trigger the release' },
+            { label: 'Set Node version', description: 'Configure the version of Node.js to be used' },
+            { label: 'Install dependencies', description: 'Install the project dependencies' },
+            { label: 'Build', description: 'Compile and generate distribution artifacts' },
+            { label: 'Launch Semantic Release', description: 'Run the Semantic Release CLI to publish the release' },
+        ],
     },
     {
         id: 'aws-s3-cloudfront-deploy',
@@ -134,6 +176,14 @@ export const availableTemplates: Template[] = [
             },
             Build: { type: 'non-empty-string', key: 'buildCommand' },
         },
+        guide: [
+            { label: 'Checkout', description: 'Download your repository on the runner' },
+            { label: 'Set destination branch', description: 'Configure the target branch to deploy from' },
+            { label: 'Set Node version', description: 'Configure the version of Node.js to be used' },
+            { label: 'Install dependencies', description: 'Install the project dependencies' },
+            { label: 'Build', description: 'Compile and generate distribution artifacts' },
+            { label: 'Set AWS configuration', description: 'Configure credentials and deploy files to S3 and invalidate CloudFront cache' },
+        ],
     },
     {
         id: 'security-scan-snyk',
@@ -152,6 +202,13 @@ export const availableTemplates: Template[] = [
             'Set severity threshold': { type: 'select-value', key: 'snykSeverityThreshold' },
             'Run Snyk scan': { type: 'non-empty-string', key: 'snykTokenSecret' },
         },
+        guide: [
+            { label: 'Checkout', description: 'Download your repository on the runner' },
+            { label: 'Set destination branch', description: 'Configure the target branch to scan from' },
+            { label: 'Set stack', description: 'Specify the type of code to scan (e.g., Node, Java, Python)' },
+            { label: 'Set severity threshold', description: 'Define the minimum vulnerability level to fail the scan' },
+            { label: 'Run Snyk scan', description: 'Execute Snyk CLI to detect vulnerabilities using the configured token' },
+        ],
     },
     {
         id: 'docker-image-publish',
@@ -169,6 +226,12 @@ export const availableTemplates: Template[] = [
             'Set credentials': { type: 'non-empty-string', keys: ['dockerUsername', 'dockerPasswordSecret'] },
             'Set build context': { type: 'non-empty-string', keys: ['dockerBuildContext', 'dockerDockerfile', 'dockerImageTags'] },
         },
+        guide: [
+            { label: 'Set destination branch', description: 'Configure the target branch to publish from' },
+            { label: 'Set registry', description: 'Select the container registry to push the image to' },
+            { label: 'Set credentials', description: 'Configure authentication using registry username and secret' },
+            { label: 'Set build context', description: 'Define the Dockerfile path, build context, and image tags' },
+        ],
     },
     {
         id: 'auto-tag-version',
@@ -189,6 +252,10 @@ export const availableTemplates: Template[] = [
             Checkout: { type: 'completed' },
             'Set Auto Tag command': { type: 'non-empty-string', key: 'autoTagVersionCommand' },
         },
+        guide: [
+            { label: 'Checkout', description: 'Download your repository on the runner' },
+            { label: 'Set Auto Tag command', description: 'Configure the command to detect version changes and create the Git tag' },
+        ],
     },
     {
         id: 'laravel-forge-deploy',
@@ -214,5 +281,11 @@ export const availableTemplates: Template[] = [
                 ],
             },
         },
+        guide: [
+            { label: 'Checkout', description: 'Download your repository on the runner' },
+            { label: 'Set destination branch', description: 'Configure the target branch to deploy from' },
+            { label: 'Set deployment mode', description: 'Select whether to deploy via trigger URL or API key' },
+            { label: 'Set Forge configuration', description: 'Configure secrets and identifiers required for the Laravel Forge deployment' },
+        ],
     },
 ];

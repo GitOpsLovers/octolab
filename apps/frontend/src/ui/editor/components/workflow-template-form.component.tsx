@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 
 import { useEditorTemplate } from '../hooks/editor-template.hooks';
 
+import { TemplateWorkflowGuide } from './editor-template-guide.component';
 import { TemplateWorkflowOverview } from './editor-template-overview.component';
 
 /**
@@ -57,31 +58,13 @@ export function TemplateWorkflowForm(): ReactNode {
         setEditingWorkflow({ ...editingWorkflow, fields: updatedFields });
     };
 
-    /* const guidedSteps = [
-        { label: 'Checkout', description: 'Descarga tu repositorio en el runner' },
-        { label: 'Instalar dependencias', description: 'Ejecuta el comando de instalación (ej: npm install)' },
-        { label: 'Lint', description: 'Verifica el estilo y formato del código' },
-        { label: 'Tests', description: 'Ejecuta los tests para validar el comportamiento' },
-        { label: 'Build', description: 'Compila y genera artefactos de distribución' },
-    ]; */
-
     return (
         <div className="w-full lg:w-1/2 flex flex-col gap-4 mb-8">
+            {/* Guided step breakdown */}
+            <TemplateWorkflowGuide />
+
             {/* Overview panel */}
             <TemplateWorkflowOverview />
-
-            {/* Guided step breakdown */}
-            {/* <div className="bg-surface border border-border p-4 rounded-lg shadow-sm">
-                <h2 className="text-lg font-semibold text-text flex items-center gap-2 mb-2">¿Qué hace este workflow?</h2>
-                <ul className="space-y-2">
-                    {guidedSteps.map((step) => (
-                        <li key={step.label} className="flex items-start gap-2 text-sm text-text-muted">
-                            <span className="text-primary font-semibold">{step.label}:</span>
-                            <span>{step.description}</span>
-                        </li>
-                    ))}
-                </ul>
-            </div> */}
 
             {/* Formulario */}
             <div className="bg-surface border border-border p-6 rounded-lg shadow flex flex-col">
