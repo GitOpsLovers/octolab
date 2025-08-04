@@ -1,4 +1,4 @@
-import { Template } from '@octolab/domain';
+import { TemplateForListing } from '@octolab/domain';
 
 import { TemplatesRepository } from '../domain/repositories/templates.repository';
 
@@ -9,6 +9,6 @@ import { TemplatesRepository } from '../domain/repositories/templates.repository
  *
  * @returns All templates.
  */
-export function getTemplatesUseCase(repository: TemplatesRepository): Promise<Template[]> {
+export function getTemplatesUseCase(repository: TemplatesRepository): Promise<TemplateForListing[]> {
     return repository.getAll();
 }

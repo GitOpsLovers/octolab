@@ -15,7 +15,7 @@ export const getTemplatesController: RequestHandler = async (req, res) => {
 
         res.status(StatusCodes.OK).json(templates);
     } catch (error: unknown) {
-        appLogger.error(`Error: ${(error as Error).message}`, 'Template proposal');
+        appLogger.error(`Error: ${(error as Error).message}`, 'Get templates controller');
         handleError(error as Error, res);
     }
 };

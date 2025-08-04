@@ -1,4 +1,4 @@
-import { Template } from '@octolab/domain';
+import { Template, TemplateForListing } from '@octolab/domain';
 
 /**
  * Templates repository.
@@ -9,7 +9,7 @@ export interface TemplatesRepository {
      *
      *  @returns All templates.
      */
-    getAll: () => Promise<Template[]>;
+    getAll: () => Promise<TemplateForListing[]>;
 
     /**
      * Get template by id.

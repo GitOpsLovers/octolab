@@ -1,6 +1,6 @@
 'use client';
 
-import { Template } from '@octolab/domain';
+import { TemplateForListing } from '@octolab/domain';
 import { ReactNode, useEffect, useState } from 'react';
 
 import { TemplatesContext } from '../contexts/templates.context';
@@ -12,7 +12,7 @@ import { templatesApiRepository } from '@features/templates/infrastructure/templ
  * Templates context provider
  */
 export function TemplatesProvider({ children }: { children: ReactNode }) {
-    const [templates, setTemplates] = useState<Template[]>([]);
+    const [templates, setTemplates] = useState<TemplateForListing[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 

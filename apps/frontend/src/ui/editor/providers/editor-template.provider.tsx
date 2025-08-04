@@ -56,7 +56,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
      */
     useEffect(() => {
         const init = async () => {
-            // Si disponemos de workflow Id, los buscamos en la base de datos (estamos editando)
+            // If we have workflow Id, we look them up in the database (we are editing)
             if (workflowId) {
                 try {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -88,7 +88,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
                 }
             }
 
-            // Obtenemos los datos del template
+            // We obtain the template data
             const fetchTemplate = async (): Promise<Template | null> => {
                 try {
                     const repository = templatesApiRepository();
@@ -101,16 +101,16 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
                 }
             };
 
-            // Obtenemos la configuración del template workflow
-            const fetchWorkflowConfig = async (templateOverride?: Template | null) => {
+            // We obtain the workflow template configuration
+            const fetchWorkflowConfig = async () => {
                 try {
                     const repository = editorApiRepository();
                     const workflowConfigFromApi = await getWorkflowConfigUseCase(repository, templateId);
 
                     const initialWorkflow: WorkflowTemplateConfig = {
                         ...workflowConfigFromApi,
-                        name: templateOverride?.name ?? '',
-                        description: templateOverride?.description ?? '',
+                        name: 'Set workflow name',
+                        description: 'Set workflow description',
                     };
 
                     setEditingWorkflow(structuredClone(initialWorkflow));
@@ -120,8 +120,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
                 }
             };
 
-            const templateFetched = await fetchTemplate();
-            await fetchWorkflowConfig(templateFetched);
+            Promise.all([fetchTemplate(), fetchWorkflowConfig()]);
 
             setLoading(false);
         };
