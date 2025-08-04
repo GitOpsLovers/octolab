@@ -8,6 +8,8 @@ import { IoBrowsers } from 'react-icons/io5';
 import { FadeInUp } from './fade-in-up.component';
 import { FeatureCard } from './feature-card.component';
 
+import { useIsDesktop } from '@ui/layout/hooks/is-desktop.hook';
+
 const features = [
     {
         icon: <IoBrowsers />,
@@ -30,21 +32,27 @@ const features = [
  * Features component.
  */
 export function Features(): ReactNode {
+    const isDesktop = useIsDesktop();
+
+    if (isDesktop === null) {
+        return null;
+    }
+
     return (
         <section aria-labelledby="features-title" className="w-full px-4 py-8 md:py-32 bg-surface">
             <div className="max-w-6xl mx-auto text-center mb-10 md:mb-20">
-                <FadeInUp as="h2" id="features-title" className="text-4xl font-bold text-text">
+                <FadeInUp as="h2" id="features-title" className="text-4xl font-bold text-text" animate={isDesktop}>
                     What you can do
                 </FadeInUp>
 
-                <FadeInUp as="p" delay={0.15} className="text-lg text-text-muted mt-4">
+                <FadeInUp as="p" delay={0.15} className="text-lg text-text-muted mt-4" animate={isDesktop}>
                     Visual editing, ready-to-use templates, clean YAML output. All streamlined for speed.
                 </FadeInUp>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                 {features.map((f, i) => (
-                    <FeatureCard key={i} icon={f.icon} title={f.title} description={f.description} delay={i * 0.2} />
+                    <FeatureCard key={i} icon={f.icon} title={f.title} description={f.description} delay={i * 0.2} animate={isDesktop} />
                 ))}
             </div>
         </section>

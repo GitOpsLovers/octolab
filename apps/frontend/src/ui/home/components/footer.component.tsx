@@ -3,10 +3,16 @@
 import Link from 'next/link';
 import { ReactNode } from 'react';
 
+import { useIsDesktop } from '@ui/layout/hooks/is-desktop.hook';
+
 /**
  * Footer component
  */
 export function Footer(): ReactNode {
+    const isDesktop = useIsDesktop();
+
+    if (isDesktop === null) return null;
+
     return (
         <footer className="w-full bg-background border-t border-border px-4 py-10 text-text-muted text-sm">
             <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6 sm:gap-0">

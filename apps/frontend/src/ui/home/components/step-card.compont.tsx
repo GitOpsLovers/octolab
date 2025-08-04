@@ -10,21 +10,22 @@ interface StepCardProps {
     title: string;
     description: string;
     delay?: number;
+    animate?: boolean;
 }
 
 /**
  * Step card component.
  */
-export function StepCard({ number, title, description, delay = 0 }: StepCardProps): ReactNode {
+export function StepCard({ number, title, description, delay = 0, animate = true }: StepCardProps): ReactNode {
     const { ref, isInView } = useInViewMotion();
     const headingId = `step-${number.replace(/\s+/g, '-')}-title`;
 
     return (
         <motion.article
             ref={ref}
-            initial={{ opacity: 0, y: 40 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-            transition={{ duration: 0.5, delay, ease: 'easeOut' }}
+            initial={animate ? { opacity: 0, y: 40 } : undefined}
+            animate={animate && isInView ? { opacity: 1, y: 0 } : undefined}
+            transition={animate ? { duration: 0.5, delay, ease: 'easeOut' } : undefined}
             aria-labelledby={headingId}
             className="relative z-10 flex-1 bg-surface border border-border rounded-2xl py-8 px-4 md:py-8 md:px-8 shadow-md"
         >
