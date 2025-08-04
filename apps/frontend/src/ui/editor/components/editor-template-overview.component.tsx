@@ -67,8 +67,6 @@ export function TemplateWorkflowOverview(): ReactNode {
         const ruleHandler = completionRuleHandlers[rule.type];
         if (!ruleHandler) return false;
 
-        console.log(editingWorkflow.fields);
-
         return ruleHandler(editingWorkflow.fields, rule);
     };
 
