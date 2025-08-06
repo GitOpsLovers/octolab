@@ -38,6 +38,9 @@ export default function RootLayout({
 
     return (
         <html lang="en">
+            <head>
+                <link rel="preconnect" href="https://cloud.umami.is" crossOrigin="" />
+            </head>
             <body className={`${montserrat.variable} ${poppins.variable} antialiased overflow-y-auto bg-background`}>
                 <CookiesProvider>
                     {children}
