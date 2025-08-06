@@ -41,6 +41,7 @@ export interface TemplateField {
         equals: string;
     };
     value?: string;
+    helpMessage?: string;
 }
 
 /**

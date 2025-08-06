@@ -1,9 +1,10 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { useEditorTemplate } from '../hooks/editor-template.hooks';
 
+import { TemplateWorkflowFieldHelpMessages } from './editor-template-field-help-messages.component';
 import { TemplateWorkflowGuide } from './editor-template-guide.component';
 import { TemplateWorkflowOverview } from './editor-template-overview.component';
 
@@ -12,6 +13,7 @@ import { TemplateWorkflowOverview } from './editor-template-overview.component';
  */
 export function TemplateWorkflowForm(): ReactNode {
     const { editingWorkflow, availableRunners, errors, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditorTemplate();
+    const [focusedField, setFocusedField] = useState<string | null>(null);
 
     /**
      * Validate fields
@@ -66,7 +68,7 @@ export function TemplateWorkflowForm(): ReactNode {
             {/* Overview panel */}
             <TemplateWorkflowOverview />
 
-            {/* Formulario */}
+            {/* Form */}
             <div className="bg-surface border border-border p-6 rounded-lg shadow flex flex-col">
                 <h2 className="text-lg font-semibold text-text flex items-center gap-2 mb-2">Workflow configuration</h2>
 
@@ -87,6 +89,12 @@ export function TemplateWorkflowForm(): ReactNode {
                                         updateFieldValue(field.key, newValue);
                                         validateField(field, newValue);
                                     }}
+                                    onFocus={() => {
+                                        setFocusedField(field.key);
+                                    }}
+                                    onBlur={() => {
+                                        setFocusedField(null);
+                                    }}
                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                     placeholder={field.placeholder}
                                 />
@@ -95,6 +103,12 @@ export function TemplateWorkflowForm(): ReactNode {
                                     value={value}
                                     onChange={(e) => {
                                         updateFieldValue(field.key, e.target.value);
+                                    }}
+                                    onFocus={() => {
+                                        setFocusedField(field.key);
+                                    }}
+                                    onBlur={() => {
+                                        setFocusedField(null);
                                     }}
                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                 >
@@ -105,12 +119,7 @@ export function TemplateWorkflowForm(): ReactNode {
                                     ))}
                                 </select>
                             )}
-                            {/* {field.key === 'installCommand' && value === 'npm install' && (
-                                <p className="text-xs text-primary mt-1">
-                                    💡 Considera usar <code>npm ci</code> para builds más rápidos y reproducibles.
-                                </p>
-                            )} */}
-
+                            {field.helpMessage && focusedField === field.key && <TemplateWorkflowFieldHelpMessages message={field.helpMessage} />}
                             {errors[field.key] && <p className="text-red-500 text-sm mt-1">{errors[field.key]}</p>}
                         </div>
                     );

@@ -36,6 +36,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm install',
                 required: true,
                 value: 'npm install',
+                helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
             },
             {
                 key: 'lintCommand',
@@ -103,6 +104,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm install',
                 required: true,
                 value: 'npm install',
+                helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
             },
             {
                 key: 'lintCommand',
@@ -170,6 +172,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm install',
                 required: true,
                 value: 'npm install',
+                helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
             },
             {
                 key: 'testCommand',
@@ -194,6 +197,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'NPM_TOKEN',
                 required: true,
                 value: 'NPM_TOKEN',
+                helpMessage: 'Make sure you have created the secret in your repository configuration.',
             },
         ],
     },
@@ -228,6 +232,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'VERCEL_TOKEN',
                 required: true,
                 value: 'VERCEL_TOKEN',
+                helpMessage: 'Make sure you have created the secret in your repository configuration.',
             },
         ],
     },
@@ -271,6 +276,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm install',
                 required: true,
                 value: 'npm install',
+                helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
             },
             {
                 key: 'buildCommand',
@@ -295,6 +301,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'GH_TOKEN',
                 required: true,
                 value: 'GH_TOKEN',
+                helpMessage: 'You can use the default Github token or set your own.',
             },
         ],
     },
@@ -338,6 +345,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm install',
                 required: true,
                 value: 'npm install',
+                helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
             },
             {
                 key: 'buildCommand',
@@ -420,6 +428,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'CLOUDFRONT_DISTRIBUTION_ID',
                 required: true,
                 value: 'CLOUDFRONT_DISTRIBUTION_ID',
+                helpMessage: 'Make sure you have created the secret in your repository configuration.',
             },
             {
                 key: 'awsAccountIdSecret',
@@ -428,6 +437,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'AWS_ACCOUNT_ID',
                 required: true,
                 value: 'AWS_ACCOUNT_ID',
+                helpMessage: 'Make sure you have created the secret in your repository configuration.',
             },
         ],
     },
@@ -481,6 +491,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'SNYK_TOKEN',
                 required: true,
                 value: 'SNYK_TOKEN',
+                helpMessage: 'Make sure you have created the secret in your repository configuration.',
             },
         ],
     },
@@ -532,6 +543,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'DOCKER_PASSWORD',
                 required: true,
                 value: 'DOCKER_PASSWORD',
+                helpMessage: 'Make sure you have created the secret in your repository configuration.',
             },
             {
                 key: 'dockerBuildContext',
@@ -629,6 +641,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                     field: 'deployMode',
                     equals: 'webhook',
                 },
+                helpMessage: 'Make sure you have created the secret in your repository configuration.',
             },
             {
                 key: 'laravelForgeDeployApiKeySecretName',
@@ -641,6 +654,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                     field: 'deployMode',
                     equals: 'api',
                 },
+                helpMessage: 'Make sure you have created the secret in your repository configuration.',
             },
             {
                 key: 'laravelForgeDeployServerIdSecretName',
@@ -653,6 +667,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                     field: 'deployMode',
                     equals: 'api',
                 },
+                helpMessage: 'Make sure you have created the secret in your repository configuration.',
             },
             {
                 key: 'laravelForgeDeploySiteIdSecretName',
@@ -665,6 +680,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                     field: 'deployMode',
                     equals: 'api',
                 },
+                helpMessage: 'Make sure you have created the secret in your repository configuration.',
             },
         ],
     },
