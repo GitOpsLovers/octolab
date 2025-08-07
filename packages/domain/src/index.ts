@@ -13,6 +13,7 @@ export type {
     DockerImagePublishWorkflowConfig,
     AutoTagVersionWorkflowConfig,
     LaravelForgeDeployWorkflowConfig,
+    PrConventionalCommitCheckerWorkflowConfig,
 } from './workflows/models/workflow-templates.models';
 export type { WorkflowYaml, Step, Job } from './workflows/models/workflows.models';
 export type { Runner } from './runners/models/runners.models';

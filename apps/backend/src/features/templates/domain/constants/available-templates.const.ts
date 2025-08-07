@@ -288,4 +288,25 @@ export const availableTemplates: Template[] = [
             { label: 'Set Forge configuration', description: 'Configure secrets and identifiers required for the Laravel Forge deployment' },
         ],
     },
+    {
+        id: 'pr-conventional-commit-checker',
+        name: 'Pull Request Conventional Commit checker',
+        description: 'Ensure all commits in pull requests follow the Conventional Commits specification.',
+        icon: 'IoGitCommit',
+        iconColor: '#22c55e',
+        iconLibrary: 'io5',
+        features: ['Configurable runners', 'Supports multiple target branches', 'Validates commits on pull requests', 'Configurable validation pattern'],
+        steps: ['Checkout', 'Configure branches', 'Set commit patterns'],
+        type: 'verification',
+        stepCompletionRules: {
+            Checkout: { type: 'completed' },
+            'Configure branches': { type: 'non-empty-string', keys: ['currentBranch', 'targetBranch'] },
+            'Set commit patterns': { type: 'non-empty-string', key: 'commitLintPattern' },
+        },
+        guide: [
+            { label: 'Checkout', description: 'Download your repository and full commit history' },
+            { label: 'Configure action', description: 'Set the current and target branches and define patterts for the commit check' },
+            { label: 'Run checker', description: 'Run the commit checker with a pattern matching Conventional Commits' },
+        ],
+    },
 ];
