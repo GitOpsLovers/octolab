@@ -21,25 +21,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
             url: 'https://www.octolab.app/about',
             lastModified: new Date(),
             changeFrequency: 'monthly',
-            priority: 0.7,
+            priority: 0.8,
+        },
+        {
+            url: 'https://www.octolab.app/how-to',
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
         },
         {
             url: 'https://www.octolab.app/contact',
             lastModified: new Date(),
             changeFrequency: 'monthly',
-            priority: 0.6,
+            priority: 0.8,
         },
         {
             url: 'https://www.octolab.app/privacy',
             lastModified: new Date(),
             changeFrequency: 'monthly',
-            priority: 0.5,
+            priority: 0.8,
         },
         {
             url: 'https://www.octolab.app/terms',
             lastModified: new Date(),
             changeFrequency: 'monthly',
-            priority: 0.5,
+            priority: 0.8,
+        },
+        {
+            url: 'https://www.octolab.app/propose-template',
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
         },
     ];
 }
