@@ -13,7 +13,8 @@ export type WorkflowTemplateConfig =
     | SnykSecurityScanWorkflowConfig
     | DockerImagePublishWorkflowConfig
     | AutoTagVersionWorkflowConfig
-    | LaravelForgeDeployWorkflowConfig;
+    | LaravelForgeDeployWorkflowConfig
+    | PrConventionalCommitCheckerWorkflowConfig;
 
 /**
  * Base workflow template configuration model
@@ -112,6 +113,15 @@ export interface AutoTagVersionWorkflowConfig extends BaseWorkflowTemplateConfig
  */
 export interface LaravelForgeDeployWorkflowConfig extends BaseWorkflowTemplateConfig {
     id: 'laravel-forge-deploy';
+    runner: string;
+    jobName: string;
+}
+
+/**
+ * Template configuration for Pull Request Conventional Commit checker
+ */
+export interface PrConventionalCommitCheckerWorkflowConfig extends BaseWorkflowTemplateConfig {
+    id: 'pr-conventional-commit-checker';
     runner: string;
     jobName: string;
 }

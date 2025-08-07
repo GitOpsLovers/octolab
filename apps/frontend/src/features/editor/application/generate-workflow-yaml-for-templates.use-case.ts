@@ -372,6 +372,30 @@ function laravelForgeDeploymentSteps(config: WorkflowTemplateConfig): Step[] {
 }
 
 /**
+ * Pull Request Conventional Commits checker steps
+ */
+function prConventinalCommitsCheckSteps(config: WorkflowTemplateConfig): Step[] {
+    const targetBranch = config.fields.find((f) => f.key === 'targetBranch')?.value ?? 'main';
+    const currentBranch = config.fields.find((f) => f.key === 'currentBranch')?.value ?? '${{ github.head_ref }}';
+    const commitLintPattern = config.fields.find((f) => f.key === 'commitLintPattern')?.value ?? '(feat|fix|ci|chore|docs|test|style|refactor): .{1,}$';
+
+    const baseStep: Step = {
+        internalId: uuidv4(),
+        id: 'pr-conventional-commits-check-step',
+        name: 'Commits check',
+        type: 'uses',
+        uses: 'netodevel/conventional-commits-checker@v1.0.1',
+        with: {
+            'target-branch': targetBranch,
+            'current-branch': currentBranch,
+            'commit-lint-pattern': commitLintPattern,
+        },
+    };
+
+    return [baseStep];
+}
+
+/**
  * Generate steps based on workflow config
  */
 function generateSteps(config: WorkflowTemplateConfig): Step[] {
@@ -415,6 +439,8 @@ function generateSteps(config: WorkflowTemplateConfig): Step[] {
         steps.push(...autoTagSteps(config));
     } else if (config.id === 'laravel-forge-deploy') {
         steps.push(...laravelForgeDeploymentSteps(config));
+    } else if (config.id === 'pr-conventional-commit-checker') {
+        steps.push(...prConventinalCommitsCheckSteps(config));
     }
 
     return steps;
@@ -424,7 +450,7 @@ function generateSteps(config: WorkflowTemplateConfig): Step[] {
  * Generate "on" section based on workflow config
  */
 function generateOnConfig(config: WorkflowTemplateConfig): Record<string, any> {
-    if (config.id === 'node-pr-verify' || config.id === 'nx-pr-verify') {
+    if (config.id === 'node-pr-verify' || config.id === 'nx-pr-verify' || config.id === 'pr-conventional-commit-checker') {
         return { pull_request: {} };
     }
 
