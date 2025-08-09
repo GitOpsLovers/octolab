@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { FiX } from 'react-icons/fi';
 
-import { useEditorTemplate } from '../hooks/editor-template.hooks';
+import { useEditorTemplate } from '../../hooks/editor-template.hooks';
 
 /**
  * Template workflow guide component

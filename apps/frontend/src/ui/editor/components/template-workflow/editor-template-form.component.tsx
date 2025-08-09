@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 
-import { useEditorTemplate } from '../hooks/editor-template.hooks';
+import { useEditorTemplate } from '../../hooks/editor-template.hooks';
 
 import { TemplateWorkflowForm } from './workflow-template-form.component';
 

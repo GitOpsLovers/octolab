@@ -11,7 +11,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import yaml from 'yaml';
 
-import { useEditorTemplate } from '../hooks/editor-template.hooks';
+import { useEditorTemplate } from '../../hooks/editor-template.hooks';
 
 import { createWorkflowUseCase } from '@features/editor/application/save-workflow.use-case';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';

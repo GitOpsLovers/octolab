@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 
-import { EditorCustomForm } from '@ui/editor/components/editor-custom-form.component';
-import { EditorCustomLoading } from '@ui/editor/components/editor-custom-loading.component';
-import { EditorCustomTitle } from '@ui/editor/components/editor-custom-title.component';
-import { YamlCustomPreview } from '@ui/editor/components/yaml-custom-preview.component';
+import { EditorCustomForm } from '@ui/editor/components/custom-workflow/editor-custom-form.component';
+import { EditorCustomLoading } from '@ui/editor/components/custom-workflow/editor-custom-loading.component';
+import { EditorCustomTitle } from '@ui/editor/components/custom-workflow/editor-custom-title.component';
+import { YamlCustomPreview } from '@ui/editor/components/yaml-preview/yaml-custom-preview.component';
 import { EditorCustomProvider } from '@ui/editor/providers/editor-custom.provider';
 
 export const metadata: Metadata = {
