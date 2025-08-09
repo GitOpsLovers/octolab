@@ -6,8 +6,162 @@ const kebabCaseRegex = /^[\da-z]+(-[\da-z]+)*$/;
 
 // Simulación de los inputs de cada acción
 const actionsMap: Record<string, Array<{ key: string; label: string; required: boolean; type: 'string' | 'number' | 'boolean' }>> = {
-    'actions/checkout@v4': [{ key: 'fetch-depth', label: 'Fetch depth', required: false, type: 'number' }],
-    'actions/setup-node@v4': [{ key: 'node-version', label: 'Node version', required: true, type: 'string' }],
+    'actions/checkout@v4': [
+        {
+            key: 'fetch-depth',
+            label: 'Fetch depth',
+            required: false,
+            type: 'number',
+        },
+    ],
+    'actions/setup-node@v4': [
+        {
+            key: 'node-version',
+            label: 'Node version',
+            required: true,
+            type: 'string',
+        },
+    ],
+    'JS-DevTools/npm-publish@v3': [
+        {
+            key: 'token',
+            label: 'NPM Token Secret Name',
+            required: true,
+            type: 'string',
+        },
+    ],
+    'aws-actions/configure-aws-credentials@v4': [
+        {
+            key: 'role-to-assume',
+            label: 'AWS account ID secret name',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'aws-region',
+            label: 'AWS region environment variable name',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'aws-region-env-value',
+            label: 'AWS region environment variable value',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'aws-rolename',
+            label: 'AWS role name environment variable name',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'aws-rolename-env-value',
+            label: 'AWS role name environment variable value',
+            required: true,
+            type: 'string',
+        },
+    ],
+    'snyk/actions/node@master': [
+        {
+            key: 'args',
+            label: 'Severity threshold',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'snyk-token',
+            label: 'Snyk token secret name',
+            required: true,
+            type: 'string',
+        },
+    ],
+    'docker/login-action@v3': [
+        {
+            key: 'username',
+            label: 'Docker Hub username',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'password',
+            label: 'Docker Hub password secret name',
+            required: true,
+            type: 'string',
+        },
+    ],
+    'docker/build-push-action@v6': [
+        {
+            key: 'context',
+            label: 'Docker build context',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'file',
+            label: 'Dockerfile',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'push',
+            label: 'Push image to registry',
+            required: true,
+            type: 'boolean',
+        },
+        {
+            key: 'tags',
+            label: 'Docker image tags (comma separated)',
+            required: true,
+            type: 'string',
+        },
+    ],
+    'jbrooksuk/laravel-forge-action@v1.0.2': [
+        {
+            key: 'api_key',
+            label: 'API Key secret name',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'server_id',
+            label: 'Server ID secret name',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'site_id',
+            label: 'Site ID secret name',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'trigger-url',
+            label: 'Trigger URL secret name',
+            required: false,
+            type: 'string',
+        },
+    ],
+    'netodevel/conventional-commits-checker@v1.0.1': [
+        {
+            key: 'target-branch',
+            label: 'Target branch',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'current-branch',
+            label: 'Current branch',
+            required: true,
+            type: 'string',
+        },
+        {
+            key: 'commit-lint-pattern',
+            label: 'Commit lint pattern',
+            required: true,
+            type: 'string',
+        },
+    ],
 };
 
 export const customWorkflowSchema = z

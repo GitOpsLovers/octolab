@@ -40,12 +40,11 @@ export function CustomWorkflowFormJobsSteps({
     const sensors = useSensors(useSensor(PointerSensor));
     const {
         register,
-        watch,
         setValue,
         formState: { errors },
     } = useFormContext<CustomWorkflowFormSchema>();
 
-    const jobs = watch('jobs');
+    const jobs = editingWorkflow.jobs;
 
     const [jobConditions, setJobConditions] = useState<Record<string, boolean>>(Object.fromEntries(editingWorkflow.jobs.map((job) => [job.id, !!job.if?.trim()])));
     const [jobDependencies, setJobDependencies] = useState<Record<string, boolean>>(Object.fromEntries(editingWorkflow.jobs.map((job) => [job.id, !!job.needs?.length])));
