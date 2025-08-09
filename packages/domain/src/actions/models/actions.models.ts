@@ -1,4 +1,12 @@
 /**
+ * Represents the conditions under which a step should be shown.
+ */
+export type ShowWhen =
+    | { field: string; op: 'equals' | 'notEquals' | 'truthy' | 'falsy' | 'exists' | 'notExists'; value?: any }
+    | { field: string; op: 'in' | 'notIn'; value: any[] }
+    | { field: string; op: 'regex'; value: string };
+
+/**
  * Action
  */
 export interface Action {
@@ -17,6 +25,7 @@ export interface Action {
         options?: Array<{ label: string; value: string }>;
         defaultValue?: string | number | boolean;
         info: string;
+        showWhen?: ShowWhen | ShowWhen[];
     }>;
     templates?: Record<string, string>;
 }

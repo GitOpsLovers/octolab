@@ -19,7 +19,7 @@ export function RegisterModalForTemplatesList({ isOpen, onClose, templateId, onS
     if (!templateId) return null;
 
     const draftId = uuidv4();
-    const editorUrl = templateId === 'custom' ? `/editor/custom/${templateId}/${draftId}` : `/editor/templates/${templateId}/${draftId}`;
+    const editorUrl = templateId === 'custom' ? `/editor/${templateId}/${draftId}` : `/editor/templates/${templateId}/${draftId}`;
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>

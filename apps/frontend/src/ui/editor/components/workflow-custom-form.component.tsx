@@ -1,12 +1,13 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CustomWorkflowConfig, Trigger } from '@octolab/domain';
+import { Trigger } from '@octolab/domain';
 import Link from 'next/link';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FaInfoCircle } from 'react-icons/fa';
 
+import { syncEditingWorkflow } from '../helpers/sync-editing-custom-workflow';
 import { useEditorCustom } from '../hooks/editor-custom.hooks';
 import { CustomWorkflowFormSchema, customWorkflowSchema } from '../models/custom-workflow-form.models';
 
@@ -75,90 +76,18 @@ export function CustomWorkflowForm(): ReactNode {
     }, []);
 
     /**
-     * On every form change, update the editing workflow on provider to reflect changes on form and YAML preview
+     * On every form change, update the editing workflow to reflect changes on form and YAML preview
      */
     useEffect(() => {
         const subscription = form.watch((values) => {
             if (isCustomWorkflow && editingWorkflow) {
-                const updatedJobs = values.jobs?.map((job, jobIndex) => {
-                    const updatedSteps = job?.steps?.map((step, stepIndex) => {
-                        if (step?.type === 'uses' && step.uses) {
-                            const action = availableActions.find((a) => a.id === step.uses);
-                            if (!action) return step;
-
-                            // Clean obsolete "with" properties
-                            const cleanedWith: Record<string, string | number | boolean> = {};
-
-                            for (const input of action.inputs) {
-                                const key = input.key;
-                                const currentValue = step.with?.[key];
-
-                                if (currentValue !== undefined) {
-                                    cleanedWith[key] = currentValue;
-                                } else if (input.hideInForm && input.defaultValue !== undefined) {
-                                    cleanedWith[key] = input.defaultValue;
-                                }
-                            }
-
-                            // Update the step with cleaned "with" properties
-                            if (JSON.stringify(cleanedWith) !== JSON.stringify(step.with)) {
-                                form.setValue(`jobs.${jobIndex}.steps.${stepIndex}.with`, cleanedWith, {
-                                    shouldDirty: true,
-                                    shouldValidate: true,
-                                });
-                            }
-
-                            // Add secret and environment variable keys
-                            const secretKeys = action.inputs.filter((input) => input.isSecret).map((input) => input.key);
-                            const environmentVariablesKeys = action.inputs.filter((input) => input.isEnvironmentVariable).map((input) => input.key);
-                            const stepEnvironmentVariablesKeys = action.inputs.filter((input) => input.isStepEnvironmentVariable).map((input) => input.key);
-
-                            // Add templates if available
-                            const templates = action.templates ?? {};
-
-                            // Set hidden inputs
-                            const hiddenInputs = action.inputs.filter((i) => i.hideInYaml).map((i) => i.key);
-
-                            return {
-                                ...step,
-                                secretInputs: secretKeys,
-                                environmentVariables: environmentVariablesKeys,
-                                stepEnvironmentVariables: stepEnvironmentVariablesKeys,
-                                hiddenInputs,
-                                templates,
-                                stepActionInputs: action.inputs,
-                            };
-                        }
-
-                        return step;
-                    });
-
-                    // Sync and clean `needs`
-                    const currentJobId = job?.id;
-                    const otherJobs = values.jobs?.filter((_, i) => i !== jobIndex) ?? [];
-                    const validJobIds = new Set(otherJobs.map((j) => j?.id));
-
-                    const currentNeeds = job?.needs ?? [];
-                    const cleanedNeeds = currentNeeds.filter((id) => id !== currentJobId && validJobIds.has(id)).filter((id): id is string => typeof id === 'string');
-
-                    if (JSON.stringify(cleanedNeeds) !== JSON.stringify(currentNeeds)) {
-                        form.setValue(`jobs.${jobIndex}.needs`, cleanedNeeds, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                        });
-                    }
-
-                    return {
-                        ...job,
-                        steps: updatedSteps,
-                    };
+                syncEditingWorkflow({
+                    form,
+                    values: values as CustomWorkflowFormSchema,
+                    availableActions,
+                    editingWorkflow,
+                    setEditingWorkflow,
                 });
-
-                setEditingWorkflow({
-                    ...editingWorkflow,
-                    ...values,
-                    jobs: updatedJobs,
-                } as CustomWorkflowConfig);
             }
         });
 

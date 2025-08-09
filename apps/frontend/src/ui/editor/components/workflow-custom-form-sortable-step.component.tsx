@@ -38,6 +38,8 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
         transition,
     };
 
+    const actionInputs = step.stepActionInputs ?? selectedAction?.inputs ?? [];
+
     // On add condition to step
     const handleAddStepCondition = () => {
         const fieldName = `jobs.${jobIndex}.steps.${stepIndex}.if` as const;
@@ -142,8 +144,8 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                                 )}
                             </div>
 
-                            {/* Inputs */}
-                            {selectedAction?.inputs
+                            {/* Action inputs */}
+                            {actionInputs
                                 .filter((input) => !input.hideInForm)
                                 .map((input) => {
                                     const type = input.type ?? 'string';
