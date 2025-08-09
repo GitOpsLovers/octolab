@@ -7,7 +7,7 @@ import * as FaIcons from 'react-icons/fa';
 import * as Io5Icons from 'react-icons/io5';
 import * as SiIcons from 'react-icons/si';
 
-import { useEditorTemplate } from '../hooks/editor-template.hooks';
+import { useEditorTemplate } from '../../hooks/editor-template.hooks';
 
 /**
  * Rule handler map for step completion

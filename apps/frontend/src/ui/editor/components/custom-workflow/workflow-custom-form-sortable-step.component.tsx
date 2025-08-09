@@ -5,9 +5,12 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FaAngleDown, FaAngleUp, FaInfoCircle, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { MdDragIndicator } from 'react-icons/md';
+import Select from 'react-select';
 
-import { CustomWorkflowFormSchema } from '../models/custom-workflow-form.models';
+import { transformAvailableActionsToSelectOptions } from '../../helpers/transform-available-actions-to-select';
+import { CustomWorkflowFormSchema } from '../../models/custom-workflow-form.models';
 
+import { select2Styles } from '@ui/layout/styles/select2.styles';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/shared/components/tooltip';
 
 interface SortableStepProps {
@@ -16,7 +19,6 @@ interface SortableStepProps {
     stepIndex: number;
     collapsed: boolean;
     availableActions: Action[];
-    selectedAction?: Action;
     onToggleCollapse: (id: string) => void;
     onRemove: (index: number) => void;
 }
@@ -24,7 +26,7 @@ interface SortableStepProps {
 /**
  * Sortable step for the workflow custom form component.
  */
-export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableActions, selectedAction, onToggleCollapse, onRemove }: SortableStepProps) {
+export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableActions, onToggleCollapse, onRemove }: SortableStepProps) {
     const [hasCondition, setHasCondition] = useState(!!step.if?.trim());
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: step.internalId });
     const {
@@ -38,7 +40,40 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
         transition,
     };
 
-    const actionInputs = step.stepActionInputs ?? selectedAction?.inputs ?? [];
+    // Transform available actions to select options for actions input
+    const actionsOptions = transformAvailableActionsToSelectOptions(availableActions);
+    const findOpt = (id?: string | null) => actionsOptions.find((o) => o.value === (id ?? '')) ?? null;
+    const findAction = (id?: string | null) => availableActions.find((a) => a.id === id);
+
+    const currentAction = findAction(step.uses);
+    const actionInputs = step.stepActionInputs ?? currentAction?.inputs ?? [];
+
+    // On action selection
+    const handleActionChange = (opt: { value: string } | null) => {
+        const newUses = opt?.value ?? '';
+
+        setValue(`jobs.${jobIndex}.steps.${stepIndex}.uses`, newUses, {
+            shouldDirty: true,
+            shouldValidate: true,
+            shouldTouch: true,
+        });
+
+        setValue(`jobs.${jobIndex}.steps.${stepIndex}.type`, 'uses', {
+            shouldDirty: true,
+            shouldValidate: true,
+            shouldTouch: true,
+        });
+
+        setValue(
+            `jobs.${jobIndex}.steps.${stepIndex}.with`,
+            {},
+            {
+                shouldDirty: true,
+                shouldValidate: true,
+                shouldTouch: true,
+            },
+        );
+    };
 
     // On add condition to step
     const handleAddStepCondition = () => {
@@ -127,18 +162,15 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                             {/* Action */}
                             <div className="mb-2">
                                 <label className="block text-sm font-medium text-text mb-1">Action</label>
-                                <select
-                                    {...register(`jobs.${jobIndex}.steps.${stepIndex}.uses`)}
-                                    value={step.uses || ''}
-                                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
-                                >
-                                    <option value="">-- Select an action --</option>
-                                    {availableActions.map((action) => (
-                                        <option key={action.id} value={action.id}>
-                                            {action.id}
-                                        </option>
-                                    ))}
-                                </select>
+                                <Select
+                                    name={`jobs.${jobIndex}.steps.${stepIndex}.uses`}
+                                    options={actionsOptions}
+                                    styles={select2Styles}
+                                    placeholder="-- Select an action --"
+                                    value={findOpt(step.uses ?? '')}
+                                    onChange={handleActionChange}
+                                />
+
                                 {errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.uses && (
                                     <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.steps?.[stepIndex]?.uses?.message}</p>
                                 )}
@@ -166,7 +198,8 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                                                 </Tooltip>
                                             </div>
 
-                                            {type === 'select' && Array.isArray(input.options) ? (
+                                            {/* Select input */}
+                                            {type === 'select' && Array.isArray(input.options) && (
                                                 <select
                                                     {...register(fieldName)}
                                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -181,10 +214,23 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                                                         </option>
                                                     ))}
                                                 </select>
-                                            ) : (
+                                            )}
+
+                                            {/* Text input */}
+                                            {type === 'string' && (
                                                 <input
                                                     {...register(fieldName)}
-                                                    type={type === 'number' ? 'number' : 'text'}
+                                                    type="text"
+                                                    placeholder={input.placeholder}
+                                                    className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
+                                                />
+                                            )}
+
+                                            {/* Number input */}
+                                            {type === 'number' && (
+                                                <input
+                                                    {...register(fieldName)}
+                                                    type="number"
                                                     placeholder={input.placeholder}
                                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                                 />

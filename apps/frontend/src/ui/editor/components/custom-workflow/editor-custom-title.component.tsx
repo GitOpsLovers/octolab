@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { FaPencilAlt, FaCheck, FaTimes } from 'react-icons/fa';
 
-import { useEditorCustom } from '../hooks/editor-custom.hooks';
+import { useEditorCustom } from '../../hooks/editor-custom.hooks';
 
 /**
  * Editor custom workflow title component.

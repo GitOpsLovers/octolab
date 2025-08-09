@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 
-import { EditorTemplateForm } from '@ui/editor/components/editor-template-form.component';
-import { EditorTemplateLoading } from '@ui/editor/components/editor-template-loading.component';
-import { EditorTemplateTitle } from '@ui/editor/components/editor-template-title.component';
-import { YamlTemplatePreview } from '@ui/editor/components/yaml-template-preview.component';
+import { EditorTemplateForm } from '@ui/editor/components/template-workflow/editor-template-form.component';
+import { EditorTemplateLoading } from '@ui/editor/components/template-workflow/editor-template-loading.component';
+import { EditorTemplateTitle } from '@ui/editor/components/template-workflow/editor-template-title.component';
+import { YamlTemplatePreview } from '@ui/editor/components/yaml-preview/yaml-template-preview.component';
 import { EditorTemplateProvider } from '@ui/editor/providers/editor-template.provider';
 
 export const metadata: Metadata = {

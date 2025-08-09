@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 
-import { useEditorCustom } from '../hooks/editor-custom.hooks';
+import { useEditorCustom } from '../../hooks/editor-custom.hooks';
 
 import { CustomWorkflowForm } from './workflow-custom-form.component';
 

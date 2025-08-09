@@ -7,7 +7,7 @@ import { useFormContext } from 'react-hook-form';
 import { FaAngleDown, FaAngleUp, FaInfoCircle, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CustomWorkflowFormSchema } from '../models/custom-workflow-form.models';
+import { CustomWorkflowFormSchema } from '../../models/custom-workflow-form.models';
 
 import { SortableStep } from './workflow-custom-form-sortable-step.component';
 
@@ -100,8 +100,6 @@ export function CustomWorkflowFormJobsSteps({
         setEditingWorkflow({ ...editingWorkflow, jobs: newJobs });
         setValue('jobs', newJobs, { shouldDirty: true, shouldValidate: true });
     };
-
-    const findAction = (id: string): Action | undefined => availableActions.find((action) => action.id === id);
 
     return (
         <>
@@ -394,7 +392,6 @@ export function CustomWorkflowFormJobsSteps({
                                     <SortableContext items={job.steps.map((step) => step.internalId)} strategy={verticalListSortingStrategy}>
                                         {job.steps.map((step, stepIndex) => {
                                             const isStepCollapsed = collapsedSteps[step.id] ?? false;
-                                            const selectedAction = findAction(step.uses || '');
 
                                             return (
                                                 <SortableStep
@@ -404,7 +401,6 @@ export function CustomWorkflowFormJobsSteps({
                                                     stepIndex={stepIndex}
                                                     collapsed={isStepCollapsed}
                                                     availableActions={availableActions}
-                                                    selectedAction={selectedAction}
                                                     onToggleCollapse={toggleCollapseStep}
                                                     onRemove={() => {
                                                         handleRemoveStep(jobIndex, stepIndex);

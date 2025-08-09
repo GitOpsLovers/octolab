@@ -7,9 +7,9 @@ import { ReactNode, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FaInfoCircle } from 'react-icons/fa';
 
-import { syncEditingWorkflow } from '../helpers/sync-editing-custom-workflow';
-import { useEditorCustom } from '../hooks/editor-custom.hooks';
-import { CustomWorkflowFormSchema, customWorkflowSchema } from '../models/custom-workflow-form.models';
+import { syncEditingWorkflow } from '../../helpers/sync-editing-custom-workflow';
+import { useEditorCustom } from '../../hooks/editor-custom.hooks';
+import { CustomWorkflowFormSchema, customWorkflowSchema } from '../../models/custom-workflow-form.models';
 
 import { CustomWorkflowFormJobsSteps } from './workflow-custom-form-jobs-steps.component';
 

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { FaPencilAlt, FaCheck, FaTimes } from 'react-icons/fa';
 
-import { useEditorTemplate } from '../hooks/editor-template.hooks';
+import { useEditorTemplate } from '../../hooks/editor-template.hooks';
 
 /**
  * Editor template title component.

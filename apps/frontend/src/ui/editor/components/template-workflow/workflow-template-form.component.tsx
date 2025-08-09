@@ -2,7 +2,7 @@
 
 import { ReactNode, useState } from 'react';
 
-import { useEditorTemplate } from '../hooks/editor-template.hooks';
+import { useEditorTemplate } from '../../hooks/editor-template.hooks';
 
 import { TemplateWorkflowFieldHelpMessages } from './editor-template-field-help-messages.component';
 import { TemplateWorkflowGuide } from './editor-template-guide.component';
