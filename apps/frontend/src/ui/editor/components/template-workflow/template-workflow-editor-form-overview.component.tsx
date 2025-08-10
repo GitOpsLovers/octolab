@@ -40,9 +40,9 @@ const completionRuleHandlers: Record<StepCompletionRule['type'], (fields: Templa
 };
 
 /**
- * Template workflow overview component
+ * Template workflow editor form overview component
  */
-export function TemplateWorkflowOverview(): ReactNode {
+export function TemplateWorkflowEditorFormOverview(): ReactNode {
     const { editingWorkflow, template } = useEditorTemplate();
 
     let Icon;

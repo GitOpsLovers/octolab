@@ -116,9 +116,9 @@ export interface YamlTemplateBlockProps {
 }
 
 /**
- * YAML preview block form template workflows component.
+ * YAML preview component.
  */
-export default function YamlTemplateBlock({ content, fields, highlightedKey, className }: YamlTemplateBlockProps) {
+export function YamlPreview({ content, fields, highlightedKey, className }: YamlTemplateBlockProps) {
     /**
      * Get the line range for each field.
      */

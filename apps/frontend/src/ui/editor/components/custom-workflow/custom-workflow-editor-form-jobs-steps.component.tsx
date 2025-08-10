@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useEditorCustom } from '../../hooks/editor-custom.hooks';
 import { CustomWorkflowFormSchema } from '../../models/custom-workflow-form.models';
 
-import { SortableStep } from './workflow-custom-form-sortable-step.component';
+import { CustomWorkflowEditorFormStep } from './custom-workflow-editor-form-step.component';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/shared/components/tooltip';
 
@@ -26,9 +26,9 @@ interface CustomWorkflowFormJobsStepsProps {
 }
 
 /**
- * Custom workflow form jobs and steps component
+ * Custom workflow editor form jobs and steps component
  */
-export function CustomWorkflowFormJobsSteps({
+export function CustomWorkflowEditorFormJobsSteps({
     collapsedJobs,
     collapsedSteps,
     toggleCollapseJob,
@@ -435,7 +435,7 @@ export function CustomWorkflowFormJobsSteps({
                                             const isStepCollapsed = collapsedSteps[step.id] ?? false;
 
                                             return (
-                                                <SortableStep
+                                                <CustomWorkflowEditorFormStep
                                                     key={step.internalId}
                                                     step={step}
                                                     jobIndex={jobIndex}

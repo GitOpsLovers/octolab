@@ -21,9 +21,9 @@ interface EditorTemplateProviderProps {
 }
 
 /**
- * Editor template provider
+ * Template workflow editor provider
  */
-export function EditorTemplateProvider({ children, templateId, workflowId }: EditorTemplateProviderProps) {
+export function TemplateWorkflowEditorProvider({ children, templateId, workflowId }: EditorTemplateProviderProps) {
     const { authToken, isLoading } = useAuthUser();
     const [errors, setErrors] = useState<Record<string, string | null>>({});
     const [loading, setLoading] = useState<boolean>(true);

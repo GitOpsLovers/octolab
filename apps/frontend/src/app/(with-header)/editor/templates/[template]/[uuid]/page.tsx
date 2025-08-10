@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 
-import { EditorTemplateForm } from '@ui/editor/components/template-workflow/editor-template-form.component';
-import { EditorTemplateLoading } from '@ui/editor/components/template-workflow/editor-template-loading.component';
-import { EditorTemplateTitle } from '@ui/editor/components/template-workflow/editor-template-title.component';
-import { YamlTemplatePreview } from '@ui/editor/components/yaml-preview/yaml-template-preview.component';
-import { EditorTemplateProvider } from '@ui/editor/providers/editor-template.provider';
+import { TemplateWorkflowEditorLoader } from '@ui/editor/components/template-workflow/template-workflow-editor-loader.component';
+import { TemplateWorkflowEditorTitle } from '@ui/editor/components/template-workflow/template-workflow-editor-title.component';
+import { TemplateWorkflowEditorWrapper } from '@ui/editor/components/template-workflow/template-workflow-editor-wrapper.component';
+import { TemplateWorkflowYamlPreview } from '@ui/editor/components/yaml-preview/template-workflow-yaml-preview.component';
+import { TemplateWorkflowEditorProvider } from '@ui/editor/providers/template-workflow-editor.provider';
 
 export const metadata: Metadata = {
     robots: {
@@ -14,24 +14,24 @@ export const metadata: Metadata = {
 };
 
 /**
- * Editor template page component.
+ * Template workflow editor page
  */
-export default async function EditorTemplatePage({ params }: { params: Promise<{ template: string; uuid: string }> }) {
+export default async function TemplateWorkflowEditorPage({ params }: { params: Promise<{ template: string; uuid: string }> }) {
     const { template, uuid } = await params;
 
     return (
         <main className="p-8 h-[calc(100vh-64px)] flex flex-col">
-            <EditorTemplateProvider templateId={template} workflowId={uuid}>
-                <EditorTemplateTitle />
+            <TemplateWorkflowEditorProvider templateId={template} workflowId={uuid}>
+                <TemplateWorkflowEditorTitle />
 
                 <div className="flex flex-col lg:flex-row gap-6 w-full flex-1">
-                    <EditorTemplateLoading />
+                    <TemplateWorkflowEditorLoader />
 
-                    <EditorTemplateForm />
+                    <TemplateWorkflowEditorWrapper />
 
-                    <YamlTemplatePreview />
+                    <TemplateWorkflowYamlPreview />
                 </div>
-            </EditorTemplateProvider>
+            </TemplateWorkflowEditorProvider>
         </main>
     );
 }

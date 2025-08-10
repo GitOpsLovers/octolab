@@ -6,9 +6,9 @@ import { FiX } from 'react-icons/fi';
 import { useEditorTemplate } from '../../hooks/editor-template.hooks';
 
 /**
- * Template workflow guide component
+ * Template workflow editor form guide component
  */
-export function TemplateWorkflowGuide() {
+export function TemplateWorkflowEditorFormGuide() {
     const { template } = useEditorTemplate();
     const [isVisible, setIsVisible] = useState(true);
 

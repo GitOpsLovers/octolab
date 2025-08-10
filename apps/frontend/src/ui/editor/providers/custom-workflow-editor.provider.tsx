@@ -46,9 +46,9 @@ const createBaseCustomWorkflow = (): CustomWorkflowConfig => ({
 });
 
 /**
- * Editor provider for custom workflows.
+ * Custom workflow editor provider.
  */
-export function EditorCustomProvider({ children, workflowId }: EditorProviderProps) {
+export function CustomWorkflowEditorProvider({ children, workflowId }: EditorProviderProps) {
     const { authToken, isLoading } = useAuthUser();
     const [errors, setErrors] = useState<Record<string, string | null>>({});
     const [loading, setLoading] = useState<boolean>(true);

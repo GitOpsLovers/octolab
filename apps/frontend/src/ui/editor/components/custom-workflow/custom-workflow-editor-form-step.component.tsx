@@ -26,9 +26,9 @@ interface SortableStepProps {
 }
 
 /**
- * Sortable step for the workflow custom form component.
+ * Custom workflow editor form step component.
  */
-export function SortableStep({ step, jobIndex, jobId, stepIndex, collapsed, availableActions, onToggleCollapse, onRemove }: SortableStepProps) {
+export function CustomWorkflowEditorFormStep({ step, jobIndex, jobId, stepIndex, collapsed, availableActions, onToggleCollapse, onRemove }: SortableStepProps) {
     const { focusYamlAtField, editingWorkflowYaml } = useEditorCustom();
     const [hasCondition, setHasCondition] = useState(!!step.if?.trim());
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: step.internalId });

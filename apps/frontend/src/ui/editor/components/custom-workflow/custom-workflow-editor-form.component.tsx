@@ -11,16 +11,16 @@ import { syncEditingWorkflow } from '../../helpers/sync-editing-custom-workflow'
 import { useEditorCustom } from '../../hooks/editor-custom.hooks';
 import { CustomWorkflowFormSchema, customWorkflowSchema } from '../../models/custom-workflow-form.models';
 
-import { CustomWorkflowFormJobsSteps } from './workflow-custom-form-jobs-steps.component';
+import { CustomWorkflowEditorFormJobsSteps } from './custom-workflow-editor-form-jobs-steps.component';
 
 import { getTriggersUseCase } from '@features/editor/application/get-triggers.use-case';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/shared/components/tooltip';
 
 /**
- * Custom workflow form component
+ * Custom workflow editorform component
  */
-export function CustomWorkflowForm(): ReactNode {
+export function CustomWorkflowEditorForm(): ReactNode {
     const { editingWorkflow, availableRunners, availableActions, setEditingWorkflow, resetEditingWorkflow, focusYamlAtField, setErrors } = useEditorCustom();
     const [availableTriggers, setAvailableTriggers] = useState<string[]>([]);
     const [collapsedJobs, setCollapsedJobs] = useState<Record<string, boolean>>({});
@@ -303,7 +303,7 @@ export function CustomWorkflowForm(): ReactNode {
 
                 {/* Jobs and steps */}
                 {availableRunners && (
-                    <CustomWorkflowFormJobsSteps
+                    <CustomWorkflowEditorFormJobsSteps
                         collapsedJobs={collapsedJobs}
                         collapsedSteps={collapsedSteps}
                         toggleCollapseJob={(id) => {

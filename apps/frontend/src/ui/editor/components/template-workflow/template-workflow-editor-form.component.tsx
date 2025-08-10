@@ -4,14 +4,14 @@ import { ReactNode, useState } from 'react';
 
 import { useEditorTemplate } from '../../hooks/editor-template.hooks';
 
-import { TemplateWorkflowFieldHelpMessages } from './editor-template-field-help-messages.component';
-import { TemplateWorkflowGuide } from './editor-template-guide.component';
-import { TemplateWorkflowOverview } from './editor-template-overview.component';
+import { TemplateWorkflowEditorFormFieldHelpMessages } from './template-workflow-editor-form-field-help-messages.component';
+import { TemplateWorkflowEditorFormGuide } from './template-workflow-editor-form-guide.component';
+import { TemplateWorkflowEditorFormOverview } from './template-workflow-editor-form-overview.component';
 
 /**
- * Template workflow form component
+ * Template workflow editorform component
  */
-export function TemplateWorkflowForm(): ReactNode {
+export function TemplateWorkflowEditorForm(): ReactNode {
     const { editingWorkflow, availableRunners, errors, setEditingWorkflow, resetEditingWorkflow, setErrors, focusYamlAtField } = useEditorTemplate();
     const [focusedField, setFocusedField] = useState<string | null>(null);
 
@@ -63,10 +63,10 @@ export function TemplateWorkflowForm(): ReactNode {
     return (
         <div className="w-full lg:w-1/2 flex flex-col gap-4 mb-8">
             {/* Guided step breakdown */}
-            <TemplateWorkflowGuide />
+            <TemplateWorkflowEditorFormGuide />
 
             {/* Overview panel */}
-            <TemplateWorkflowOverview />
+            <TemplateWorkflowEditorFormOverview />
 
             {/* Form */}
             <div className="bg-surface border border-border p-6 rounded-lg shadow flex flex-col">
@@ -123,7 +123,7 @@ export function TemplateWorkflowForm(): ReactNode {
                                     ))}
                                 </select>
                             )}
-                            {field.helpMessage && focusedField === field.key && <TemplateWorkflowFieldHelpMessages message={field.helpMessage} />}
+                            {field.helpMessage && focusedField === field.key && <TemplateWorkflowEditorFormFieldHelpMessages message={field.helpMessage} />}
                             {errors[field.key] && <p className="text-red-500 text-sm mt-1">{errors[field.key]}</p>}
                         </div>
                     );

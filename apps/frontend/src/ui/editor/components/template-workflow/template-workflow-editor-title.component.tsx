@@ -6,9 +6,9 @@ import { FaPencilAlt, FaCheck, FaTimes } from 'react-icons/fa';
 import { useEditorTemplate } from '../../hooks/editor-template.hooks';
 
 /**
- * Editor template title component.
+ * Template workflow editor title component.
  */
-export function EditorTemplateTitle() {
+export function TemplateWorkflowEditorTitle() {
     const { editingWorkflow, setWorkflowNameAndDescription } = useEditorTemplate();
 
     const [editingField, setEditingField] = useState<'name' | 'description' | null>(null);

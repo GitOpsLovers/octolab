@@ -8,9 +8,9 @@ interface TemplateWorkflowFieldHelpMessagesProps {
 }
 
 /**
- * Template workflow field help messages component
+ * Template workflow editor form field help messages component
  */
-export function TemplateWorkflowFieldHelpMessages({ message }: TemplateWorkflowFieldHelpMessagesProps): ReactNode {
+export function TemplateWorkflowEditorFormFieldHelpMessages({ message }: TemplateWorkflowFieldHelpMessagesProps): ReactNode {
     const parts = message.split(/(`[^`]+`)/g);
 
     return (

@@ -11,7 +11,7 @@ import yaml from 'yaml';
 
 import { useEditorCustom } from '../../hooks/editor-custom.hooks';
 
-import YamlTemplateBlock from './yaml-template-block.component';
+import { YamlPreview } from './yaml-preview.component';
 
 import { createWorkflowUseCase } from '@features/editor/application/save-workflow.use-case';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
@@ -19,9 +19,9 @@ import { Modal } from '@ui/layout/components/modal.component';
 import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 
 /**
- * Yaml custom workflow preview component.
+ * Custom workflow YAML preview component.
  */
-export function YamlCustomPreview(): ReactNode {
+export function CustomWorkflowYamlPreview(): ReactNode {
     const cookies = useCookies();
     const { authToken } = useAuthUser();
     const { uuid } = useParams();
@@ -287,7 +287,7 @@ export function YamlCustomPreview(): ReactNode {
         <>
             <div className="w-full lg:w-1/2 flex flex-col h-full">
                 {/* Yaml preview */}
-                <YamlTemplateBlock content={workflowContent} fields={yamlFields as any} highlightedKey={highlightedFieldKey} />
+                <YamlPreview content={workflowContent} fields={yamlFields as any} highlightedKey={highlightedFieldKey} />
 
                 {/* Informative banner */}
                 <div className="bg-background border border-border px-4 py-3 rounded-md mb-4 flex items-center gap-2">

@@ -6,9 +6,9 @@ import { FaPencilAlt, FaCheck, FaTimes } from 'react-icons/fa';
 import { useEditorCustom } from '../../hooks/editor-custom.hooks';
 
 /**
- * Editor custom workflow title component.
+ * Custom workflow editor title component.
  */
-export function EditorCustomTitle() {
+export function CustomWorkflowEditorTitle() {
     const { editingWorkflow, setWorkflowNameAndDescription } = useEditorCustom();
 
     const [editingField, setEditingField] = useState<'name' | 'description' | null>(null);
