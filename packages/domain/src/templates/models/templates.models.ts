@@ -34,14 +34,15 @@ export interface TemplateField {
     type: 'input' | 'select';
     placeholder?: string;
     options?: string[];
-    required?: boolean;
+    required: boolean;
     default?: string;
     condition?: {
         field: string;
         equals: string;
     };
-    value?: string;
+    value: string;
     helpMessage?: string;
+    yamlPath?: string;
 }
 
 /**

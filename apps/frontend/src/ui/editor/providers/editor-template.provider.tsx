@@ -1,7 +1,7 @@
 'use client';
 
 import { Template, WorkflowTemplateConfig } from '@octolab/domain';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { EditorTemplateContext } from '../contexts/editor.context';
 
@@ -32,6 +32,7 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
     const [editingWorkflow, setEditingWorkflow] = useState<WorkflowTemplateConfig | null>(null);
     const [initialEditingWorkflowData, setInitialEditingWorkflowData] = useState<WorkflowTemplateConfig | null>(null);
     const [isEditingExistingWorkflow, setIsEditingExistingWorkflow] = useState<boolean>(false);
+    const [highlightedFieldKey, setHighlightedFieldKey] = useState<string | null>(null);
 
     /**
      * Get available runners
@@ -131,19 +132,27 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
         }
     }, [isLoading, authToken, templateId, workflowId]);
 
-    // Set the workflow YAML based on the editing workflow
+    /**
+     * Set the workflow YAML based on the editing workflow
+     */
     const editingWorkflowYaml = useMemo(() => {
         if (!editingWorkflow) return null;
 
         return generateWorkflowYamlForTemplatesUseCase(editingWorkflow);
     }, [editingWorkflow]);
 
+    /**
+     * Reset the editing workflow to its initial state
+     */
     const resetEditingWorkflow = () => {
         if (initialEditingWorkflowData) {
             setEditingWorkflow(structuredClone(initialEditingWorkflowData));
         }
     };
 
+    /**
+     * Set the workflow name and description
+     */
     const setWorkflowNameAndDescription = (name: string, description: string) => {
         setEditingWorkflow((prev) => {
             if (!prev) return prev;
@@ -155,18 +164,27 @@ export function EditorTemplateProvider({ children, templateId, workflowId }: Edi
         });
     };
 
+    /**
+     * Focus the YAML editor at the specified field
+     */
+    const focusYamlAtField = useCallback((fieldKey: string | null) => {
+        setHighlightedFieldKey(fieldKey);
+    }, []);
+
     const value = {
         editingWorkflow,
         editingWorkflowYaml,
         availableRunners,
         template,
         isEditingExistingWorkflow,
+        highlightedFieldKey,
         loading,
         errors,
         setEditingWorkflow,
         resetEditingWorkflow,
         setIsEditingExistingWorkflow,
         setWorkflowNameAndDescription,
+        focusYamlAtField,
         setErrors,
     };
 

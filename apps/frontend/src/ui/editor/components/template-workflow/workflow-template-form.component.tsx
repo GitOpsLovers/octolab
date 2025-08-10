@@ -12,7 +12,7 @@ import { TemplateWorkflowOverview } from './editor-template-overview.component';
  * Template workflow form component
  */
 export function TemplateWorkflowForm(): ReactNode {
-    const { editingWorkflow, availableRunners, errors, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditorTemplate();
+    const { editingWorkflow, availableRunners, errors, setEditingWorkflow, resetEditingWorkflow, setErrors, focusYamlAtField } = useEditorTemplate();
     const [focusedField, setFocusedField] = useState<string | null>(null);
 
     /**
@@ -91,9 +91,11 @@ export function TemplateWorkflowForm(): ReactNode {
                                     }}
                                     onFocus={() => {
                                         setFocusedField(field.key);
+                                        focusYamlAtField(field.key);
                                     }}
                                     onBlur={() => {
                                         setFocusedField(null);
+                                        focusYamlAtField(null);
                                     }}
                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                     placeholder={field.placeholder}
@@ -106,9 +108,11 @@ export function TemplateWorkflowForm(): ReactNode {
                                     }}
                                     onFocus={() => {
                                         setFocusedField(field.key);
+                                        focusYamlAtField(field.key);
                                     }}
                                     onBlur={() => {
                                         setFocusedField(null);
+                                        focusYamlAtField(null);
                                     }}
                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                 >
@@ -129,6 +133,7 @@ export function TemplateWorkflowForm(): ReactNode {
                     type="button"
                     onClick={() => {
                         resetEditingWorkflow();
+                        focusYamlAtField(null);
                         setErrors({});
                     }}
                     data-umami-event={`[Workflow template editor] Reset values on ${editingWorkflow.id} click`}
