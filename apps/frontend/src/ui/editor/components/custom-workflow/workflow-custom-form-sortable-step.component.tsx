@@ -8,6 +8,7 @@ import { MdDragIndicator } from 'react-icons/md';
 import Select from 'react-select';
 
 import { transformAvailableActionsToSelectOptions } from '../../helpers/transform-available-actions-to-select';
+import { useEditorCustom } from '../../hooks/editor-custom.hooks';
 import { CustomWorkflowFormSchema } from '../../models/custom-workflow-form.models';
 
 import { select2Styles } from '@ui/layout/styles/select2.styles';
@@ -16,6 +17,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/shared/components/t
 interface SortableStepProps {
     step: Step;
     jobIndex: number;
+    jobId: string;
     stepIndex: number;
     collapsed: boolean;
     availableActions: Action[];
@@ -26,12 +28,14 @@ interface SortableStepProps {
 /**
  * Sortable step for the workflow custom form component.
  */
-export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableActions, onToggleCollapse, onRemove }: SortableStepProps) {
+export function SortableStep({ step, jobIndex, jobId, stepIndex, collapsed, availableActions, onToggleCollapse, onRemove }: SortableStepProps) {
+    const { focusYamlAtField, editingWorkflowYaml } = useEditorCustom();
     const [hasCondition, setHasCondition] = useState(!!step.if?.trim());
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: step.internalId });
     const {
         register,
         setValue,
+        getValues,
         formState: { errors },
     } = useFormContext<CustomWorkflowFormSchema>();
 
@@ -40,7 +44,9 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
         transition,
     };
 
-    // Transform available actions to select options for actions input
+    /**
+     * Transform available actions to select options for actions input
+     */
     const actionsOptions = transformAvailableActionsToSelectOptions(availableActions);
     const findOpt = (id?: string | null) => actionsOptions.find((o) => o.value === (id ?? '')) ?? null;
     const findAction = (id?: string | null) => availableActions.find((a) => a.id === id);
@@ -48,7 +54,9 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
     const currentAction = findAction(step.uses);
     const actionInputs = step.stepActionInputs ?? currentAction?.inputs ?? [];
 
-    // On action selection
+    /**
+     * On action selection
+     */
     const handleActionChange = (opt: { value: string } | null) => {
         const newUses = opt?.value ?? '';
 
@@ -75,11 +83,30 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
         );
     };
 
-    // On add condition to step
+    /**
+     * On add condition to step
+     */
     const handleAddStepCondition = () => {
         const fieldName = `jobs.${jobIndex}.steps.${stepIndex}.if` as const;
         setValue(fieldName, '');
         setHasCondition(true);
+    };
+
+    const computeHighlightKeyForInput = (inputKey: string) => {
+        const fieldName = `jobs.${jobIndex}.steps.${stepIndex}.with.${inputKey}` as const;
+        const val = getValues(fieldName);
+        const envKey = typeof val === 'string' ? val.trim() : '';
+
+        // existe en el estado del form...
+        const existsInStepState = !!envKey && step.env && Object.prototype.hasOwnProperty.call(step.env, envKey);
+
+        // ...o ya existe en el YAML renderizado
+        const stepYaml = editingWorkflowYaml?.jobs?.[jobId]?.steps?.[stepIndex] as { env?: Record<string, unknown> } | undefined;
+        const existsInYaml = !!envKey && stepYaml?.env && Object.prototype.hasOwnProperty.call(stepYaml.env, envKey);
+
+        const hasEnv = existsInStepState || existsInYaml;
+
+        return hasEnv ? `job:${jobId}:step:${step.internalId}:env.${envKey}` : `job:${jobId}:step:${step.internalId}:with.${inputKey}`;
     };
 
     return (
@@ -111,6 +138,12 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                             <input
                                 type="text"
                                 {...register(`jobs.${jobIndex}.steps.${stepIndex}.id`)}
+                                onFocus={() => {
+                                    focusYamlAtField(`job:${jobId}:step:${step.internalId}:id`);
+                                }}
+                                onBlur={() => {
+                                    focusYamlAtField(null);
+                                }}
                                 className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
                             {errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.id && (
@@ -124,6 +157,12 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                             <input
                                 type="text"
                                 {...register(`jobs.${jobIndex}.steps.${stepIndex}.name`)}
+                                onFocus={() => {
+                                    focusYamlAtField(`job:${jobId}:step:${step.internalId}:name`);
+                                }}
+                                onBlur={() => {
+                                    focusYamlAtField(null);
+                                }}
                                 className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
                             {errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.name && (
@@ -151,6 +190,12 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                             <input
                                 type="text"
                                 {...register(`jobs.${jobIndex}.steps.${stepIndex}.run`)}
+                                onFocus={() => {
+                                    focusYamlAtField(`job:${jobId}:step:${step.internalId}:run`);
+                                }}
+                                onBlur={() => {
+                                    focusYamlAtField(null);
+                                }}
                                 className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                             />
                             {errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.run && (
@@ -169,6 +214,12 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                                     placeholder="-- Select an action --"
                                     value={findOpt(step.uses ?? '')}
                                     onChange={handleActionChange}
+                                    onMenuOpen={() => {
+                                        focusYamlAtField(`job:${jobId}:step:${step.internalId}:uses`);
+                                    }}
+                                    onMenuClose={() => {
+                                        focusYamlAtField(null);
+                                    }}
                                 />
 
                                 {errors.jobs?.[jobIndex]?.steps?.[stepIndex]?.uses && (
@@ -202,6 +253,12 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                                             {type === 'select' && Array.isArray(input.options) && (
                                                 <select
                                                     {...register(fieldName)}
+                                                    onFocus={() => {
+                                                        focusYamlAtField(computeHighlightKeyForInput(input.key));
+                                                    }}
+                                                    onBlur={() => {
+                                                        focusYamlAtField(null);
+                                                    }}
                                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                                     defaultValue=""
                                                 >
@@ -220,6 +277,12 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                                             {type === 'string' && (
                                                 <input
                                                     {...register(fieldName)}
+                                                    onFocus={() => {
+                                                        focusYamlAtField(computeHighlightKeyForInput(input.key));
+                                                    }}
+                                                    onBlur={() => {
+                                                        focusYamlAtField(null);
+                                                    }}
                                                     type="text"
                                                     placeholder={input.placeholder}
                                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -230,6 +293,12 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                                             {type === 'number' && (
                                                 <input
                                                     {...register(fieldName)}
+                                                    onFocus={() => {
+                                                        focusYamlAtField(computeHighlightKeyForInput(input.key));
+                                                    }}
+                                                    onBlur={() => {
+                                                        focusYamlAtField(null);
+                                                    }}
                                                     type="number"
                                                     placeholder={input.placeholder}
                                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -252,6 +321,12 @@ export function SortableStep({ step, jobIndex, stepIndex, collapsed, availableAc
                                 <input
                                     type="text"
                                     {...register(`jobs.${jobIndex}.steps.${stepIndex}.if`)}
+                                    onFocus={() => {
+                                        focusYamlAtField(`job:${jobId}:step:${step.internalId}:if`);
+                                    }}
+                                    onBlur={() => {
+                                        focusYamlAtField(null);
+                                    }}
                                     placeholder="e.g. github.ref == 'refs/heads/main'"
                                     className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                 />

@@ -11,6 +11,7 @@ interface FieldLike {
     key: string;
     value?: unknown;
     yamlPath?: string | string[];
+    highlightTarget?: 'value' | 'key';
 }
 
 /**
@@ -45,15 +46,41 @@ function getNodeByPath(doc: YAML.Document.Parsed, path: string) {
     return node ?? null;
 }
 
+/** Get the Pair (key/value) for the last segment of a path. */
+function getPairByPath(doc: YAML.Document.Parsed, path: string) {
+    const parts = splitPath(path);
+    let node: any = doc.contents;
+    let pair: any = null;
+
+    for (const p of parts) {
+        if (!node) return null;
+
+        if (typeof p === 'number') {
+            // Índice de secuencia
+            const seq = node?.items ?? node;
+            node = Array.isArray(seq) ? seq[p] : null;
+            pair = null; // en índices no hay 'pair'
+        } else {
+            // Clave dentro de un Map
+            const items = node?.items;
+            if (!Array.isArray(items)) return null;
+            pair = items.find((kv: any) => (kv.key?.value ?? kv.key) === p) ?? null;
+            node = pair ? pair.value : null;
+        }
+    }
+    return pair;
+}
+
+/** Reemplaza placeholders ${fieldKey} en rutas con el value actual del campo. */
 function resolvePathTemplate(path: string, fields: FieldLike[]) {
     return path.replace(/\${([\w-]+)}/g, (_, k: string) => {
         const f = fields.find((x) => x.key === k);
-
         // eslint-disable-next-line @typescript-eslint/no-base-to-string
-        return String(f?.value ?? k);
+        return String(f?.value ?? k); // fallback al nombre si no hay valor
     });
 }
 
+/** Une rangos contiguos/solapados para evitar parpadeos. */
 function mergeRanges(ranges: Array<[number, number]>): Array<[number, number]> {
     if (ranges.length <= 1) return ranges;
     const sorted = [...ranges].sort((a, b) => a[0] - b[0]);
@@ -71,6 +98,14 @@ function mergeRanges(ranges: Array<[number, number]>): Array<[number, number]> {
     }
     merged.push([curStart, curEnd]);
     return merged;
+}
+
+function isPrefixPath(a: Array<string | number>, b: Array<string | number>) {
+    if (a.length > b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) return false;
+    }
+    return true;
 }
 
 export interface YamlTemplateBlockProps {
@@ -94,16 +129,40 @@ export default function YamlTemplateBlock({ content, fields, highlightedKey, cla
 
         for (const f of fields) {
             if (!f.yamlPath) continue;
-            const rawPaths = Array.isArray(f.yamlPath) ? f.yamlPath : [f.yamlPath];
 
-            // 👇 resolvemos placeholders ${...} con los values actuales
+            const rawPaths = Array.isArray(f.yamlPath) ? f.yamlPath : [f.yamlPath];
             const paths = rawPaths.map((p) => resolvePathTemplate(p, fields));
+
+            // 1) Recolecta candidatos existentes con sus "parts" para poder filtrar ancestros
+            const candidates: Array<{
+                parts: Array<string | number>;
+                range: [number, number, number];
+            }> = [];
 
             for (const path of paths) {
                 const node: any = getNodeByPath(doc, path);
-                const range = node?.range as [number, number, number] | undefined;
-                if (!range) continue;
+                const pair: any = getPairByPath(doc, path);
 
+                const rawRange =
+                    f.highlightTarget === 'key'
+                        ? (pair?.key?.range as [number, number, number] | undefined)
+                        : ((node?.range ?? pair?.value?.range) as [number, number, number] | undefined);
+
+                if (!rawRange) continue;
+
+                candidates.push({
+                    parts: splitPath(path),
+                    range: rawRange,
+                });
+            }
+
+            if (!candidates.length) continue;
+
+            // 2) Quita rutas que sean prefijo de otra más específica (fallback real)
+            const filtered = candidates.filter((c, i, arr) => !arr.some((other, j) => j !== i && isPrefixPath(c.parts, other.parts)));
+
+            // 3) Convierte los rangos a líneas y acumula (luego merge)
+            for (const { range } of filtered) {
                 const [start, end] = range;
                 const beforeStart = content.slice(0, start);
                 const within = content.slice(start, end);
@@ -115,7 +174,6 @@ export default function YamlTemplateBlock({ content, fields, highlightedKey, cla
                 ranges[f.key].push([startLine, endLine]);
             }
 
-            // (opcional) normaliza rangos del mismo campo
             if (ranges[f.key]?.length > 1) {
                 ranges[f.key] = mergeRanges(ranges[f.key]);
             }
