@@ -3,15 +3,15 @@
 import { plansLimits } from '@octolab/domain';
 import { useParams } from 'next/navigation';
 import { useCookies } from 'next-client-cookies';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaRegFileAlt, FaSpinner } from 'react-icons/fa';
 import { LuPartyPopper } from 'react-icons/lu';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import yaml from 'yaml';
 
 import { useEditorTemplate } from '../../hooks/editor-template.hooks';
+
+import YamlTemplateBlock from './yaml-template-block.component';
 
 import { createWorkflowUseCase } from '@features/editor/application/save-workflow.use-case';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
@@ -26,16 +26,18 @@ export function YamlTemplatePreview(): ReactNode {
     const { authToken } = useAuthUser();
     const { uuid } = useParams();
     const { authUser, fetchUser } = useAuthUser();
-    const { editingWorkflow, editingWorkflowYaml, errors, template, isEditingExistingWorkflow, setIsEditingExistingWorkflow } = useEditorTemplate();
+    const { editingWorkflow, editingWorkflowYaml, errors, template, isEditingExistingWorkflow, highlightedFieldKey, setIsEditingExistingWorkflow } = useEditorTemplate();
     const [saving, setSaving] = useState(false);
     const [showFirstWorkflowModal, setShowFirstWorkflowModal] = useState(false);
 
     const fileName = editingWorkflow ? editingWorkflow.filename : 'workflow.yml';
     const workflowId = uuid as string;
 
-    const workflowContent = yaml.stringify(editingWorkflowYaml);
+    const workflowContent = useMemo(() => yaml.stringify(editingWorkflowYaml), [editingWorkflowYaml]);
 
-    // Copy the YAML to the clipboard
+    /**
+     * Copy the YAML to the clipboard
+     */
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(workflowContent);
@@ -46,7 +48,9 @@ export function YamlTemplatePreview(): ReactNode {
         }
     };
 
-    // Download the YAML as a file
+    /**
+     * Download the YAML as a file
+     */
     const handleDownload = () => {
         try {
             const blob = new Blob([workflowContent], { type: 'text/yaml' });
@@ -65,7 +69,9 @@ export function YamlTemplatePreview(): ReactNode {
         }
     };
 
-    // Save the workflow to the user's workspace
+    /**
+     * Save the workflow to the user's workspace
+     */
     const saveToWorkspace = async () => {
         if (!authUser || !editingWorkflow || !authToken) return;
 
@@ -100,7 +106,9 @@ export function YamlTemplatePreview(): ReactNode {
         }
     };
 
-    // Close the first workflow modal
+    /**
+     * Close the first workflow modal
+     */
     const handleCloseFirstWorkflowModal = () => {
         setShowFirstWorkflowModal(false);
         cookies.set('octolab_hide_first_workflow_modal', 'true', { expires: 365 });
@@ -117,19 +125,8 @@ export function YamlTemplatePreview(): ReactNode {
     return (
         <>
             <div className="w-full lg:w-1/2 flex flex-col h-full">
-                {/* Yaml preview */}
-                <SyntaxHighlighter
-                    language="yaml"
-                    style={oneDark}
-                    customStyle={{
-                        flex: 1,
-                        overflow: 'auto',
-                        margin: '0 0  1rem',
-                        borderRadius: '0.375rem',
-                    }}
-                >
-                    {workflowContent}
-                </SyntaxHighlighter>
+                {/* Yaml block */}
+                <YamlTemplateBlock content={workflowContent} fields={editingWorkflow.fields as any[]} highlightedKey={highlightedFieldKey} />
 
                 {/* Informative banner */}
                 <div className="bg-background border border-border px-4 py-3 rounded-md mb-4 flex items-center gap-2">

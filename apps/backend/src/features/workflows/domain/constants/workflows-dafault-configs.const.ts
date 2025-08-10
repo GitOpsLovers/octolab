@@ -19,6 +19,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Node.js pull request verify',
                 required: true,
                 value: 'Node.js pull request verify',
+                yamlPath: 'name',
             },
             {
                 key: 'nodeVersion',
@@ -28,6 +29,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 options: ['16', '18', '20', '22'],
                 default: '22',
                 value: '22',
+                yamlPath: 'jobs.verify.steps[1].with.node-version',
             },
             {
                 key: 'installCommand',
@@ -37,6 +39,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'npm install',
                 helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
+                yamlPath: 'jobs.verify.steps[2].run',
             },
             {
                 key: 'lintCommand',
@@ -45,6 +48,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm run lint',
                 required: true,
                 value: 'npm run lint',
+                yamlPath: 'jobs.verify.steps[3].run',
             },
             {
                 key: 'testCommand',
@@ -53,6 +57,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm run test',
                 required: true,
                 value: 'npm run test',
+                yamlPath: 'jobs.verify.steps[4].run',
             },
             {
                 key: 'buildCommand',
@@ -61,6 +66,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm run build',
                 required: true,
                 value: 'npm run build',
+                yamlPath: 'jobs.verify.steps[5].run',
             },
         ],
     },
@@ -79,6 +85,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'NX Pull request verify',
                 required: true,
                 value: 'NX Pull request verify',
+                yamlPath: 'name',
             },
             {
                 key: 'baseBranch',
@@ -87,6 +94,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'main',
                 required: true,
                 value: 'main',
+                yamlPath: 'baseBranch',
             },
             {
                 key: 'nodeVersion',
@@ -96,6 +104,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 options: ['16', '18', '20', '22'],
                 default: '22',
                 value: '22',
+                yamlPath: 'jobs.verify.steps[1].with.node-version',
             },
             {
                 key: 'installCommand',
@@ -105,6 +114,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'npm install',
                 helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
+                yamlPath: 'jobs.verify.steps[2].run',
             },
             {
                 key: 'lintCommand',
@@ -113,6 +123,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npx nx affected --target=lint --head=HEAD',
                 required: true,
                 value: 'npx nx affected --target=lint --head=HEAD',
+                yamlPath: 'jobs.verify.steps[3].run',
             },
             {
                 key: 'testCommand',
@@ -121,6 +132,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npx nx affected --target=test --head=HEAD',
                 required: true,
                 value: 'npx nx affected --target=test --head=HEAD',
+                yamlPath: 'jobs.verify.steps[4].run',
             },
             {
                 key: 'buildCommand',
@@ -129,6 +141,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npx nx affected --target=build --head=HEAD',
                 required: true,
                 value: 'npx nx affected --target=build --head=HEAD',
+                yamlPath: 'jobs.verify.steps[5].run',
             },
         ],
     },
@@ -147,6 +160,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Publish to NPM',
                 required: true,
                 value: 'Publish to NPM',
+                yamlPath: 'name',
             },
             {
                 key: 'branch',
@@ -155,6 +169,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'main',
                 required: true,
                 value: 'main',
+                yamlPath: 'on.push.branches[0]',
             },
             {
                 key: 'nodeVersion',
@@ -164,6 +179,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 options: ['16', '18', '20', '22'],
                 default: '22',
                 value: '22',
+                yamlPath: 'jobs.publish.steps[1].with.node-version',
             },
             {
                 key: 'installCommand',
@@ -173,6 +189,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'npm install',
                 helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
+                yamlPath: 'jobs.publish.steps[2].run',
             },
             {
                 key: 'testCommand',
@@ -181,6 +198,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm run test',
                 required: true,
                 value: 'npm run test',
+                yamlPath: 'jobs.publish.steps[3].run',
             },
             {
                 key: 'buildCommand',
@@ -189,6 +207,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm run build',
                 required: true,
                 value: 'npm run build',
+                yamlPath: 'jobs.publish.steps[4].run',
             },
             {
                 key: 'npmTokenSecret',
@@ -198,6 +217,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'NPM_TOKEN',
                 helpMessage: 'Make sure you have created the secret in your repository configuration.',
+                yamlPath: 'jobs.publish.steps[5].with.token',
             },
         ],
     },
@@ -216,6 +236,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Vercel PRO deployment',
                 required: true,
                 value: 'Vercel PRO deployment',
+                yamlPath: 'name',
             },
             {
                 key: 'branch',
@@ -224,6 +245,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'main',
                 required: true,
                 value: 'main',
+                yamlPath: 'on.push.branches[0]',
             },
             {
                 key: 'vercelTokenSecret',
@@ -251,6 +273,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Releasing with Semantic Release',
                 required: true,
                 value: 'Releasing with Semantic Release',
+                yamlPath: 'name',
             },
             {
                 key: 'branch',
@@ -259,6 +282,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'main',
                 required: true,
                 value: 'main',
+                yamlPath: 'on.push.branches[0]',
             },
             {
                 key: 'nodeVersion',
@@ -268,6 +292,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 options: ['16', '18', '20', '22'],
                 default: '22',
                 value: '22',
+                yamlPath: 'jobs.release.steps[1].with.node-version',
             },
             {
                 key: 'installCommand',
@@ -277,6 +302,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'npm install',
                 helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
+                yamlPath: 'jobs.release.steps[2].run',
             },
             {
                 key: 'buildCommand',
@@ -285,6 +311,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm run build',
                 required: true,
                 value: 'npm run build',
+                yamlPath: 'jobs.release.steps[3].run',
             },
             {
                 key: 'releaseCommand',
@@ -293,6 +320,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npx semantic-release',
                 required: true,
                 value: 'npx semantic-release',
+                yamlPath: 'jobs.release.steps[4].run',
             },
             {
                 key: 'githubTokenSecret',
@@ -302,6 +330,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'GH_TOKEN',
                 helpMessage: 'You can use the default Github token or set your own.',
+                yamlPath: 'jobs.release.steps[4].env.GITHUB_TOKEN',
             },
         ],
     },
@@ -320,6 +349,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'AWS S3 and CloudFront Deployment',
                 required: true,
                 value: 'AWS S3 and CloudFront Deployment',
+                yamlPath: 'name',
             },
             {
                 key: 'branch',
@@ -328,6 +358,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'main',
                 required: true,
                 value: 'main',
+                yamlPath: 'on.push.branches[0]',
             },
             {
                 key: 'nodeVersion',
@@ -337,6 +368,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 options: ['16', '18', '20', '22'],
                 default: '22',
                 value: '22',
+                yamlPath: 'jobs.deploy.steps[1].with.node-version',
             },
             {
                 key: 'installCommand',
@@ -346,6 +378,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'npm install',
                 helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
+                yamlPath: 'jobs.deploy.steps[2].run',
             },
             {
                 key: 'buildCommand',
@@ -354,6 +387,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'npm run build',
                 required: true,
                 value: 'npm run build',
+                yamlPath: 'jobs.deploy.steps[3].run',
             },
             {
                 key: 'awsRegionEnvironmentVariable',
@@ -362,6 +396,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'MY_AWS_REGION',
                 required: true,
                 value: 'MY_AWS_REGION',
+                yamlPath: 'env.MY_AWS_REGION',
             },
             {
                 key: 'awsRegionEnvironmentVariableValue',
@@ -370,6 +405,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: '<YOUR AWS REGION>',
                 required: true,
                 value: '<YOUR AWS REGION>',
+                yamlPath: 'env.MY_AWS_REGION',
             },
             {
                 key: 'awsRoleNameEnvironmentVariable',
@@ -378,6 +414,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'AWS_ROLENAME',
                 required: true,
                 value: 'AWS_ROLENAME',
+                yamlPath: 'env.AWS_ROLENAME',
             },
             {
                 key: 'awsRoleNameEnvironmentVariableValue',
@@ -386,6 +423,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: '<YOUR AWS ROLE>',
                 required: true,
                 value: '<YOUR AWS ROLE>',
+                yamlPath: 'env.AWS_ROLENAME',
             },
             {
                 // eslint-disable-next-line no-secrets/no-secrets
@@ -395,6 +433,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'AWS_S3_BUCKET',
                 required: true,
                 value: 'AWS_S3_BUCKET',
+                yamlPath: 'env.AWS_S3_BUCKET',
             },
             {
                 // eslint-disable-next-line no-secrets/no-secrets
@@ -404,6 +443,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: '<YOUR S3 BUCKET>',
                 required: true,
                 value: '<YOUR S3 BUCKET>',
+                yamlPath: 'env.AWS_S3_BUCKET',
             },
             {
                 key: 'sourceDirEnvironmentVariable',
@@ -412,6 +452,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'SOURCE_DIR',
                 required: true,
                 value: 'SOURCE_DIR',
+                yamlPath: 'env.SOURCE_DIR',
             },
             {
                 key: 'sourceDirEnvironmentVariableValue',
@@ -420,6 +461,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: './build',
                 required: true,
                 value: './build',
+                yamlPath: 'env.SOURCE_DIR',
             },
             {
                 key: 'cloudfrontDistributionIdSecret',
@@ -429,6 +471,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'CLOUDFRONT_DISTRIBUTION_ID',
                 helpMessage: 'Make sure you have created the secret in your repository configuration.',
+                yamlPath: 'jobs.deploy.steps[6].run',
             },
             {
                 key: 'awsAccountIdSecret',
@@ -438,6 +481,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'AWS_ACCOUNT_ID',
                 helpMessage: 'Make sure you have created the secret in your repository configuration.',
+                yamlPath: 'jobs.deploy.steps[4].with.role-to-assume',
             },
         ],
     },
@@ -457,6 +501,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Snyk Security Scan',
                 required: true,
                 value: 'Snyk Security Scan',
+                yamlPath: 'name',
             },
             {
                 key: 'branch',
@@ -465,6 +510,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'main',
                 required: true,
                 value: 'main',
+                yamlPath: 'on.push.branches[0]',
             },
             {
                 key: 'snykCodeStack',
@@ -474,6 +520,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 options: ['Dotnet', 'Golang', 'Gradle', 'Maven', 'Node', 'PHP', 'Python', 'Ruby'],
                 default: 'Node',
                 value: 'Node',
+                yamlPath: 'jobs.snyk-scan.steps[1].uses',
             },
             {
                 key: 'snykSeverityThreshold',
@@ -483,6 +530,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 options: ['low', 'medium', 'high'],
                 default: 'high',
                 value: 'high',
+                yamlPath: 'jobs.snyk-scan.steps[1].with.args',
             },
             {
                 key: 'snykTokenSecret',
@@ -492,6 +540,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'SNYK_TOKEN',
                 helpMessage: 'Make sure you have created the secret in your repository configuration.',
+                yamlPath: 'jobs.snyk-scan.steps[1].env.SNYK_TOKEN',
             },
         ],
     },
@@ -510,6 +559,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Publish Docker Image',
                 required: true,
                 value: 'Publish Docker Image',
+                yamlPath: 'name',
             },
             {
                 key: 'branch',
@@ -518,6 +568,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'main',
                 required: true,
                 value: 'main',
+                yamlPath: 'on.push.branches[0]',
             },
             {
                 key: 'dockerRegistry',
@@ -527,6 +578,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Docker',
                 required: true,
                 value: 'Docker',
+                yamlPath: 'jobs.docker-publish.steps[0].with.registry',
             },
             {
                 key: 'dockerUsername',
@@ -535,6 +587,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: '<YOUR_DOCKER_USERNAME>',
                 required: true,
                 value: '<YOUR_DOCKER_USERNAME>',
+                yamlPath: 'jobs.docker-publish.steps[0].with.username',
             },
             {
                 key: 'dockerPasswordSecret',
@@ -544,6 +597,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'DOCKER_PASSWORD',
                 helpMessage: 'Make sure you have created the secret in your repository configuration.',
+                yamlPath: 'jobs.docker-publish.steps[0].with.password',
             },
             {
                 key: 'dockerBuildContext',
@@ -552,6 +606,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: '.',
                 required: true,
                 value: '.',
+                yamlPath: 'jobs.docker-publish.steps[3].with.context',
             },
             {
                 key: 'dockerDockerfile',
@@ -560,6 +615,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Dockerfile',
                 required: true,
                 value: 'Dockerfile',
+                yamlPath: 'jobs.docker-publish.steps[3].with.file',
             },
             {
                 key: 'dockerImageTags',
@@ -568,6 +624,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'latest',
                 required: true,
                 value: 'latest',
+                yamlPath: 'jobs.docker-publish.steps[3].with.tags',
             },
         ],
     },
@@ -586,6 +643,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Auto Tag Version',
                 required: true,
                 value: 'Auto Tag Version',
+                yamlPath: 'name',
             },
             {
                 key: 'autoTagVersionCommand',
@@ -594,6 +652,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'cat current-version.txt',
                 required: true,
                 value: 'cat current-version.txt',
+                yamlPath: 'jobs.auto-tag.steps[1].with.version-command',
             },
         ],
     },
@@ -612,6 +671,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Laravel Forge Deployment',
                 required: true,
                 value: 'Laravel Forge Deployment',
+                yamlPath: 'name',
             },
             {
                 key: 'branch',
@@ -620,6 +680,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'main',
                 required: true,
                 value: 'main',
+                yamlPath: 'on.push.branches[0]',
             },
             {
                 key: 'deployMode',
@@ -642,6 +703,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                     equals: 'webhook',
                 },
                 helpMessage: 'Make sure you have created the secret in your repository configuration.',
+                yamlPath: 'jobs.laravel-forge-deploy.steps[1].with.trigger-url',
             },
             {
                 key: 'laravelForgeDeployApiKeySecretName',
@@ -655,6 +717,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                     equals: 'api',
                 },
                 helpMessage: 'Make sure you have created the secret in your repository configuration.',
+                yamlPath: 'jobs.laravel-forge-deploy.steps[1].with.api_key',
             },
             {
                 key: 'laravelForgeDeployServerIdSecretName',
@@ -668,6 +731,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                     equals: 'api',
                 },
                 helpMessage: 'Make sure you have created the secret in your repository configuration.',
+                yamlPath: 'jobs.laravel-forge-deploy.steps[1].with.server_id',
             },
             {
                 key: 'laravelForgeDeploySiteIdSecretName',
@@ -681,6 +745,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                     equals: 'api',
                 },
                 helpMessage: 'Make sure you have created the secret in your repository configuration.',
+                yamlPath: 'jobs.laravel-forge-deploy.steps[1].with.site_id',
             },
         ],
     },
@@ -699,6 +764,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'Conventional Commit PR Validator',
                 required: true,
                 value: 'Conventional Commit PR Validator',
+                yamlPath: 'name',
             },
             {
                 key: 'targetBranch',
@@ -708,6 +774,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: '${{ github.event.pull_request.base.ref }}',
                 helpMessage: 'The branch into which the pull request is being merged.',
+                yamlPath: 'jobs.commit-lint.steps[1].with.target-branch',
             },
             {
                 key: 'currentBranch',
@@ -717,6 +784,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: '${{ github.event.pull_request.head.ref }}',
                 helpMessage: 'The branch from which the pull request originates.',
+                yamlPath: 'jobs.commit-lint.steps[1].with.current-branch',
             },
             {
                 key: 'commitLintPattern',
@@ -726,6 +794,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: '(feat|fix|ci|chore|docs|test|style|refactor): .{1,}$',
                 helpMessage: 'Regular expression to validate commit messages',
+                yamlPath: 'jobs.commit-lint.steps[1].with.commit-lint-pattern',
             },
         ],
     },
