@@ -94,7 +94,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'main',
                 required: true,
                 value: 'main',
-                yamlPath: 'baseBranch',
+                yamlPath: ['jobs.verify.steps[3].run', 'jobs.verify.steps[4].run', 'jobs.verify.steps[5].run'],
             },
             {
                 key: 'nodeVersion',
@@ -396,7 +396,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'MY_AWS_REGION',
                 required: true,
                 value: 'MY_AWS_REGION',
-                yamlPath: 'env.MY_AWS_REGION',
+                yamlPath: ['env.${awsRegionEnvironmentVariable}', 'jobs.deploy.steps[4].with.aws-region'],
             },
             {
                 key: 'awsRegionEnvironmentVariableValue',
@@ -405,7 +405,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: '<YOUR AWS REGION>',
                 required: true,
                 value: '<YOUR AWS REGION>',
-                yamlPath: 'env.MY_AWS_REGION',
+                yamlPath: 'env.${awsRegionEnvironmentVariable}',
             },
             {
                 key: 'awsRoleNameEnvironmentVariable',
@@ -414,7 +414,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'AWS_ROLENAME',
                 required: true,
                 value: 'AWS_ROLENAME',
-                yamlPath: 'env.AWS_ROLENAME',
+                yamlPath: ['env.${awsRoleNameEnvironmentVariable}', 'jobs.deploy.steps[4].with.role-to-assume'],
             },
             {
                 key: 'awsRoleNameEnvironmentVariableValue',
@@ -423,7 +423,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: '<YOUR AWS ROLE>',
                 required: true,
                 value: '<YOUR AWS ROLE>',
-                yamlPath: 'env.AWS_ROLENAME',
+                yamlPath: 'env.${awsRoleNameEnvironmentVariable}',
             },
             {
                 // eslint-disable-next-line no-secrets/no-secrets
@@ -433,7 +433,8 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'AWS_S3_BUCKET',
                 required: true,
                 value: 'AWS_S3_BUCKET',
-                yamlPath: 'env.AWS_S3_BUCKET',
+                // eslint-disable-next-line no-secrets/no-secrets
+                yamlPath: ['env.${awsS3BucketEnvironmentVariable}', 'jobs.deploy.steps[5].run'],
             },
             {
                 // eslint-disable-next-line no-secrets/no-secrets
@@ -443,7 +444,8 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: '<YOUR S3 BUCKET>',
                 required: true,
                 value: '<YOUR S3 BUCKET>',
-                yamlPath: 'env.AWS_S3_BUCKET',
+                // eslint-disable-next-line no-secrets/no-secrets
+                yamlPath: 'env.${awsS3BucketEnvironmentVariable}',
             },
             {
                 key: 'sourceDirEnvironmentVariable',
@@ -452,7 +454,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: 'SOURCE_DIR',
                 required: true,
                 value: 'SOURCE_DIR',
-                yamlPath: 'env.SOURCE_DIR',
+                yamlPath: ['env.${sourceDirEnvironmentVariable}', 'jobs.deploy.steps[5].run'],
             },
             {
                 key: 'sourceDirEnvironmentVariableValue',
@@ -461,7 +463,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 placeholder: './build',
                 required: true,
                 value: './build',
-                yamlPath: 'env.SOURCE_DIR',
+                yamlPath: 'env.${sourceDirEnvironmentVariable}',
             },
             {
                 key: 'cloudfrontDistributionIdSecret',

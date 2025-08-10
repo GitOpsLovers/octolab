@@ -42,7 +42,7 @@ export interface TemplateField {
     };
     value: string;
     helpMessage?: string;
-    yamlPath?: string;
+    yamlPath?: string | string[];
 }
 
 /**
