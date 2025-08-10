@@ -7,6 +7,7 @@ import { useFormContext } from 'react-hook-form';
 import { FaAngleDown, FaAngleUp, FaInfoCircle, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { v4 as uuidv4 } from 'uuid';
 
+import { useEditorCustom } from '../../hooks/editor-custom.hooks';
 import { CustomWorkflowFormSchema } from '../../models/custom-workflow-form.models';
 
 import { SortableStep } from './workflow-custom-form-sortable-step.component';
@@ -38,6 +39,8 @@ export function CustomWorkflowFormJobsSteps({
     availableActions,
 }: CustomWorkflowFormJobsStepsProps) {
     const sensors = useSensors(useSensor(PointerSensor));
+    const { focusYamlAtField } = useEditorCustom();
+
     const {
         register,
         setValue,
@@ -49,7 +52,9 @@ export function CustomWorkflowFormJobsSteps({
     const [jobConditions, setJobConditions] = useState<Record<string, boolean>>(Object.fromEntries(editingWorkflow.jobs.map((job) => [job.id, !!job.if?.trim()])));
     const [jobDependencies, setJobDependencies] = useState<Record<string, boolean>>(Object.fromEntries(editingWorkflow.jobs.map((job) => [job.id, !!job.needs?.length])));
 
-    // On add new step
+    /**
+     * On add new step
+     */
     const handleAddStep = (jobIndex: number) => {
         const newJobs = [...editingWorkflow.jobs];
         const newStep: Step = {
@@ -65,7 +70,9 @@ export function CustomWorkflowFormJobsSteps({
         setValue('jobs', newJobs, { shouldDirty: true, shouldValidate: true });
     };
 
-    // On remove step
+    /**
+     * On remove step
+     */
     const handleRemoveStep = (jobIndex: number, stepIndex: number) => {
         const newJobs = [...editingWorkflow.jobs];
         newJobs[jobIndex].steps.splice(stepIndex, 1);
@@ -74,7 +81,9 @@ export function CustomWorkflowFormJobsSteps({
         setValue('jobs', newJobs, { shouldDirty: true, shouldValidate: true });
     };
 
-    // On remove job
+    /**
+     * On remove job
+     */
     const handleRemoveJob = (jobIndex: number) => {
         const newJobs = [...editingWorkflow.jobs];
         newJobs.splice(jobIndex, 1);
@@ -83,7 +92,9 @@ export function CustomWorkflowFormJobsSteps({
         setValue('jobs', newJobs, { shouldDirty: true, shouldValidate: true });
     };
 
-    // On drag step
+    /**
+     * On drag step
+     */
     const handleStepDrag = (jobIndex: number, event: DragEndEvent) => {
         const { active, over } = event;
         if (!over || active.id === over.id) return;
@@ -180,6 +191,12 @@ export function CustomWorkflowFormJobsSteps({
                                         <input
                                             type="text"
                                             {...register(`jobs.${jobIndex}.id`)}
+                                            onFocus={() => {
+                                                focusYamlAtField(`job:${job.id}:root`);
+                                            }}
+                                            onBlur={() => {
+                                                focusYamlAtField(null);
+                                            }}
                                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                         />
                                         {errors.jobs?.[jobIndex]?.id && <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.id?.message}</p>}{' '}
@@ -191,6 +208,12 @@ export function CustomWorkflowFormJobsSteps({
                                         <input
                                             type="text"
                                             {...register(`jobs.${jobIndex}.name`)}
+                                            onFocus={() => {
+                                                focusYamlAtField(`job:${job.id}:name`);
+                                            }}
+                                            onBlur={() => {
+                                                focusYamlAtField(null);
+                                            }}
                                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                         />
                                         {errors.jobs?.[jobIndex]?.name && <p className="text-red-500 text-sm mt-1">{errors.jobs[jobIndex]?.name?.message}</p>}{' '}
@@ -224,6 +247,12 @@ export function CustomWorkflowFormJobsSteps({
 
                                     <select
                                         {...register(`jobs.${jobIndex}.runner`)}
+                                        onFocus={() => {
+                                            focusYamlAtField(`job:${job.id}:runner`);
+                                        }}
+                                        onBlur={() => {
+                                            focusYamlAtField(null);
+                                        }}
                                         className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                     >
                                         {availableRunners.map((runner) => (
@@ -263,6 +292,12 @@ export function CustomWorkflowFormJobsSteps({
                                             <input
                                                 type="text"
                                                 {...register(`jobs.${jobIndex}.if`)}
+                                                onFocus={() => {
+                                                    focusYamlAtField(`job:${job.id}:if`);
+                                                }}
+                                                onBlur={() => {
+                                                    focusYamlAtField(null);
+                                                }}
                                                 placeholder="e.g. success()"
                                                 className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                             />
@@ -320,6 +355,12 @@ export function CustomWorkflowFormJobsSteps({
                                             <select
                                                 multiple
                                                 {...register(`jobs.${jobIndex}.needs`)}
+                                                onFocus={() => {
+                                                    focusYamlAtField(`job:${job.id}:needs`);
+                                                }}
+                                                onBlur={() => {
+                                                    focusYamlAtField(null);
+                                                }}
                                                 className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                                             >
                                                 {editingWorkflow.jobs
@@ -398,6 +439,7 @@ export function CustomWorkflowFormJobsSteps({
                                                     key={step.internalId}
                                                     step={step}
                                                     jobIndex={jobIndex}
+                                                    jobId={job.id}
                                                     stepIndex={stepIndex}
                                                     collapsed={isStepCollapsed}
                                                     availableActions={availableActions}

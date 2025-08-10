@@ -21,7 +21,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/shared/components/t
  * Custom workflow form component
  */
 export function CustomWorkflowForm(): ReactNode {
-    const { editingWorkflow, availableRunners, availableActions, setEditingWorkflow, resetEditingWorkflow, setErrors } = useEditorCustom();
+    const { editingWorkflow, availableRunners, availableActions, setEditingWorkflow, resetEditingWorkflow, focusYamlAtField, setErrors } = useEditorCustom();
     const [availableTriggers, setAvailableTriggers] = useState<string[]>([]);
     const [collapsedJobs, setCollapsedJobs] = useState<Record<string, boolean>>({});
     const [collapsedSteps, setCollapsedSteps] = useState<Record<string, boolean>>({});
@@ -98,7 +98,9 @@ export function CustomWorkflowForm(): ReactNode {
 
     if (!customWorkflow) return null;
 
-    // On trigger change
+    /**
+     * On trigger change
+     */
     const handleTriggerChange = (value: Trigger) => {
         form.setValue('on', value);
 
@@ -113,7 +115,9 @@ export function CustomWorkflowForm(): ReactNode {
         }
     };
 
-    // On add job
+    /**
+     * On add job
+     */
     const handleAddJob = () => {
         const existingIds = customWorkflow.jobs.map((j) => j.id);
         let newJobId = 'job-id';
@@ -146,7 +150,9 @@ export function CustomWorkflowForm(): ReactNode {
         });
     };
 
-    // On reset form values
+    /**
+     * On reset form values
+     */
     const handleResetValues = () => {
         resetEditingWorkflow();
         setErrors({});
@@ -170,6 +176,12 @@ export function CustomWorkflowForm(): ReactNode {
                         <input
                             type="text"
                             {...form.register('workflowName')}
+                            onFocus={() => {
+                                focusYamlAtField('workflowName');
+                            }}
+                            onBlur={() => {
+                                focusYamlAtField(null);
+                            }}
                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                         />
                         {form.formState.errors.workflowName && <p className="text-red-500 text-sm mt-1">{form.formState.errors.workflowName.message}</p>}{' '}
@@ -204,6 +216,12 @@ export function CustomWorkflowForm(): ReactNode {
                             onChange={(e) => {
                                 handleTriggerChange(e.target.value);
                             }}
+                            onFocus={() => {
+                                focusYamlAtField('on');
+                            }}
+                            onBlur={() => {
+                                focusYamlAtField(null);
+                            }}
                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                         >
                             {availableTriggers.map((opt) => (
@@ -235,6 +253,12 @@ export function CustomWorkflowForm(): ReactNode {
                         <input
                             type="text"
                             {...form.register('branch')}
+                            onFocus={() => {
+                                focusYamlAtField('branch');
+                            }}
+                            onBlur={() => {
+                                focusYamlAtField(null);
+                            }}
                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                         />
                         {form.formState.errors.branch && <p className="text-red-500 text-sm mt-1">{form.formState.errors.branch.message}</p>}
@@ -265,6 +289,12 @@ export function CustomWorkflowForm(): ReactNode {
                         <input
                             type="text"
                             {...form.register('schedule')}
+                            onFocus={() => {
+                                focusYamlAtField('schedule');
+                            }}
+                            onBlur={() => {
+                                focusYamlAtField(null);
+                            }}
                             className="bg-background border border-border text-text px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary transition"
                         />
                         {form.formState.errors.schedule && <p className="text-red-500 text-sm mt-1">{form.formState.errors.schedule.message}</p>}

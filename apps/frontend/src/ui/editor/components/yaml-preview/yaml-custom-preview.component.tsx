@@ -3,15 +3,15 @@
 import { plansLimits } from '@octolab/domain';
 import { useParams } from 'next/navigation';
 import { useCookies } from 'next-client-cookies';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaRegFileAlt, FaSpinner } from 'react-icons/fa';
 import { LuPartyPopper } from 'react-icons/lu';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import yaml from 'yaml';
 
 import { useEditorCustom } from '../../hooks/editor-custom.hooks';
+
+import YamlTemplateBlock from './yaml-template-block.component';
 
 import { createWorkflowUseCase } from '@features/editor/application/save-workflow.use-case';
 import { editorApiRepository } from '@features/editor/infrastructure/editor-api.repository';
@@ -26,16 +26,18 @@ export function YamlCustomPreview(): ReactNode {
     const { authToken } = useAuthUser();
     const { uuid } = useParams();
     const { authUser, fetchUser } = useAuthUser();
-    const { editingWorkflow, editingWorkflowYaml, errors, template, isEditingExistingWorkflow, setIsEditingExistingWorkflow } = useEditorCustom();
+    const { editingWorkflow, editingWorkflowYaml, errors, template, isEditingExistingWorkflow, highlightedFieldKey, setIsEditingExistingWorkflow } = useEditorCustom();
     const [saving, setSaving] = useState(false);
     const [showFirstWorkflowModal, setShowFirstWorkflowModal] = useState(false);
 
     const fileName = editingWorkflow ? editingWorkflow.filename : 'workflow.yml';
     const workflowId = uuid as string;
 
-    const workflowContent = yaml.stringify(editingWorkflowYaml);
+    const workflowContent = useMemo(() => yaml.stringify(editingWorkflowYaml), [editingWorkflowYaml]);
 
-    // Copy the YAML to the clipboard
+    /**
+     * Copy the YAML to the clipboard
+     */
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(workflowContent);
@@ -46,7 +48,9 @@ export function YamlCustomPreview(): ReactNode {
         }
     };
 
-    // Download the YAML as a file
+    /**
+     * Download the YAML as a file
+     */
     const handleDownload = () => {
         try {
             const blob = new Blob([workflowContent], { type: 'text/yaml' });
@@ -65,7 +69,9 @@ export function YamlCustomPreview(): ReactNode {
         }
     };
 
-    // Save the workflow to the user's workspace
+    /**
+     * Save the workflow to the user's workspace
+     */
     const saveToWorkspace = async () => {
         if (!authUser || !editingWorkflow || !authToken) return;
 
@@ -101,7 +107,9 @@ export function YamlCustomPreview(): ReactNode {
         }
     };
 
-    // Close the first workflow modal
+    /**
+     * Close the first workflow modal
+     */
     const handleCloseFirstWorkflowModal = () => {
         setShowFirstWorkflowModal(false);
         cookies.set('octolab_hide_first_workflow_modal', 'true', { expires: 365 });
@@ -111,6 +119,166 @@ export function YamlCustomPreview(): ReactNode {
     const planLimit = plansLimits[authUser?.plan ?? 'free']?.workflows ?? 0;
     const reachedWorkflowLimit = !!(authUser && authUser.workflows >= planLimit);
 
+    const yamlFields = useMemo(() => {
+        if (!editingWorkflow) return [];
+
+        const fields: Array<{
+            key: string;
+            value?: unknown;
+            yamlPath?: string | string[];
+            highlightTarget?: 'value' | 'key';
+        }> = [];
+
+        // name
+        fields.push({
+            key: 'workflowName',
+            value: editingWorkflow.workflowName,
+            yamlPath: 'name',
+        });
+
+        // on:
+        fields.push({
+            key: 'on',
+            value: editingWorkflow.on,
+            yamlPath: 'on',
+            highlightTarget: 'key',
+        });
+
+        // push branches
+        if (editingWorkflow.on === 'push') {
+            fields.push({
+                key: 'branch',
+                value: editingWorkflow.branch,
+                yamlPath: 'on.${on}.branches[0]',
+            });
+        }
+
+        // schedule cron
+        if (editingWorkflow.on === 'schedule') {
+            fields.push({
+                key: 'schedule',
+                value: editingWorkflow.schedule,
+                yamlPath: 'on.${on}[0].cron',
+            });
+        }
+
+        // 🔥 jobs
+        for (const job of editingWorkflow.jobs) {
+            const jid = job.id;
+
+            // línea "jid:" dentro de jobs (solo la clave)
+            fields.push({
+                key: `job:${jid}:root`,
+                yamlPath: `jobs.${jid}`,
+                highlightTarget: 'key',
+            });
+
+            // name
+            fields.push({
+                key: `job:${jid}:name`,
+                yamlPath: `jobs.${jid}.name`,
+            });
+
+            // runner
+            fields.push({
+                key: `job:${jid}:runner`,
+                yamlPath: `jobs.${jid}.runs-on`,
+            });
+
+            // if (si existe lo resaltará; si no, no pasa nada)
+            fields.push({
+                key: `job:${jid}:if`,
+                yamlPath: `jobs.${jid}.if`,
+            });
+
+            // needs (primer elemento)
+            fields.push({
+                key: `job:${jid}:needs`,
+                yamlPath: `jobs.${jid}.needs[0]`,
+            });
+
+            // steps
+            job.steps.forEach((step, si) => {
+                fields.push({
+                    key: `job:${jid}:step:${step.internalId}:id`,
+                    yamlPath: `jobs.${jid}.steps[${si}].id`,
+                });
+
+                fields.push({
+                    key: `job:${jid}:step:${step.internalId}:name`,
+                    yamlPath: `jobs.${jid}.steps[${si}].name`,
+                });
+
+                if (step.type === 'run') {
+                    fields.push({
+                        key: `job:${jid}:step:${step.internalId}:run`,
+                        yamlPath: `jobs.${jid}.steps[${si}].run`,
+                    });
+                } else if (step.type === 'uses') {
+                    fields.push({
+                        key: `job:${jid}:step:${step.internalId}:uses`,
+                        yamlPath: `jobs.${jid}.steps[${si}].uses`,
+                    });
+
+                    // 🔥 Inputs de la acción (with.*) + fallback a "with:"
+                    const withKeysFromAction = step.stepActionInputs?.map((i) => i.key) ?? [];
+                    const withKeysFromState = Object.keys(step.with ?? {});
+                    const withKeys = Array.from(new Set([...withKeysFromAction, ...withKeysFromState]));
+
+                    for (const k of withKeys) {
+                        fields.push({
+                            key: `job:${jid}:step:${step.internalId}:with.${k}`,
+                            // 1) intenta resaltar la key concreta (with.k)
+                            // 2) si aún no existe en el YAML, resalta la clave "with:"
+                            yamlPath: [`jobs.${jid}.steps[${si}].with.${k}`, `jobs.${jid}.steps[${si}].with`],
+                            highlightTarget: 'key',
+                        });
+
+                        // ⬇️ NUEVO: candidato dinámico para env.<valorDeWith>
+                        const maybeEnvKey = (step.with?.[k] ?? '').toString().trim();
+                        if (maybeEnvKey) {
+                            fields.push({
+                                key: `job:${jid}:step:${step.internalId}:env.${maybeEnvKey}`,
+                                yamlPath: [
+                                    `jobs.${jid}.steps[${si}].env.${maybeEnvKey}`, // específico
+                                    `jobs.${jid}.steps[${si}].env`, // fallback
+                                ],
+                                highlightTarget: 'key',
+                            });
+                        }
+                    }
+                }
+
+                fields.push({
+                    key: `job:${jid}:step:${step.internalId}:if`,
+                    yamlPath: `jobs.${jid}.steps[${si}].if`,
+                });
+
+                // env
+                fields.push({
+                    key: `job:${jid}:step:${step.internalId}:env`,
+                    yamlPath: `jobs.${jid}.steps[${si}].env`,
+                    highlightTarget: 'key',
+                });
+
+                if (step.env) {
+                    for (const envKey of Object.keys(step.env)) {
+                        fields.push({
+                            key: `job:${jid}:step:${step.internalId}:env.${envKey}`,
+                            yamlPath: [
+                                `jobs.${jid}.steps[${si}].env.${envKey}`, // específico
+                                `jobs.${jid}.steps[${si}].env`, // fallback
+                            ],
+                            highlightTarget: 'key',
+                        });
+                    }
+                }
+            });
+        }
+
+        return fields;
+    }, [editingWorkflow]);
+
     if (!editingWorkflow) {
         return null;
     }
@@ -119,18 +287,7 @@ export function YamlCustomPreview(): ReactNode {
         <>
             <div className="w-full lg:w-1/2 flex flex-col h-full">
                 {/* Yaml preview */}
-                <SyntaxHighlighter
-                    language="yaml"
-                    style={oneDark}
-                    customStyle={{
-                        flex: 1,
-                        overflow: 'auto',
-                        margin: '0 0  1rem',
-                        borderRadius: '0.375rem',
-                    }}
-                >
-                    {workflowContent}
-                </SyntaxHighlighter>
+                <YamlTemplateBlock content={workflowContent} fields={yamlFields as any} highlightedKey={highlightedFieldKey} />
 
                 {/* Informative banner */}
                 <div className="bg-background border border-border px-4 py-3 rounded-md mb-4 flex items-center gap-2">

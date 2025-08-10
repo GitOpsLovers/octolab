@@ -1,7 +1,7 @@
 'use client';
 
 import { Action, CustomWorkflowConfig, Template } from '@octolab/domain';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { EditorCustomContext } from '../contexts/editor.context';
@@ -58,6 +58,7 @@ export function EditorCustomProvider({ children, workflowId }: EditorProviderPro
     const [isEditingExistingWorkflow, setIsEditingExistingWorkflow] = useState<boolean>(false);
     const [availableRunners, setAvailableRunners] = useState<string[]>([]);
     const [availableActions, setAvailableActions] = useState<Action[]>([]);
+    const [highlightedFieldKey, setHighlightedFieldKey] = useState<string | null>(null);
 
     useEffect(() => {
         const init = async () => {
@@ -165,20 +166,26 @@ export function EditorCustomProvider({ children, workflowId }: EditorProviderPro
         });
     };
 
+    const focusYamlAtField = useCallback((fieldKey: string | null) => {
+        setHighlightedFieldKey(fieldKey);
+    }, []);
+
     const value = {
         template,
         editingWorkflow,
-        setEditingWorkflow,
-        resetEditingWorkflow,
-        errors,
-        setErrors,
         editingWorkflowYaml,
-        loading,
-        setWorkflowNameAndDescription,
         isEditingExistingWorkflow,
         availableRunners,
-        setIsEditingExistingWorkflow,
         availableActions,
+        highlightedFieldKey,
+        loading,
+        errors,
+        setIsEditingExistingWorkflow,
+        setWorkflowNameAndDescription,
+        setEditingWorkflow,
+        resetEditingWorkflow,
+        focusYamlAtField,
+        setErrors,
     };
 
     return <EditorCustomContext.Provider value={value}>{children}</EditorCustomContext.Provider>;
