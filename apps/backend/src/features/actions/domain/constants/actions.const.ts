@@ -19,6 +19,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'Fetch depth of the git repository. 0 means full history.',
+                defaultValue: 0,
             },
         ],
     },
@@ -37,6 +38,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'Node.js version to use. Can be a specific version or a range (e.g., 18.x).',
+                defaultValue: '18',
             },
         ],
     },
@@ -55,6 +57,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'The secret name for the NPM token used for authentication.',
+                defaultValue: 'NPM_TOKEN',
             },
         ],
     },
@@ -73,6 +76,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'The secret name for the AWS account ID to assume the role in.',
+                defaultValue: 'AWS_ACCOUNT_ID',
             },
             {
                 key: 'aws-region',
@@ -86,6 +90,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'The environment variable name for the AWS region to use.',
+                defaultValue: 'MY_AWS_REGION',
             },
             {
                 key: 'aws-region-env-value',
@@ -99,6 +104,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: true,
                 hideInForm: false,
                 info: 'The value for the AWS region environment variable.',
+                defaultValue: 'cn-northwest-1',
             },
             {
                 key: 'aws-rolename',
@@ -151,6 +157,7 @@ export const workflowsActions: Action[] = [
                     { label: 'High', value: 'high' },
                 ],
                 info: 'The severity threshold for the Snyk scan. Choose from Low, Medium, or High.',
+                defaultValue: 'medium',
             },
             {
                 key: 'snyk-token',
@@ -164,6 +171,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'The secret name for the Snyk token used for authentication.',
+                defaultValue: 'SNYK_TOKEN',
             },
         ],
         templates: {
@@ -185,6 +193,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'Your Docker Hub username for authentication.',
+                defaultValue: 'my-docker-username',
             },
             {
                 key: 'password',
@@ -198,6 +207,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'The secret name for your Docker Hub password used for authentication.',
+                defaultValue: 'DOCKER_PASSWORD',
             },
         ],
     },
@@ -224,6 +234,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'The context for the Docker build. Typically the root of your repository.',
+                defaultValue: '.',
             },
             {
                 key: 'file',
@@ -237,6 +248,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'The path to the Dockerfile to use for the build.',
+                defaultValue: 'Dockerfile',
             },
             {
                 key: 'push',
@@ -264,6 +276,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'Comma-separated list of tags for the Docker image. For example: "latest,1.0.0".',
+                defaultValue: 'latest',
             },
         ],
     },
@@ -300,6 +313,7 @@ export const workflowsActions: Action[] = [
                 hideInForm: true,
                 info: 'The secret name for your Laravel Forge API key.',
                 showWhen: { field: 'deployMode', op: 'equals', value: 'webhook' },
+                defaultValue: 'LARAVEL_FORGE_API_KEY',
             },
             {
                 key: 'server_id',
@@ -314,6 +328,7 @@ export const workflowsActions: Action[] = [
                 hideInForm: true,
                 info: 'The secret name for your Laravel Forge server ID.',
                 showWhen: { field: 'deployMode', op: 'equals', value: 'api' },
+                defaultValue: 'LARAVEL_FORGE_SERVER_ID',
             },
             {
                 key: 'site_id',
@@ -328,6 +343,7 @@ export const workflowsActions: Action[] = [
                 hideInForm: true,
                 info: 'The secret name for your Laravel Forge site ID.',
                 showWhen: { field: 'deployMode', op: 'equals', value: 'api' },
+                defaultValue: 'LARAVEL_FORGE_SITE_ID',
             },
         ],
     },
@@ -346,6 +362,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'The branch into which the pull request is being merged.',
+                defaultValue: '${{ github.event.pull_request.base.ref }}',
             },
             {
                 key: 'current-branch',
@@ -359,6 +376,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'The branch from which the pull request originates.',
+                defaultValue: '${{ github.event.pull_request.head.ref }}',
             },
             {
                 key: 'commit-lint-pattern',
@@ -372,6 +390,7 @@ export const workflowsActions: Action[] = [
                 hideInYaml: false,
                 hideInForm: false,
                 info: 'Regular expression to validate commit messages',
+                defaultValue: '(feat|fix|ci|chore|docs|test|style|refactor): .{1,}$',
             },
         ],
     },
