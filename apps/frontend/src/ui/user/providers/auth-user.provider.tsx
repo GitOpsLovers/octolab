@@ -28,12 +28,16 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
         isLoading: true,
     });
 
-    // Set the authenticated user in the context
+    /**
+     * Set the authenticated user in the context
+     */
     const setAuthUser = (user: User | null) => {
         setState((prev) => ({ ...prev, authUser: user }));
     };
 
-    // Fetch the authenticated user
+    /**
+     * Fetch the authenticated user
+     */
     const fetchUser = async () => {
         try {
             const token = await getAccessToken();
@@ -53,7 +57,6 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
                 isLoading: false,
             });
         } catch (error) {
-            // mismo error handling que ya tienes
             if (error instanceof Error && error.message.includes('The user does not have an active session.')) {
                 setState({
                     authUser: null,

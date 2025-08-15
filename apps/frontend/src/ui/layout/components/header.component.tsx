@@ -14,13 +14,15 @@ export function Header(): ReactNode {
     const { authUser } = useAuthUser();
     const pathname = usePathname();
 
+    const avatarSrc = !authUser?.picture ? '/img/user/avatar-placeholder.png' : authUser.picture;
+
     return (
         <header className="w-full bg-surface px-6 py-4 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-1 relative group">
                 <Image src="/img/logo/header-logo-sm.png" alt="OctoLab logo" width={400} height={284} className="inline-block" style={{ width: 'auto', height: '32px' }} />
                 <div className="flex items-center relative">
                     <span className="text-2xl font-bold text-primary ml-1 hidden md:block">OctoLab</span>
-                    <span className="absolute -top-1 -right-9 bg-secondary text-surface text-[8px] md:text-xs font-semibold px-1 py-0.2 rounded-full shadow-md hidden md:block">
+                    <span className="absolute -top-1 -right-9 bg-secondary text-surface text-[8px] md:text-xs font-semibold px-1 py-0.5 rounded-full shadow-md hidden md:block">
                         Beta
                     </span>
                 </div>
@@ -30,25 +32,31 @@ export function Header(): ReactNode {
                 <Link href="/templates" className="text-muted hover:text-primary transition font-medium">
                     Templates
                 </Link>
+
                 {!authUser && (
                     <a
-                        href={`/auth/login?returnTo=${pathname}`}
+                        href={`/auth/login?returnTo=${encodeURIComponent(pathname ?? '/')}`}
                         data-umami-event="[Header] Sign in click"
                         className="px-4 py-2 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-surface transition"
                     >
                         Sign in
                     </a>
                 )}
+
                 {authUser && (
                     <Link href="/my-workflows" className="text-muted hover:text-primary transition font-medium">
                         My Workflows
                     </Link>
                 )}
+
                 {authUser && (
                     <a href="/auth/logout" className="text-muted hover:text-primary transition font-medium">
                         Logout
                     </a>
                 )}
+
+                {/* Avatar: a la derecha del todo, después de Logout */}
+                {authUser && <Image src={avatarSrc} alt={'User avatar'} width={32} height={32} className="rounded-full ring-1 ring-border transition" />}
             </nav>
         </header>
     );
