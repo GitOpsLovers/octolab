@@ -255,6 +255,7 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 required: true,
                 value: 'VERCEL_TOKEN',
                 helpMessage: 'Make sure you have created the secret in your repository configuration.',
+                yamlPath: ['jobs.deploy.steps[2].run', 'jobs.deploy.steps[3].run', 'jobs.deploy.steps[4].run'],
             },
         ],
     },
