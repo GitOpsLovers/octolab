@@ -5,6 +5,7 @@ export interface Template {
     id: string;
     name: string;
     description: string;
+    largeDescription: string;
     icon: string;
     iconColor: string;
     iconLibrary: string;
@@ -13,6 +14,9 @@ export interface Template {
     type: TemplateType;
     stepCompletionRules: StepCompletionRules;
     guide: Array<{ label: string; description: string }>;
+    whatDoInfo: Array<{ label: string; description: string; icon: string }>;
+    requirements: Array<{ description: string; icon: string }>;
+    faq: Array<{ label: string; description: string; icon: string }>;
 }
 
 /**
