@@ -15,6 +15,12 @@ const META_BY_ID: Record<string, { title: string; description: string; keywords:
             'Verify and ensure the quality of pull requests in an NX monorepo using “affected” commands. Only the projects impacted by the PR are linted, tested, and built against a configurable base branch.',
         keywords: ['nx pull request verify', 'nx affected', 'nx ci github actions', 'nx monorepo ci', 'pr checks nx', 'nx lint test build workflow'],
     },
+    'npm-publish': {
+        title: 'Publish to NPM | OctoLab',
+        description:
+            'Publish your package to npm automatically when changes are merged into a target branch. This template runs tests and builds first, then authenticates with a secure npm token to perform a clean, production-ready release.',
+        keywords: ['npm publish', 'github actions npm', 'npm ci cd', 'pr checks npm'],
+    },
 };
 
 /**

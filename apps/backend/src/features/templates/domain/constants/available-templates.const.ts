@@ -118,7 +118,8 @@ export const availableTemplates: Template[] = [
         id: 'npm-publish',
         name: 'Publish to NPM',
         description: 'Publish and release packages to NPM automatically after merging.',
-        largeDescription: '',
+        largeDescription:
+            'Publish your package to npm automatically when changes are merged into a target branch. This template runs tests and builds first, then authenticates with a secure npm token to perform a clean, production-ready release.',
         icon: 'FaNpm',
         iconColor: '#cb3737',
         iconLibrary: 'fa',
@@ -143,9 +144,46 @@ export const availableTemplates: Template[] = [
             { label: 'Build', description: 'Compile and generate distribution artifacts' },
             { label: 'Set NPM options', description: 'Configure NPM credentials to publish the artifact' },
         ],
-        whatDoInfo: [],
-        requirements: [],
-        faq: [],
+        whatDoInfo: [
+            { label: 'Checkout', description: 'Download your repository on the runner', icon: 'IoDownloadOutline' },
+            { label: 'Set destination branch', description: 'Select the branch that will trigger publishing (e.g., main).', icon: 'IoGitBranchOutline' },
+            { label: 'Define Node version', description: 'Configure the version of Node.js to be used', icon: 'IoLogoNodejs' },
+            { label: 'Install dependencies', description: 'Install the project dependencies', icon: 'IoConstructOutline' },
+            { label: 'Test', description: 'Run tests to validate behavior before publishing', icon: 'IoBeakerOutline' },
+            { label: 'Build', description: 'Compile and prepare distribution artifacts', icon: 'IoBuildOutline' },
+            { label: 'Publish', description: 'Authenticate with npm and publish the package to the registry', icon: 'IoCloudUploadOutline' },
+        ],
+        requirements: [
+            { description: 'A GitHub repository with a Node.js package (package.json with name and version) and test/build scripts.', icon: 'IoLogoGithub' },
+            { description: 'An npm Automation Token stored as a repository secret (e.g., NPM_TOKEN) with publish permissions.', icon: 'IoKeyOutline' },
+            { description: 'Runner on ubuntu-latest. Compatible with public and private repositories.', icon: 'IoServerOutline' },
+            { description: 'Support for Node.js versions 18, 20, and 22.', icon: 'IoLogoNodejs' },
+        ],
+        faq: [
+            {
+                label: 'How do I provide the npm token?',
+                description:
+                    'Create an npm Automation Token and add it as a repo secret (e.g., NPM_TOKEN). The workflow uses JS-DevTools/npm-publish@v3 with the npm registry to authenticate.',
+                icon: 'IoKeyOutline',
+            },
+            {
+                label: 'What about 2FA on npm?',
+                description: 'Use an npm Automation Token. It bypasses interactive 2FA for CI while keeping your account secure.',
+                // eslint-disable-next-line no-secrets/no-secrets
+                icon: 'IoShieldCheckmarkOutline',
+            },
+            {
+                label: 'Will it publish on every push?',
+                description: 'No, only when the configured destination branch triggers the workflow (e.g., merges to main). Adjust the branch filter to change this behavior.',
+                icon: 'IoGitBranchOutline',
+            },
+            {
+                label: 'Can I use pnpm or yarn?',
+                description:
+                    'Yes. Replace install/test/build commands with your package manager equivalents. Publishing can be done via npm or your chosen tool’s publish command.',
+                icon: 'IoCubeOutline',
+            },
+        ],
     },
     {
         id: 'vercel-pro-deployment',
