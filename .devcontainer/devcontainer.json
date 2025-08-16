@@ -1,11 +1,11 @@
 {
-    "name": "Generator Development container",
+    "name": "OctoLab Development container",
     "build": {
         "dockerfile": "Dockerfile",
         "context": ".."
     },
     "runArgs": [
-        "--name", "generator-devcontainer",
+        "--name", "octolab-devcontainer",
         "--network", "host"
     ],
     "customizations": {
