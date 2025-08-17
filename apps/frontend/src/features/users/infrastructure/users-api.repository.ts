@@ -17,4 +17,13 @@ export const usersApiRepository = (token: string): UsersRepository => ({
 
         return response.json();
     },
+    deleteCurrentUser: async (): Promise<void> => {
+        await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/user`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    },
 });

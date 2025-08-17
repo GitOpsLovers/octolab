@@ -3,8 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 
+import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from '@ui/shared/components/dropdown';
 import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 
 /**
@@ -13,8 +14,9 @@ import { useAuthUser } from '@ui/user/hooks/use-auth.hook';
 export function Header(): ReactNode {
     const { authUser } = useAuthUser();
     const pathname = usePathname();
+    const [avatarError, setAvatarError] = useState(false);
 
-    const avatarSrc = !authUser?.picture ? '/img/user/avatar-placeholder.png' : authUser.picture;
+    const avatarSrc = !avatarError && authUser?.picture ? authUser.picture : '/img/user/avatar-placeholder.png';
 
     return (
         <header className="w-full bg-surface px-6 py-4 flex items-center justify-between">
@@ -44,19 +46,38 @@ export function Header(): ReactNode {
                 )}
 
                 {authUser && (
-                    <Link href="/my-workflows" className="text-muted hover:text-primary transition font-medium">
-                        My Workflows
-                    </Link>
-                )}
+                    <>
+                        <Link href="/my-workflows" className="text-muted hover:text-primary transition font-medium">
+                            My Workflows
+                        </Link>
 
-                {authUser && (
-                    <a href="/auth/logout" className="text-muted hover:text-primary transition font-medium">
-                        Logout
-                    </a>
-                )}
+                        <Dropdown>
+                            <DropdownTrigger className="ml-2">
+                                <span className="inline-flex items-center justify-center rounded-full ring-1 ring-border hover:ring-primary transition cursor-pointer">
+                                    <Image
+                                        src={avatarSrc}
+                                        alt={authUser?.name ? `${authUser.name}'s avatar` : 'User avatar'}
+                                        width={32}
+                                        height={32}
+                                        className="rounded-full"
+                                        onError={() => {
+                                            setAvatarError(true);
+                                        }}
+                                    />
+                                </span>
+                            </DropdownTrigger>
 
-                {/* Avatar: a la derecha del todo, después de Logout */}
-                {authUser && <Image src={avatarSrc} alt={'User avatar'} width={32} height={32} className="rounded-full ring-1 ring-border transition" />}
+                            <DropdownContent align="end">
+                                <DropdownItem href="/profile" data-umami-event="[Header] Menu -> Profile">
+                                    Profile
+                                </DropdownItem>
+                                <DropdownItem href="/auth/logout" data-umami-event="[Header] Menu -> Logout">
+                                    Logout
+                                </DropdownItem>
+                            </DropdownContent>
+                        </Dropdown>
+                    </>
+                )}
             </nav>
         </header>
     );

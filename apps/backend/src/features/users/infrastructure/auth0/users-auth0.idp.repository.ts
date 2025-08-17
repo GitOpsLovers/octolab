@@ -18,5 +18,12 @@ export function usersAuth0IdpRepository(client: ManagementClient): UsersIdpRepos
                 throw new Auth0Error(`Failed to fetch user with id ${id}: ${(error as Error).message}`, Auth0ErrorType.AUTH0_CONNECTION_ERROR);
             }
         },
+        deleteById: async (id) => {
+            try {
+                await client.users.delete({ id });
+            } catch (error: unknown) {
+                throw new Auth0Error(`Failed to delete user with id ${id}: ${(error as Error).message}`, Auth0ErrorType.AUTH0_CONNECTION_ERROR);
+            }
+        },
     };
 }

@@ -1,7 +1,8 @@
-import { User } from '@octolab/domain';
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
+import { deleteUserByIdFromIdpUseCase } from '../../application/delete-user-by-id-from-idp.use-case';
+import { deleteUserByIdFromDatabaseUseCase } from '../../application/delete-user-by-id-on-database.use-case';
 import { getCurrentUserIdUseCase } from '../../application/get-current-user-id.use-case';
 import { getUserByIdFromIdpUseCase } from '../../application/get-user-by-id-from-idp.use-case';
 import { getUserByIdpIdFromDatabaseUseCase } from '../../application/get-user-by-idp-id-on-database.use-case';
@@ -11,16 +12,14 @@ import { usersSupabaseDatabaseRepository } from '../../infrastructure/database/u
 import { getAuth0ManagementClient } from '@core/infrastructure/auth0/auth0-idp.client';
 import { appLogger } from '@core/infrastructure/loggers/winston.logger';
 import { handleError } from '@core/ui/handlers/error.handler';
-import { getWorkflowsUseCase } from '@features/workflows/application/get-workflows.use-case';
-import { workflowsSupabaseDatabaseRepository } from '@features/workflows/infrastructure/database/workflows-supabase-db.repository';
 
 /**
- * Get current user controller
+ * Delete current user controller
  *
  * @param req Request
  * @param res Response
  */
-export const getCurrentUserController: RequestHandler = async (req, res) => {
+export const deleteUserController: RequestHandler = async (req, res) => {
     try {
         const auth0Id = getCurrentUserIdUseCase(req);
 
@@ -44,20 +43,13 @@ export const getCurrentUserController: RequestHandler = async (req, res) => {
             return;
         }
 
-        const workflows = await getWorkflowsUseCase(workflowsSupabaseDatabaseRepository, databaseUser.id);
+        // Delete users from Database and Identity provider
+        await deleteUserByIdFromIdpUseCase(repository, idpUser.user_id);
+        await deleteUserByIdFromDatabaseUseCase(usersSupabaseDatabaseRepository, databaseUser.id);
 
-        const authenticatedUser: User = {
-            id: databaseUser.id,
-            name: idpUser.name,
-            email: idpUser.email,
-            workflows: workflows.length,
-            plan: 'free',
-            picture: idpUser.picture,
-        };
-
-        res.status(StatusCodes.OK).json(authenticatedUser);
+        res.status(StatusCodes.OK).json({ message: 'User deleted successfully' });
     } catch (error: unknown) {
-        appLogger.error(`Error: ${(error as Error).message}`, 'Current user controller');
+        appLogger.error(`Error: ${(error as Error).message}`, 'Delete user controller');
 
         handleError(error as Error, res);
     }

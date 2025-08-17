@@ -10,4 +10,11 @@ export interface UsersIdpRepository {
      * @param id User id
      */
     getById: (id: string) => Promise<UserIdp>;
+
+    /**
+     * Delete user by id
+     *
+     * @param id User id
+     */
+    deleteById: (id: string) => Promise<void>;
 }

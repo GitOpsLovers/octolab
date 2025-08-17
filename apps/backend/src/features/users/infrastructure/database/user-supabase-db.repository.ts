@@ -67,4 +67,19 @@ export const usersSupabaseDatabaseRepository: UsersDatabaseRepository = {
             throw new DatabaseError(`Failed to find user by auth0_id: ${(error as Error).message}`, DatabaseErrorType.DATABASE_CONNECTION_ERROR);
         }
     },
+    deleteById: async (id: string): Promise<void> => {
+        const supabase = getSupabaseClient();
+
+        try {
+            const { error } = (await supabase.from('users').delete().eq('id', id)) as unknown as {
+                error: Error | null;
+            };
+
+            if (error) {
+                throw new DatabaseError('Failed to delete user', DatabaseErrorType.DATABASE_CONNECTION_ERROR);
+            }
+        } catch (error: unknown) {
+            throw new DatabaseError(`Failed to delete user: ${(error as Error).message}`, DatabaseErrorType.DATABASE_CONNECTION_ERROR);
+        }
+    },
 };
