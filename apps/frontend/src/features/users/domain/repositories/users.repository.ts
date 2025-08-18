@@ -10,4 +10,9 @@ export interface UsersRepository {
      * @returns User
      */
     getCurrentUser: () => Promise<User>;
+
+    /**
+     * Delete current user
+     */
+    deleteCurrentUser: () => Promise<void>;
 }

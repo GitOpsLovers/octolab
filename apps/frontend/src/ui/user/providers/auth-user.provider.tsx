@@ -2,7 +2,6 @@
 
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { User } from '@octolab/domain';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { AuthUserContext } from '../contexts/auth-user.context';
@@ -12,10 +11,9 @@ import { getCurrentUserUseCase } from '@features/users/application/get-current-u
 import { usersApiRepository } from '@features/users/infrastructure/users-api.repository';
 
 /**
- * Authenticated user provider.
+ * Authenticated user provider
  */
 export function AuthUserProvider({ children }: AuthUserProviderProps) {
-    const router = useRouter();
     const [state, setState] = useState<{
         authUser: User | null;
         authToken: string | null;
@@ -29,21 +27,26 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
     });
 
     /**
-     * Set the authenticated user in the context
+     * Set authenticated user
      */
     const setAuthUser = (user: User | null) => {
         setState((prev) => ({ ...prev, authUser: user }));
     };
 
     /**
-     * Fetch the authenticated user
+     * Fetch authenticated user
      */
     const fetchUser = async () => {
         try {
             const token = await getAccessToken();
 
             if (!token) {
-                setState((prev) => ({ ...prev, isLoading: false }));
+                setState({
+                    authUser: null,
+                    authToken: null,
+                    userLoadError: null,
+                    isLoading: false,
+                });
                 return;
             }
 
@@ -57,7 +60,9 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
                 isLoading: false,
             });
         } catch (error) {
-            if (error instanceof Error && error.message.includes('The user does not have an active session.')) {
+            const msg = error instanceof Error ? error.message : String(error);
+
+            if (msg.includes('The user does not have an active session.')) {
                 setState({
                     authUser: null,
                     authToken: null,
@@ -67,13 +72,12 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
                 return;
             }
 
-            if (error instanceof Error && error.message.includes('The access token has expired')) {
+            if (msg.includes('The access token has expired')) {
                 window.location.href = '/auth/logout';
                 return;
             }
 
             console.error('Error fetching current user:', error);
-
             setState({
                 authUser: null,
                 authToken: null,
@@ -83,12 +87,9 @@ export function AuthUserProvider({ children }: AuthUserProviderProps) {
         }
     };
 
-    /**
-     * Effect to fetch th authenticated user
-     */
     useEffect(() => {
         fetchUser();
-    }, [router]);
+    }, []);
 
     return <AuthUserContext.Provider value={{ ...state, setAuthUser, fetchUser }}>{children}</AuthUserContext.Provider>;
 }

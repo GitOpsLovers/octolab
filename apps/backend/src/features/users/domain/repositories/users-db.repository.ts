@@ -22,4 +22,11 @@ export interface UsersDatabaseRepository {
      * @returns User if found, otherwise null
      */
     findByAuth0Id: (auth0Id: string) => Promise<DatabaseUser | null>;
+
+    /**
+     * Delete user by id
+     *
+     * @param id User id
+     */
+    deleteById: (id: string) => Promise<void>;
 }
