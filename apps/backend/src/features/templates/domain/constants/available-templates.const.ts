@@ -189,7 +189,7 @@ export const availableTemplates: Template[] = [
         id: 'vercel-pro-deployment',
         name: 'Vercel production deployment',
         description: 'Deploy an application to Vercel in production environment.',
-        largeDescription: '',
+        largeDescription: 'Deploy your application to a Vercel production environment from GitHub Actions.',
         icon: 'IoLogoVercel',
         iconColor: '#000000',
         iconLibrary: 'io5',
@@ -211,9 +211,43 @@ export const availableTemplates: Template[] = [
             { label: 'Build', description: 'Build the project locally' },
             { label: 'Deploy', description: 'Deploy the prebuilt output to Vercel production environment' },
         ],
-        whatDoInfo: [],
-        requirements: [],
-        faq: [],
+        whatDoInfo: [
+            { label: 'Checkout', description: 'Download your repository on the runner', icon: 'IoDownloadOutline' },
+            { label: 'Set destination branch', description: 'Select the branch that will trigger the Production deploy (e.g., main).', icon: 'IoGitBranchOutline' },
+            { label: 'Install Vercel CLI', description: 'Install the Vercel CLI globally in the runner', icon: 'IoTerminalOutline' },
+            { label: 'Pull Vercel environment', description: 'Sync project settings and environment variables from Vercel', icon: 'IoSyncOutline' },
+            { label: 'Build', description: 'Create a local production build (prebuilt output)', icon: 'IoBuildOutline' },
+            { label: 'Deploy', description: 'Deploy the prebuilt output to Vercel Production using the CLI', icon: 'IoCloudUploadOutline' },
+        ],
+        requirements: [
+            { description: 'A GitHub repository linked to a Vercel project.', icon: 'IoLinkOutline' },
+            { description: 'A Vercel token stored as a repository secret (e.g., VERCEL_TOKEN) with deploy permissions.', icon: 'IoKeyOutline' },
+            { description: 'If the repository isn’t already linked, provide VERCEL_ORG_ID and VERCEL_PROJECT_ID as environment variables.', icon: 'IoSettingsOutline' },
+            { description: 'Runs on ubuntu-latest runner.', icon: 'IoServerOutline' },
+        ],
+        faq: [
+            {
+                label: 'How do I provide the Vercel token?',
+                description: 'Create a token in your Vercel account settings and add it as a repository secret. The workflow authenticates the CLI with this token.',
+                icon: 'IoKeyOutline',
+            },
+            {
+                label: 'How are project settings and env vars pulled?',
+                description: 'The workflow runs `vercel pull` (production) with your token to sync project configuration and environment variables.',
+                icon: 'IoSyncOutline',
+            },
+            {
+                label: 'Does this create a Production or a Preview deployment?',
+                description: 'The CLI deploy step uses the Production target. Switch to Preview by removing the Production flag in the deploy step.',
+                icon: 'IoCloudUploadOutline',
+            },
+            {
+                label: 'Will it deploy on every push?',
+                description:
+                    'No. It only deploys when the configured destination branch triggers the workflow (e.g., pushes to main). Adjust the branch filter to change this behavior.',
+                icon: 'IoGitBranchOutline',
+            },
+        ],
     },
     {
         id: 'semantic-release',

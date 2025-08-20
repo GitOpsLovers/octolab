@@ -201,7 +201,7 @@ export function TemplateLanding() {
             <section className="mx-auto mt-16 max-w-5xl">
                 <div className="flex flex-col items-start justify-between gap-4 rounded-lg border border-border bg-gradient-to-br from-surface to-background p-6 md:flex-row md:items-center">
                     <div>
-                        <h3 className="text-xl font-bold">Ready to use it in your repo?</h3>
+                        <h3 className="text-xl font-bold">Ready to use it in your repository?</h3>
                         <p className="text-text-muted">Open the visual editor to customize steps, runners, and versions in minutes.</p>
                     </div>
                     <Link
