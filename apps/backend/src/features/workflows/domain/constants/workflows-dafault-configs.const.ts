@@ -187,8 +187,8 @@ export const workflowsDefaultConfigs: Record<string, WorkflowTemplateConfig> = {
                 type: 'input',
                 placeholder: 'npm install',
                 required: true,
-                value: 'npm install',
-                helpMessage: 'Consider using `npm ci` for faster and more reliable builds.',
+                value: 'npm ci',
+                helpMessage: 'Using “npm ci” is better than simply using “npm install” because it results in faster and more reliable builds.',
                 yamlPath: 'jobs.publish.steps[2].run',
             },
             {
