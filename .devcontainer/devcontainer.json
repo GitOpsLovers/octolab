@@ -1,38 +1,32 @@
 {
-    "name": "OctoLab Development container",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": ".."
-    },
-    "runArgs": [
-        "--name", "octolab-devcontainer",
-        "--network", "host"
-    ],
-    "customizations": {
-        "vscode": {
-            "settings": {
-                "http.proxyStrictSSL": false
-            },
-            "extensions": [
-                "dbaeumer.vscode-eslint",
-                "sleistner.vscode-fileutils",
-                "GitHub.copilot",
-                "GitHub.copilot-chat",
-                "eamodio.gitlens",
-                "ms-vscode.vscode-typescript-next",
-                "shd101wyy.markdown-preview-enhanced",
-                "stylelint.vscode-stylelint",
-                "firsttris.vscode-jest-runner",
-                "GitHub.vscode-github-actions",
-                "redhat.vscode-yaml",
-                "sibiraj-s.vscode-scss-formatter",
-                "aeschli.vscode-css-formatter",
-                "bradlc.vscode-tailwindcss"
-            ]
-        }
-    },
-    "remoteEnv": {
-        "NODE_TLS_REJECT_UNAUTHORIZED": "0"
+  "build": {
+    "context": "..",
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "sleistner.vscode-fileutils",
+        "eamodio.gitlens",
+        "shd101wyy.markdown-preview-enhanced",
+        "firsttris.vscode-jest-runner",
+        "GitHub.vscode-github-actions",
+        "redhat.vscode-yaml",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "http.proxyStrictSSL": false
+      }
     }
+  },
+  "name": "Octolab Development container",
+  "remoteEnv": {
+    "NODE_TLS_REJECT_UNAUTHORIZED": "0"
+  },
+  "runArgs": [
+    "--name", "octolab-devcontainer",
+    "--network", "host"
+  ]
 }
   
