@@ -19,38 +19,14 @@
     "lint:domain": "turbo run lint --filter=@octolab/domain"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@stylistic/eslint-plugin": "5.2.2",
-    "@types/node": "24.1.0",
-    "eslint": "9.31.0",
-    "eslint-config-next": "15.4.3",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-import-resolver-typescript": "4.4.4",
-    "eslint-plugin-import": "2.32.0",
-    "eslint-plugin-jest": "29.0.1",
-    "eslint-plugin-jsdoc": "51.4.1",
-    "eslint-plugin-no-secrets": "2.2.1",
-    "eslint-plugin-optimize-regex": "1.2.1",
-    "eslint-plugin-pii": "1.0.2",
-    "eslint-plugin-prefer-arrow": "1.2.3",
-    "eslint-plugin-prettier": "5.5.3",
-    "eslint-plugin-unused-imports": "4.1.4",
-    "tsconfig-paths": "^4.2.0",
-    "turbo": "2.5.5",
-    "typescript": "^5",
-    "typescript-eslint": "8.38.0"
-  },
-  "dependencies": {
-    "dotenv": "17.2.0",
-    "uuid": "^11.1.0",
-    "zod": "4.0.8"
+    "turbo": "2.9.14"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
-  "packageManager": "npm@10.9.0",
+  "packageManager": "pnpm@11.1.2",
   "engines": {
-    "node": "22.11.0"
+    "node": "24.15.0"
   }
 }

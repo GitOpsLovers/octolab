@@ -4,18 +4,14 @@ node_modules
 # Testing
 coverage
 
-# Production
+# Production builds
 build
 
-# Misc
+# OS files
 .DS_Store
-*.pem
 
-# Debug
-npm-debug.log*
-
-# env files (can opt-in for committing if needed)
+# Environment variables
 .env*
 
-# Monorepo
+# Cache
 .turbo

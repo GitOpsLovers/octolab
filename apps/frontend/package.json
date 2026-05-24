@@ -33,10 +33,12 @@
     "yaml": "^2.8.0"
   },
   "devDependencies": {
+    "@gitopslovers/eslint-config-multistack": "1.4.0",
     "@tailwindcss/postcss": "^4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "eslint": "10.4.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.6"
   },
