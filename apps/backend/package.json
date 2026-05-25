@@ -6,31 +6,31 @@
     "dev": "nodemon --exec \"tsx --inspect src/index.ts\" -e ts",
     "prebuild": "tsc --noEmit",
     "build": "node esbuild.config.mjs",
-    "lint": "npx eslint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@octolab/domain": "workspace:*",
-    "@sentry/esbuild-plugin": "4.0.2",
-    "@sentry/node": "9.43.0",
-    "@supabase/supabase-js": "2.52.1",
-    "auth0": "4.27.0",
-    "body-parser": "2.2.0",
-    "cors": "2.8.5",
-    "date-fns": "4.1.0",
-    "express": "5.1.0",
-    "express-oauth2-jwt-bearer": "1.6.1",
-    "helmet": "8.1.0",
+    "@sentry/esbuild-plugin": "5.3.0",
+    "@sentry/node": "10.53.1",
+    "@supabase/supabase-js": "2.106.1",
+    "auth0": "5.10.0",
+    "body-parser": "2.2.2",
+    "cors": "2.8.6",
+    "date-fns": "4.3.0",
+    "express": "5.2.1",
+    "express-oauth2-jwt-bearer": "1.9.0",
+    "helmet": "8.2.0",
     "http-status-codes": "2.3.0",
-    "resend": "4.7.0",
-    "winston": "3.17.0"
+    "resend": "6.12.3",
+    "winston": "3.19.0"
   },
   "devDependencies": {
     "@gitopslovers/eslint-config-multistack": "1.4.0",
     "@types/cors": "2.8.19",
-    "@types/express": "5.0.3",
-    "esbuild": "0.25.8",
+    "@types/express": "5.0.6",
+    "esbuild": "0.28.0",
     "eslint": "10.4.0",
-    "nodemon": "3.1.10",
-    "tsx": "4.20.3"
+    "nodemon": "3.1.14",
+    "tsx": "4.22.3"
   }
 }

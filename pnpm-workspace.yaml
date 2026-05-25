@@ -7,3 +7,6 @@ allowBuilds:
   esbuild: true
   sharp: false
   unrs-resolver: true
+
+overrides:
+  '@gitopslovers/eslint-config-multistack': link:../eslint-config-multistack
