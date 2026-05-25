@@ -1,5 +1,5 @@
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/react/sortable';
+import { closestCenter } from '@dnd-kit/collision';
 import { Action, Step } from '@octolab/domain';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -31,7 +31,11 @@ interface SortableStepProps {
 export function CustomWorkflowEditorFormStep({ step, jobIndex, jobId, stepIndex, collapsed, availableActions, onToggleCollapse, onRemove }: SortableStepProps) {
     const { focusYamlAtField, editingWorkflowYaml } = useEditorCustom();
     const [hasCondition, setHasCondition] = useState(!!step.if?.trim());
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: step.internalId });
+    const sortable = useSortable({
+        id: step.internalId,
+        index: stepIndex,
+        collisionDetector: closestCenter,
+    });
     const {
         register,
         setValue,
@@ -110,10 +114,10 @@ export function CustomWorkflowEditorFormStep({ step, jobIndex, jobId, stepIndex,
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} className="border border-border p-3 rounded mb-2 bg-background">
+        <div ref={sortable.ref} className="border border-border p-3 rounded mb-2 bg-background">
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                    <span {...listeners} className="cursor-grab text-muted hover:text-text">
+                    <span className="cursor-grab text-muted hover:text-text">
                         <MdDragIndicator />
                     </span>
                     <span className="text-sm font-medium">Step: {step.name}</span>

@@ -8,11 +8,14 @@
     "#*": "./src/*"
   },
   "devDependencies": {
-    "@gitopslovers/eslint-config-multistack": "1.4.0",
+    "@gitopslovers/eslint-config-multistack": "1.5.0",
     "eslint": "10.4.0"
   },
   "scripts": {
     "build": "tsc --build",
-    "lint": "npx eslint"
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "zod": "4.4.3"
   }
 }

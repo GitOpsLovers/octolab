@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/named
-import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import {DragDropProvider} from '@dnd-kit/react';
+import {PointerSensor, PointerActivationConstraints} from '@dnd-kit/dom';
 import { Action, CustomWorkflowConfig, Step } from '@octolab/domain';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -38,7 +38,6 @@ export function CustomWorkflowEditorFormJobsSteps({
     availableRunners,
     availableActions,
 }: CustomWorkflowFormJobsStepsProps) {
-    const sensors = useSensors(useSensor(PointerSensor));
     const { focusYamlAtField } = useEditorCustom();
 
     const {
@@ -423,35 +422,44 @@ export function CustomWorkflowEditorFormJobsSteps({
                                     </div>
                                 )}
 
-                                <DndContext
-                                    sensors={sensors}
-                                    collisionDetection={closestCenter}
+                                <DragDropProvider
+                                    sensors={(defaults) => [
+                                        ...defaults.filter((sensor) => sensor !== PointerSensor),
+                                        PointerSensor.configure({
+                                            activationConstraints(event, source) {
+                                                if (event.pointerType === 'touch') {
+                                                    return [
+                                                        new PointerActivationConstraints.Delay({value: 500, tolerance: {x: 5, y: 5}}),
+                                                    ];
+                                                }
+                                                return [new PointerActivationConstraints.Distance({value: 8})];
+                                            },
+                                        }),
+                                    ]}
                                     onDragEnd={(event) => {
                                         handleStepDrag(jobIndex, event);
                                     }}
                                 >
-                                    <SortableContext items={job.steps.map((step) => step.internalId)} strategy={verticalListSortingStrategy}>
-                                        {job.steps.map((step, stepIndex) => {
-                                            const isStepCollapsed = collapsedSteps[step.id] ?? false;
+                                    {job.steps.map((step, stepIndex) => {
+                                        const isStepCollapsed = collapsedSteps[step.id] ?? false;
 
-                                            return (
-                                                <CustomWorkflowEditorFormStep
-                                                    key={step.internalId}
-                                                    step={step}
-                                                    jobIndex={jobIndex}
-                                                    jobId={job.id}
-                                                    stepIndex={stepIndex}
-                                                    collapsed={isStepCollapsed}
-                                                    availableActions={availableActions}
-                                                    onToggleCollapse={toggleCollapseStep}
-                                                    onRemove={() => {
-                                                        handleRemoveStep(jobIndex, stepIndex);
-                                                    }}
-                                                />
-                                            );
-                                        })}
-                                    </SortableContext>
-                                </DndContext>
+                                        return (
+                                            <CustomWorkflowEditorFormStep
+                                                key={step.internalId}
+                                                step={step}
+                                                jobIndex={jobIndex}
+                                                jobId={job.id}
+                                                stepIndex={stepIndex}
+                                                collapsed={isStepCollapsed}
+                                                availableActions={availableActions}
+                                                onToggleCollapse={toggleCollapseStep}
+                                                onRemove={() => {
+                                                    handleRemoveStep(jobIndex, stepIndex);
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </DragDropProvider>
 
                                 {/* Add step */}
                                 <button
