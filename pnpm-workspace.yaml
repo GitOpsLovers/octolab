@@ -8,5 +8,5 @@ allowBuilds:
   sharp: false
   unrs-resolver: true
 
-overrides:
-  '@gitopslovers/eslint-config-multistack': link:../eslint-config-multistack
+minimumReleaseAgeExclude:
+  - '@gitopslovers/eslint-config-multistack@1.5.0'

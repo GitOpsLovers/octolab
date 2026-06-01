@@ -1,6 +1,4 @@
 // eslint-disable-next-line import/no-unassigned-import
-import 'dotenv/config';
-// eslint-disable-next-line import/no-unassigned-import
 import '@core/infrastructure/sentry/instrument';
 
 import * as Sentry from '@sentry/node';
