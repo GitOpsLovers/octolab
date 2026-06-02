@@ -201,8 +201,8 @@ importers:
         version: 4.4.3
     devDependencies:
       '@gitopslovers/eslint-config-multistack':
-        specifier: 1.5.0
-        version: 1.5.0(@typescript-eslint/utils@8.59.4(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(globals@11.12.0)(typescript@6.0.3)
+        specifier: 1.6.0
+        version: 1.6.0(@typescript-eslint/utils@8.59.4(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(globals@11.12.0)(typescript@6.0.3)
       eslint:
         specifier: 10.4.0
         version: 10.4.0(jiti@2.7.0)
@@ -999,6 +999,13 @@ packages:
 
   '@gitopslovers/eslint-config-multistack@1.5.0':
     resolution: {integrity: sha512-Yj//pvDHdhAWnoT5s8bfcWfZZnQk3KkSZWhGp/W4PSx/zggytGftri0lL4BGEpwyIN2ws8md50utfZN+KEO9HA==}
+    engines: {node: 24.15.0}
+    peerDependencies:
+      eslint: '>=10.4.0'
+      globals: '>=17.6.0'
+
+  '@gitopslovers/eslint-config-multistack@1.6.0':
+    resolution: {integrity: sha512-OdRovsBt7z0esHhclGKRaqRL5gvBzHCkMoKzskPZX0KF/XDuWlIncVsGZQ682skVoI+Jl6RTFsCgjZWWQXo/dA==}
     engines: {node: 24.15.0}
     peerDependencies:
       eslint: '>=10.4.0'
@@ -6618,6 +6625,35 @@ snapshots:
       - vitest
 
   '@gitopslovers/eslint-config-multistack@1.5.0(@typescript-eslint/utils@8.59.4(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(globals@11.12.0)(typescript@6.0.3)':
+    dependencies:
+      '@eslint-react/eslint-plugin': 5.8.0(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3)
+      '@next/eslint-plugin-next': 16.2.6
+      '@stylistic/eslint-plugin': 5.10.0(eslint@10.4.0(jiti@2.7.0))
+      '@typescript-eslint/eslint-plugin': 8.59.3(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3)
+      '@typescript-eslint/parser': 8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3)
+      '@vitest/eslint-plugin': 1.6.17(@typescript-eslint/eslint-plugin@8.59.3(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3)
+      eslint: 10.4.0(jiti@2.7.0)
+      eslint-import-resolver-node: 0.4.0
+      eslint-import-resolver-typescript: 4.4.4(eslint-plugin-import-x@4.16.2(@typescript-eslint/utils@8.59.4(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-node@0.4.0)(eslint@10.4.0(jiti@2.7.0)))(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-import-x: 4.16.2(@typescript-eslint/utils@8.59.4(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint-import-resolver-node@0.4.0)(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-jest-dom: 5.5.0(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-jsdoc: 62.9.0(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-no-secrets: 2.3.3(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-optimize-regex: 1.2.1
+      eslint-plugin-prefer-arrow: 1.2.3(eslint@10.4.0(jiti@2.7.0))
+      eslint-plugin-security: 4.0.0
+      eslint-plugin-testing-library: 7.16.2(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3)
+      eslint-plugin-unused-imports: 4.4.1(@typescript-eslint/eslint-plugin@8.59.3(@typescript-eslint/parser@8.59.3(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))
+      globals: 11.12.0
+    transitivePeerDependencies:
+      - '@testing-library/dom'
+      - '@typescript-eslint/utils'
+      - eslint-plugin-import
+      - supports-color
+      - typescript
+      - vitest
+
+  '@gitopslovers/eslint-config-multistack@1.6.0(@typescript-eslint/utils@8.59.4(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.0(jiti@2.7.0))(globals@11.12.0)(typescript@6.0.3)':
     dependencies:
       '@eslint-react/eslint-plugin': 5.8.0(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3)
       '@next/eslint-plugin-next': 16.2.6

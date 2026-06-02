@@ -8,7 +8,7 @@
     "#*": "./src/*"
   },
   "devDependencies": {
-    "@gitopslovers/eslint-config-multistack": "1.5.0",
+    "@gitopslovers/eslint-config-multistack": "1.6.0",
     "eslint": "10.4.0"
   },
   "scripts": {

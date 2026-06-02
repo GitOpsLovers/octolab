@@ -9,4 +9,4 @@ allowBuilds:
   unrs-resolver: true
 
 minimumReleaseAgeExclude:
-  - '@gitopslovers/eslint-config-multistack@1.5.0'
+  - '@gitopslovers/eslint-config-multistack@1.6.0'
